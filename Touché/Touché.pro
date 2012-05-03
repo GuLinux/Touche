@@ -20,7 +20,7 @@ CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
 
 LIBS += -L/tmp/Touché_staticlib/$$COMPILE_MODE -lTouché_staticlib
 LIBS += -lqjson -lX11 -lXtst
-QMAKE_CXXFLAGS += "-std=c++11"
+QMAKE_CXXFLAGS += "-std=c++0x"
 
 INCLUDEPATH += ../Touché_staticlib
 

@@ -37,8 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class HidDevPrivate {
 public:
-    HidDevPrivate(const QString &device, HidDev *parent) : q_ptr(parent) { deviceInfo.path(device); }
-    int fd=-1;
+    HidDevPrivate(const QString &device, HidDev *parent) : fd(-1), q_ptr(parent) { deviceInfo.path(device); }
+    int fd;
     QTimer readTimer;
     fd_set fdset;
     DeviceInfo deviceInfo;

@@ -30,11 +30,11 @@ class InputEvent;
 class DatabaseEntry : public QObject {
     Q_OBJECT
 public:
+    DatabaseEntry(QObject *parent=0);
     static DatabaseEntry *fromConfig(QMap<QString, QVariant> config, QObject *parent);
     ~DatabaseEntry();
     QList<ConfigEvent *> configuredEvents();
 private:
-    DatabaseEntry(QObject *parent);
     DatabaseEntryPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(DatabaseEntry)
 };

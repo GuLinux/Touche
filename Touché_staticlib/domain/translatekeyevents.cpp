@@ -31,9 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class TranslateKeyEventsPrivate {
 public:
-    TranslateKeyEventsPrivate(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig) : keyboardDatabase(keyboardDatabase), bindingsConfig(bindingsConfig) {}
+    TranslateKeyEventsPrivate(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig) : keyboardDatabase(keyboardDatabase), lastMatch(0), bindingsConfig(bindingsConfig) {}
     KeyboardDatabase *keyboardDatabase;
-    ConfigEvent *lastMatch = 0;
+    ConfigEvent *lastMatch;
     BindingsConfig *bindingsConfig;
 
     bool match(ConfigEvent *configuredEvent, InputEvent *inputEvent, QStringList tagsToMatch) {

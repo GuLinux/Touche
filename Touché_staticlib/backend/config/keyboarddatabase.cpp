@@ -31,6 +31,7 @@ public:
     KeyboardDatabasePrivate(QStringList databaseFiles, KeyboardDatabase *parent) : databaseFiles(databaseFiles), q_ptr(parent) {}
     QStringList const databaseFiles;
     QMap<QString, DatabaseEntry*> database;
+    DatabaseEntry emptyDatabaseEntry;
     KeyboardDatabase * q_ptr;
     Q_DECLARE_PUBLIC(KeyboardDatabase)
 };
@@ -50,7 +51,7 @@ KeyboardDatabase::~KeyboardDatabase()
 DatabaseEntry *KeyboardDatabase::keyboard(DeviceInfo *deviceInfo)
 {
     Q_D(KeyboardDatabase);
-    return d->database.value(deviceInfo->configID());
+    return d->database.value(deviceInfo->configID(), &d->emptyDatabaseEntry);
 }
 
 void KeyboardDatabase::deviceAdded(DeviceInfo *device)

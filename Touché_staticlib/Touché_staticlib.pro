@@ -47,7 +47,7 @@ HEADERS += \
     touchecore.h
 
 LIBS += -lqjson -lX11 -lXtst
-QMAKE_CXXFLAGS += "-std=c++11"
+QMAKE_CXXFLAGS += "-std=c++0x"
 
 CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
    else                        { COMPILE_MODE='release' }

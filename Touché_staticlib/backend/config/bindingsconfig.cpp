@@ -34,9 +34,10 @@ typedef std::function<Binding*(QObject*, const QString&)> BindingFactory;
 class BindingsConfigPrivate {
 public:
     BindingsConfigPrivate(BindingsConfig *parent) : settings(new QSettings("GuLinux", qAppName(), parent)) { }
-    BindingFactory doNothingBindingFactory =  [this](QObject* p, const QString& e) {Q_UNUSED(e); return this->moveToThreadAndReparent(p, new DoNothingBinding()); };
+
     QMap<QString, BindingFactory> bindings;
     QSettings *settings;
+    DoNothingBinding doNothingBinding;
 
     Binding* moveToThreadAndReparent(QObject *newParent, QObject *object) {
         object->moveToThread(newParent->thread());
@@ -51,6 +52,8 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     Q_D(BindingsConfig);
     d->settings->beginGroup("bindings");
     const QString params = QString("%1/%2/%3");
+
+    d->bindings["DoNothing"] = [d](QObject* p, const QString& e) {Q_UNUSED(e); Q_UNUSED(p); return &d->doNothingBinding; };
     d->bindings["RunCommand"] = [d,params](QObject* p, const QString& eventName) {
         QString commandName = d->settings->value(params.arg(eventName, "RunCommand", "ApplicationName"), "true").toString();
         QStringList arguments = d->settings->value(params.arg(eventName, "RunCommand", "Arguments"), QStringList()).toStringList();
@@ -79,7 +82,7 @@ Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
     Q_D(BindingsConfig);
     QString bindingSetting = d->settings->value(eventName, "DoNothing").toString();
     qDebug() << "Setting for event " << eventName << ": " << bindingSetting;
-    BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->doNothingBindingFactory);
+    BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value("DoNothing"));
     return bindingFactory(parent, eventName);
 }
 
