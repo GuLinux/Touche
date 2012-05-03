@@ -1,13 +1,26 @@
 #include "inputevent.h"
-#include <QMap>
+#include <QMultiMap>
 #include "inputregister.h"
 #include <QDebug>
 #include <QStringList>
+#include <QPair>
 
 class InputEventPrivate {
 public:
     InputEventPrivate() {}
-    QMap<uint, uint> registers;
+    QMultiMap<uint, RegisterValue> registers;
+
+    QList<uint> valuesFor(const QList<RegisterValue> registerValues) {
+        QList<uint> result;
+        foreach(RegisterValue registerValue, registerValues) {
+            result << registerValue.first;
+        }
+        return result;
+    }
+
+    bool registersAreDifferent(const RegisterValue &mine, const QList<RegisterValue> &other) {
+        return !valuesFor(other).contains(mine.first);
+    }
 };
 
 InputEvent::InputEvent(QObject *parent) :
@@ -21,18 +34,21 @@ InputEvent::~InputEvent()
     delete d_ptr;
 }
 
-void InputEvent::addRegister(uint hid, uint value)
+void InputEvent::addRegister(uint hid, uint value, uint index)
 {
     Q_D(InputEvent);
-    d->registers.insert(hid, value);
+    d->registers.insert(hid, RegisterValue(value, index));
 }
 
 QString InputEvent::asJSON()
 {
     Q_D(InputEvent);
     QStringList registers;
-    foreach(uint key, d->registers.keys()) {
-        registers << QString("{ \"hid\":%1, \"value\":%2 }").arg(key, 10).arg(d->registers.value(key), 10);
+    QList<RegisterValue> values = d->registers.values();
+    auto sortByIndex = [](const RegisterValue &first, const RegisterValue &second) {return first.second<second.second;};
+    qSort(values.begin(), values.end(), sortByIndex );
+    foreach(RegisterValue value, values) {
+        registers << QString("{ \"hid\":%1, \"value\":%2, \"index\":%3 }").arg(d->registers.key(value), 10).arg(value.first, 10).arg(value.second, 3, 10, QChar('0'));
     }
     return QString("[\n%1\n]\n").arg(registers.join(",\n"));
 }
@@ -43,16 +59,16 @@ bool InputEvent::matches(InputEvent *other)
     foreach(uint key, d->registers.keys()) {
         if(!other->hasRegister(key))
             return false;
-        if(! (registerAt(key) == other->registerAt(key)))
+        if( d->registersAreDifferent(registersFor(key).first(), other->registersFor(key) )) // we are on ConfigRegister, therefore we assume we've only one value
             return false;
     }
     return true;
 }
 
-uint InputEvent::registerAt(uint hid)
+QList<RegisterValue> InputEvent::registersFor(uint hid)
 {
     Q_D(InputEvent);
-    return d->registers.value(hid);
+    return d->registers.values(hid);
 }
 
 bool InputEvent::hasRegister(uint hid)

@@ -2,9 +2,13 @@
 #define KEYEVENT_H
 
 #include <QObject>
+#include <QPair>
+#include <QList>
 
 class InputEventPrivate;
 class InputRegister;
+
+typedef QPair<uint, uint> RegisterValue;
 
 class InputEvent : public QObject
 {
@@ -12,9 +16,9 @@ class InputEvent : public QObject
 public:
     explicit InputEvent(QObject *parent = 0);
     ~InputEvent();
-    void addRegister(uint hid, uint value);
+    void addRegister(uint hid, uint value, uint index);
     QString asJSON();
-    uint registerAt(uint hid);
+    QList<RegisterValue> registersFor(uint hid);
     bool hasRegister(uint hid);
     bool matches(InputEvent *other);
 signals:

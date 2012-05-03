@@ -68,7 +68,7 @@ public:
         }
         InputEvent *keyEvent = new InputEvent(q);
         for(int i=0; i<rd; i++) {
-            keyEvent->addRegister(ev[i].hid, ev[i].value);
+            keyEvent->addRegister(ev[i].hid, ev[i].value, i);
         }
         q->emit event(keyEvent, &deviceInfo);
         QTimer::singleShot(60000, keyEvent, SLOT(deleteLater()));

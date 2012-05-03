@@ -21,7 +21,7 @@ public:
     void addRegisters(ConfigEvent *configEvent, QList<QVariant> configuredRegisters, const QString &eventName) {
         InputEvent *inputEvent = new InputEvent(configEvent);
         foreach(QVariant keyRegister, configuredRegisters) {
-            inputEvent->addRegister(keyRegister.toMap().value("hid").toUInt(), keyRegister.toMap().value("value").toUInt());
+            inputEvent->addRegister(keyRegister.toMap().value("hid").toUInt(), keyRegister.toMap().value("value").toUInt(), 0); // TODO: index doesn't mean anything, here
         }
         inputEvent->setProperty("eventType", eventName);
         configEvent->addInputEvent(eventName, inputEvent);
