@@ -25,3 +25,8 @@ Just copy it in the this path:
 
 Inside you can find some configuration examples. Just follow the pattern: the key names are in the keyboard database file ( /usr/share/Touché/keyboard_database.json )
 
+* Known issues:
+- After pressing some keys, it seems that other keys get "stuck".
+For instance, if you press the "ZoomIn" key, the "1-...5-*" keys don't work anymore.
+They'll restart working if you just keep both keyboard and mouse still for a few seconds.
+Probably i just need to figure out how to manually reset the keyboard state (usbsniff?)
