@@ -36,7 +36,7 @@ private:
     QMap<DeviceInfo*, QAction*> actions;
 public slots:
     void connected(DeviceInfo *deviceInfo) {
-        tray->showMessage(qAppName() + " Device Connected!", deviceInfo->name(), "input-keyboard");
+        tray->showMessage(qAppName().prepend("<b>") + "</b>: Device Connected!", deviceInfo->name(), "input-keyboard");
         QAction *action = connectedDevices->addAction(deviceInfo->name());
         actions.insert(deviceInfo, action);
         updateTooltip();
@@ -44,7 +44,7 @@ public slots:
     }
 
     void disconnected(DeviceInfo *deviceInfo) {
-        tray->showMessage(qAppName() + "Device Disconnected!", deviceInfo->name(), "input-keyboard");
+        tray->showMessage(qAppName().prepend("<b>") + "</b>: Device Disconnected!", deviceInfo->name(), "input-keyboard");
         QAction *action = actions.take(deviceInfo);
         connectedDevices->removeAction(action);
         delete action;
