@@ -49,7 +49,9 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     QObject(parent), d_ptr(new BindingsConfigPrivate(this))
 {
     Q_D(BindingsConfig);
-    const QString params = QString("__%1_%2_%3");
+    d->settings->beginGroup("bindings");
+    qDebug() << "Configured bindings: " << d->settings->childKeys();
+    const QString params = QString("%1/%2/%3");
     d->bindings["RunCommand"] = [d,params](QObject* p, const QString& eventName) {
         QString commandName = d->settings->value(params.arg(eventName, "RunCommand", "ApplicationName"), "true").toString();
         QStringList arguments = d->settings->value(params.arg(eventName, "RunCommand", "Arguments"), QStringList()).toStringList();
