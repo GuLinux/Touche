@@ -18,7 +18,7 @@ Then you can choose between the Qt GUI (simpler) and the KDE GUI (much more beau
 mkdir Touché_staticlib.build
 cd Touché_staticlib.build
 qmake ../Touché_staticlib
-#ake install # it will only install the static library to /tmp, to allow compiling of the main application
+make install # it will only install the static library to /tmp, to allow compiling of the main application
 
 # Qt GUI: 
 mkdir ../Touché.build
