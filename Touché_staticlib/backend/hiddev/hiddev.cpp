@@ -112,8 +112,6 @@ HidDev::~HidDev()
 
 void HidDev::start()
 {
-    qDebug() << "Current thread: " << QThread::currentThread();
-
     Q_D(HidDev);
     struct hiddev_devinfo dinfo;
     char name[256] = "Unknown";

@@ -18,16 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include <QApplication>
-#include "domain/inputevent.h"
-#include "domain/dumpkeys.h"
-#include "domain/translatekeyevents.h"
-#include "backend/hiddev/finddevices.h"
-#include "domain/deviceinfo.h"
-#include "backend/config/keyboarddatabase.h"
-#include "backend/config/bindingsconfig.h"
+
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QMap>
+#include "touchecore.h"
+#include "domain/deviceinfo.h"
 
 class TrayManager : public QObject {
     Q_OBJECT
@@ -54,16 +50,11 @@ public slots:
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    DumpKeys dumpKeys;
-    KeyboardDatabase db(QStringList(QString("/usr/share/%1/keyboard_database.json").arg(qAppName())));
-    BindingsConfig bindingsConfig;
-    TranslateKeyEvents translateEvents(&db, &bindingsConfig);
-    //hiddev.start();
-    FindDevices findDevices;
-    QObject::connect(&findDevices, SIGNAL(connected(DeviceInfo*)), &db, SLOT(deviceAdded(DeviceInfo*)));
-    QObject::connect(&findDevices, SIGNAL(disconnected(DeviceInfo*)), &db, SLOT(deviceRemoved(DeviceInfo*)));
-    QObject::connect(&findDevices, SIGNAL(event(InputEvent*,DeviceInfo*)), &dumpKeys, SLOT(event(InputEvent*)));
-    QObject::connect(&findDevices, SIGNAL(event(InputEvent*,DeviceInfo*)), &translateEvents, SLOT(event(InputEvent*, DeviceInfo*)));
+
+    QStringList arguments = a.arguments();
+
+    ToucheCore toucheCore(arguments);
+
     QSystemTrayIcon tray(QIcon::fromTheme("input-keyboard"));
 
     QMenu trayMenu;
@@ -78,8 +69,10 @@ int main(int argc, char *argv[])
     tray.show();
     tray.setToolTip(qAppName());
 
-    trayManager.connect(&findDevices, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
-    trayManager.connect(&findDevices, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
+    trayManager.connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
+    trayManager.connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
+
+    toucheCore.start();
     return a.exec();
 }
 

@@ -60,7 +60,6 @@ public:
         qDebug() << "Adding device: " << devicePath;
         QThread *deviceThread = new QThread(q);
         HidDev *device = new HidDev(devicePath);
-        qDebug() << "Main thread: " << QThread::currentThread();
         deviceThread->start();
         device->moveToThread(deviceThread);
         devices.insert(devicePath, QPair<QThread*, HidDev*>(deviceThread, device) );
