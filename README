@@ -1,0 +1,9 @@
+* Install Instructions:
+mkdir Touché_staticlib.build Touché.build
+cd Touché_staticlib.build
+qmake ../Touché_staticlib
+make install # it will only install the static library to /tmp, to allow compiling of the main application
+cd ../Touché.build
+qmake ../Touché
+make install # this will install both the binary and its required dependencies, like udev rule for permissions and keyboard database.
+

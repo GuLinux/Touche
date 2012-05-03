@@ -1,0 +1,4 @@
+*-build-*
+.build*
+*.pro.user*
+static-libraries.bin
