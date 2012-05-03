@@ -49,15 +49,15 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     QObject(parent), d_ptr(new BindingsConfigPrivate(this))
 {
     Q_D(BindingsConfig);
-    d->bindings["RunCommand"] = [d](QObject* p, const QString& eventName) {
-        QString commandName = d->settings->value( eventName + "_RunCommand_ApplicationName", "true").toString();
-        QStringList arguments = d->settings->value(eventName + "_RunCommand_Arguments", QStringList()).toStringList();
+    const QString params = QString("__%1_%2_%3");
+    d->bindings["RunCommand"] = [d,params](QObject* p, const QString& eventName) {
+        QString commandName = d->settings->value(params.arg(eventName, "RunCommand", "ApplicationName"), "true").toString();
+        QStringList arguments = d->settings->value(params.arg(eventName, "RunCommand", "Arguments"), QStringList()).toStringList();
         return d->moveToThreadAndReparent(p, new RunCommandBinding(commandName, arguments));
     };
-    d->bindings["TranslateToKey"] =[d](QObject* p, const QString& eventName) {
-            qDebug() << "Creating TranslateToKey with parent object: " << p;
-        QString keySymbol = d->settings->value(eventName + "_TranslateToKey_keysymbol", QString()).toString();
-        QString iskeypress = d->settings->value(eventName + "_TranslateToKey_eventtype", "keypress").toString();
+    d->bindings["TranslateToKey"] =[d,params](QObject* p, const QString& eventName) {
+        QString keySymbol = d->settings->value(params.arg(eventName, "TranslateToKey", "keysymbol"), QString()).toString();
+        QString iskeypress = d->settings->value(params.arg(eventName,"TranslateToKey", "eventtype"), "keypress").toString();
         return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, iskeypress == "keypress"));
     };
 }
