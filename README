@@ -11,13 +11,27 @@ Touché is released under GPLv3 license (included in the COPYING file)
 -----------------------------------------
 
 * Install Instructions:
-mkdir Touché_staticlib.build Touché.build
+First you need to build the static library, and install it to a temporary location.
+Then you can choose between the Qt GUI (simpler) and the KDE GUI (much more beautiful, using KDE styles and color settings).
+
+# Core library: 
+mkdir Touché_staticlib.build
 cd Touché_staticlib.build
 qmake ../Touché_staticlib
-make install # it will only install the static library to /tmp, to allow compiling of the main application
+#ake install # it will only install the static library to /tmp, to allow compiling of the main application
+
+# Qt GUI: 
+mkdir ../Touché.build
 cd ../Touché.build
 qmake ../Touché
 make install # this will install both the binary and its required dependencies, like udev rule for permissions and keyboard database.
+
+# KDE GUI:
+mkdir ../Touché-kde.build
+cd ../ Touché-kde.build
+qmake ../Touché-kde
+make install
+
 
 * Configuration:
 Currently there is no gui for configuration. Hopefully it will be added soon enough :)
