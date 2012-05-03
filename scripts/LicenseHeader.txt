@@ -1,4 +1,3 @@
-/***********************************************************************
 Copyright (c) 2012 "Marco Gulino <marco.gulino@gmail.com>"
 
 This file is part of Touché: https://github.com/rockman81/Touche
@@ -15,33 +14,3 @@ GNU General Public License for more details (included the COPYING file).
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-***********************************************************************/
-
-#ifndef FINDDEVICES_H
-#define FINDDEVICES_H
-
-#include <QObject>
-
-class FindDevicesPrivate;
-class DeviceInfo;
-class InputEvent;
-class FindDevices : public QObject
-{
-    Q_OBJECT
-public:
-    explicit FindDevices(QObject *parent = 0);
-    ~FindDevices();
-signals:
-    void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
-    void connected(DeviceInfo *deviceInfo);
-    void disconnected(DeviceInfo *deviceInfo);
-
-public slots:
-    void deviceRemoved(DeviceInfo *deviceInfo);
-    void deviceChanged();
-private:
-    FindDevicesPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(FindDevices)
-};
-
-#endif // FINDDEVICES_H

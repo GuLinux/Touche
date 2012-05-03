@@ -6,6 +6,8 @@ but other keys, like "ZoomIn/Out", and the "1-2-3-4-5-*" keys in the upper part 
 Touché does detect these events, and allows you to transform them to known X key symbols, or to execute arbitrary commands.
 Support for new keyboards should be easly added, the application does print the events when they're sent, so they can be added in a ney "keyboard database" entry.
 
+Touché is released under GPLv3 license (included in the COPYING file)
+
 -----------------------------------------
 
 * Install Instructions:
