@@ -1,0 +1,18 @@
+{
+  "0x45e:0x745": {
+    "name": "Microsoft Wireless Keyboard 3000",
+    "vendor": "0x45e",
+    "product": "0x745",
+    "keys": {
+      "ZoomOut":      { "keypress": [ { "hid":    786990, "value":         1 } ], "keyrelease": [ { "hid":    786990, "value":         0 } ] },
+      "ZoomIn":       { "keypress": [ { "hid":    786989, "value":         1 } ], "keyrelease": [ { "hid":    786989, "value":         0 } ] },
+      "MSLaunch1":    { "keypress": [ { "hid":4278255365, "value":         1 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
+      "MSLaunch2":    { "keypress": [ { "hid":4278255365, "value":         2 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
+      "MSLaunch3":    { "keypress": [ { "hid":4278255365, "value":         4 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
+      "MSLaunch4":    { "keypress": [ { "hid":4278255365, "value":         8 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
+      "MSLaunch5":    { "keypress": [ { "hid":4278255365, "value":        16 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
+      "MSLaunchStar": { "keypress": [ { "hid":    786818, "value":         1 } ], "keyrelease": [ { "hid":    786818, "value":         0 } ] },
+      "MSSwitchWins": { "keypress": [ { "hid":    786850, "value":         1 } ], "keyrelease": [ { "hid":    786850, "value":         0 } ] }
+    }
+  }
+}
