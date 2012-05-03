@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     DumpKeys dumpKeys;
-    KeyboardDatabase db(QStringList("/usr/share/hiddev_kbd_helper/keyboard_database.json"));
+    KeyboardDatabase db(QStringList(QString("/usr/share/%1/keyboard_database.json").arg(qAppName())));
     BindingsConfig bindingsConfig;
     TranslateKeyEvents translateEvents(&db, &bindingsConfig);
     //hiddev.start();

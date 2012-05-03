@@ -7,3 +7,11 @@ cd ../Touché.build
 qmake ../Touché
 make install # this will install both the binary and its required dependencies, like udev rule for permissions and keyboard database.
 
+* Configuration:
+Currently there is no gui for configuration. Hopefully it will be added soon enough :)
+There is a sample configuration file in Touché/files/samples_config/.
+Just copy it in the this path:
+  $HOME/.config/GuLinux/Touché.conf
+
+Inside you can find some configuration examples. Just follow the pattern: the key names are in the keyboard database file ( /usr/share/Touché/keyboard_database.json )
+
