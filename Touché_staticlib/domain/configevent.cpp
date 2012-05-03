@@ -49,7 +49,7 @@ bool ConfigEvent::matches(InputEvent *other, const QStringList &tags, BindingsCo
     foreach(QString tag, tags) {
         InputEvent *cfgInputEvent = d->cfgInputEvents.value(tag);
         if(cfgInputEvent->matches(other)) {
-            QString eventName = QString("%1_%2")
+            QString eventName = QString("%1/%2")
                     .arg(property("keyName").toString() )
                     .arg(tag);
             qDebug() << "Got match: " << eventName;

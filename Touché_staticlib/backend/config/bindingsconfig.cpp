@@ -50,7 +50,6 @@ BindingsConfig::BindingsConfig(QObject *parent) :
 {
     Q_D(BindingsConfig);
     d->settings->beginGroup("bindings");
-    qDebug() << "Configured bindings: " << d->settings->childKeys();
     const QString params = QString("%1/%2/%3");
     d->bindings["RunCommand"] = [d,params](QObject* p, const QString& eventName) {
         QString commandName = d->settings->value(params.arg(eventName, "RunCommand", "ApplicationName"), "true").toString();
@@ -59,9 +58,15 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     };
     d->bindings["TranslateToKey"] =[d,params](QObject* p, const QString& eventName) {
         QString keySymbol = d->settings->value(params.arg(eventName, "TranslateToKey", "keysymbol"), QString()).toString();
-        QString iskeypress = d->settings->value(params.arg(eventName,"TranslateToKey", "eventtype"), "keypress").toString();
-        return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, iskeypress == "keypress"));
+        QString isKeypress = d->settings->value(params.arg(eventName,"TranslateToKey", "eventtype"), "keypress").toString();
+        return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress"));
     };
+
+    qDebug() << "Configured bindings: ";
+    foreach(const QString key, d->settings->childKeys()) {
+        qDebug() << key << " [" << d->settings->value(key).toString() << "]";
+    }
+
 }
 
 BindingsConfig::~BindingsConfig()

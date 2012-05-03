@@ -26,13 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class ToKeyBindingPrivate {
 public:
-    ToKeyBindingPrivate(const QString &keysymname, bool iskeypress) : keySymName(keysymname), iskeypress(iskeypress) {}
+    ToKeyBindingPrivate(const QString &keysymname, bool isKeypress) : keySymName(keysymname), isKeypress(isKeypress) {}
     QString const keySymName;
-    bool iskeypress;
+    bool isKeypress;
 };
 
-ToKeyBinding::ToKeyBinding(const QString &keySymName, bool iskeypress, QObject *parent) :
-    QObject(parent), d_ptr(new ToKeyBindingPrivate(keySymName, iskeypress))
+ToKeyBinding::ToKeyBinding(const QString &keySymName, bool isKeypress, QObject *parent) :
+    QObject(parent), d_ptr(new ToKeyBindingPrivate(keySymName, isKeypress))
 {
 }
 
@@ -47,6 +47,6 @@ void ToKeyBinding::execute()
     Q_D(ToKeyBinding);
     KeySym keysym = XStringToKeysym(d->keySymName.toLatin1());
     KeyCode keycode = XKeysymToKeycode(QX11Info::display(), keysym);
-    qDebug() << "executing \"ToKeyBinding\": sending key" << (d->iskeypress ? "press" : "release") << " with keysym:" << keysym << "; keycode: " << keycode;
-    XTestFakeKeyEvent(QX11Info::display(), keycode, d->iskeypress, 0 );
+    qDebug() << "executing \"ToKeyBinding\": sending key" << (d->isKeypress ? "press" : "release") << " with keysym:" << keysym << "; keycode: " << keycode;
+    XTestFakeKeyEvent(QX11Info::display(), keycode, d->isKeypress, 0 );
 }
