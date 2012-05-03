@@ -1,3 +1,13 @@
+Touché is an application aimed at making "just work" every key on your keyboard.
+It's still in heavy development stage, and therefore is missing lots of stuff, but it's already usable.
+The current "reference" keyboard is mine, a "Microsoft Wireless Keyboard 3000".
+The "standard" special keys, like "Media Play", or "Volume Up" do work out of the box on every GNU/Linux distribution, 
+but other keys, like "ZoomIn/Out", and the "1-2-3-4-5-*" keys in the upper part don't. Instead they send an event to /dev/usb/hiddev0.
+Touché does detect these events, and allows you to transform them to known X key symbols, or to execute arbitrary commands.
+Support for new keyboards should be easly added, the application does print the events when they're sent, so they can be added in a ney "keyboard database" entry.
+
+-----------------------------------------
+
 * Install Instructions:
 mkdir Touché_staticlib.build Touché.build
 cd Touché_staticlib.build
