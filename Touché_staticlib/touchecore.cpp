@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define GLOBAL_DATABASE QString("/usr/share/%1/keyboard_database.json").arg(qAppName())
 #define LOCAL_DATABASE QString("%1/.config/GuLinux/keyboard_database.json").arg(QProcessEnvironment::systemEnvironment().value("HOME"))
-#define DATABASE_FILES QStringList(GLOBAL_DATABASE) << LOCAL_DATABASE
+#define DATABASE_FILES QStringList(LOCAL_DATABASE) << GLOBAL_DATABASE
 
 class ToucheCorePrivate {
 public:
@@ -71,13 +71,14 @@ void ToucheCore::start()
     d->bindingsConfig = new BindingsConfig(this);
     d->keyboardDatabase = new KeyboardDatabase(DATABASE_FILES, this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
-    d->findDevices = new FindDevices(this);
+    d->findDevices = new FindDevices(d->keyboardDatabase, this);
 
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceAdded(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceRemoved(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), this, SIGNAL(connected(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), this, SIGNAL(disconnected(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(event(InputEvent*,DeviceInfo*)), d->translateEvents, SLOT(event(InputEvent*, DeviceInfo*)));
+    connect(d->findDevices, SIGNAL(noMoreEvents(DeviceInfo*)), d->translateEvents, SLOT(noMoreEvents(DeviceInfo*)));
 
     if(d->options.contains("--dump-events")) {
         d->dumpKeys = new DumpKeys(this);

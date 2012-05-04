@@ -68,3 +68,15 @@ void TranslateKeyEvents::event(InputEvent *keyEvent, DeviceInfo *deviceInfo)
             return;
     }
 }
+
+void TranslateKeyEvents::noMoreEvents(DeviceInfo *deviceInfo)
+{
+    Q_D(TranslateKeyEvents);
+    Q_UNUSED(deviceInfo);
+    if(!d->lastMatch) return;
+
+    InputEvent * voidInputEvent = new InputEvent(d->lastMatch);
+    if(d->match(d->lastMatch, voidInputEvent, QStringList("keyrelease"))) {
+        d->lastMatch=0;
+    }
+}

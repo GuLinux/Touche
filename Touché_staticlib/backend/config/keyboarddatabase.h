@@ -33,6 +33,7 @@ public:
     explicit KeyboardDatabase(QStringList databaseFiles, QObject *parent =0);
     ~KeyboardDatabase();
     DatabaseEntry *keyboard(DeviceInfo* deviceInfo);
+    const QMap<QString, QVariant> deviceConfiguration(DeviceInfo *deviceInfo);
 signals:
     
 public slots:

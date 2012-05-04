@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "domain/inputevent.h"
 #include "domain/configevent.h"
+#include "domain/nomoreeventsinputevent.h"
 #include <QList>
 #include <QDebug>
 
@@ -31,8 +32,13 @@ public:
         ConfigEvent *configEvent = new ConfigEvent(parent);
         foreach(QString eventName, events.keys()) {
             configEvent->setProperty("keyName", keyName);
-            QList<QVariant> registers = events.value(eventName).toList();
-            addRegisters(configEvent, registers, eventName);
+            QVariant eventValue = events.value(eventName);
+            if(eventValue.type() ==QVariant::List) {
+                addRegisters(configEvent, eventValue.toList(), eventName);
+            }
+            if(eventValue.type() == QVariant::String && eventValue.toString() == "no_more_events") {
+                configEvent->addInputEvent(eventName, new NoMoreEventsInputEvent(configEvent) );
+            }
         }
         configuredEvents << configEvent;
     }
@@ -65,6 +71,7 @@ QList<ConfigEvent *> DatabaseEntry::configuredEvents()
 DatabaseEntry *DatabaseEntry::fromConfig(QMap<QString, QVariant> config, QObject *parent)
 {
     DatabaseEntry* databaseEntry = new DatabaseEntry(parent);
+    databaseEntry->setProperty("deviceName", config.value("name").toString());
     QMap<QString, QVariant> keys = config.value("keys").toMap();
     foreach(QString keyName, keys.keys()) {
         QMap<QString, QVariant> events = keys.value(keyName).toMap();

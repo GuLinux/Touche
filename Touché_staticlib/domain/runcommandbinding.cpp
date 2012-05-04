@@ -35,7 +35,6 @@ RunCommandBinding::RunCommandBinding(QString command, QStringList arguments, QOb
 
 RunCommandBinding::~RunCommandBinding()
 {
-    qDebug() << "RunCommandBinding deleted";
     delete d_ptr;
 }
 

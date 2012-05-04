@@ -34,12 +34,31 @@ public:
     DatabaseEntry emptyDatabaseEntry;
     KeyboardDatabase * q_ptr;
     Q_DECLARE_PUBLIC(KeyboardDatabase)
+
+    QMap<QString, QVariant> keyboardConfiguration(DeviceInfo *deviceInfo) {
+        QJson::Parser parser;
+
+        foreach(QString database, databaseFiles) {
+            QFile databaseFile(database);
+            if(!databaseFile.exists())
+                continue;
+            qDebug() << "Parsing file: " << databaseFile.fileName();
+            QVariant config = parser.parse(&databaseFile);
+            if(config.toMap().contains(deviceInfo->configID())) {
+                QMap<QString, QVariant> thisKeyboardDatabase = config.toMap().value(deviceInfo->configID()).toMap();
+                return thisKeyboardDatabase;
+            }
+        }
+        return QMap<QString, QVariant>();
+    }
 };
 
 
 KeyboardDatabase::KeyboardDatabase(QStringList databaseFiles, QObject *parent) :
     QObject(parent), d_ptr(new KeyboardDatabasePrivate(databaseFiles, this))
 {
+    Q_D(KeyboardDatabase);
+    d->emptyDatabaseEntry.setProperty("deviceName", "Device not configured");
     qDebug() << "Using keyboard database paths: " << databaseFiles;
 }
 
@@ -57,18 +76,11 @@ DatabaseEntry *KeyboardDatabase::keyboard(DeviceInfo *deviceInfo)
 void KeyboardDatabase::deviceAdded(DeviceInfo *device)
 {
     Q_D(KeyboardDatabase);
-    QJson::Parser parser;
-
-    foreach(QString database, d->databaseFiles) {
-        QFile databaseFile(database);
-        QVariant config = parser.parse(&databaseFile);
-        if(config.toMap().contains(device->configID())) {
-            QMap<QString, QVariant> thisKeyboardDatabase = config.toMap().value(device->configID()).toMap();
-            d->database.insert(device->configID(), DatabaseEntry::fromConfig(thisKeyboardDatabase, this));
-            qDebug() << "Database updated: " << d->database;
-            return;
-        }
-    }
+    QMap<QString, QVariant> thisKeyboardDatabase = d->keyboardConfiguration(device);
+    if(thisKeyboardDatabase.isEmpty())
+        return;
+    d->database.insert(device->configID(), DatabaseEntry::fromConfig(thisKeyboardDatabase, this));
+    qDebug() << "Database updated: " << d->database;
 }
 
 void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
@@ -76,6 +88,12 @@ void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
     Q_D(KeyboardDatabase);
     delete d->database.take(device->configID());
     qDebug() << "Database updated: " << d->database;
+}
+
+const QMap<QString, QVariant> KeyboardDatabase::deviceConfiguration(DeviceInfo *deviceInfo)
+{
+    Q_D(KeyboardDatabase);
+    return d->keyboardConfiguration(deviceInfo);
 }
 
 

@@ -25,16 +25,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class DeviceInfo;
 class HidDevPrivate;
 class InputEvent;
+class KeyboardDatabase;
 
 class HidDev : public QObject
 {
     Q_OBJECT
 public:
-    explicit HidDev(const QString &path, QObject *parent = 0);
+    explicit HidDev(const QString &path, KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
     ~HidDev();
     
 signals:
     void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void noMoreEvents(DeviceInfo *deviceInfo);
     void removed(DeviceInfo *deviceInfo);
     void connected(DeviceInfo * deviceInfo);
 public slots:

@@ -17,19 +17,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "donothingbinding.h"
-#include <QDebug>
+#ifndef NOMOREEVENTSINPUTEVENT_H
+#define NOMOREEVENTSINPUTEVENT_H
+#include "domain/inputevent.h"
 
-DoNothingBinding::DoNothingBinding(QObject *parent) :
-    QObject(parent)
+class NoMoreEventsInputEvent : public InputEvent
 {
-}
+    Q_OBJECT
+public:
+    explicit NoMoreEventsInputEvent(QObject *parent = 0);
+    virtual bool matches(InputEvent *other);
+signals:
+    
+public slots:
+    
+};
 
-DoNothingBinding::~DoNothingBinding()
-{
-}
-
-void DoNothingBinding::execute()
-{
-    qDebug() << "Executing \"DoNothingBinding\"";
-}
+#endif // NOMOREEVENTSINPUTEVENT_H

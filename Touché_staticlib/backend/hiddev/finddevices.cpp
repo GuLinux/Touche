@@ -27,14 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimer>
 #include <QThread>
 #include <QPair>
+#include "backend/config/keyboarddatabase.h"
+
 
 #define HIDDEV_PATH "/dev/usb/"
 #define DEV_PATH "/dev"
 
 class FindDevicesPrivate {
 public:
-    FindDevicesPrivate(FindDevices *q) : q_ptr(q) {}
+    FindDevicesPrivate(KeyboardDatabase* keyboardDatabase, FindDevices *q) : keyboardDatabase(keyboardDatabase), q_ptr(q) {}
     QFileSystemWatcher fileSystemWatcher;
+    KeyboardDatabase* keyboardDatabase;
     QMap<QString, QPair<QThread*, HidDev*> > devices;
     FindDevices * const q_ptr;
     Q_DECLARE_PUBLIC(FindDevices)
@@ -59,11 +62,12 @@ public:
         if(devices.contains(devicePath)) return;
         qDebug() << "Adding device: " << devicePath;
         QThread *deviceThread = new QThread(q);
-        HidDev *device = new HidDev(devicePath);
+        HidDev *device = new HidDev(devicePath, keyboardDatabase);
         deviceThread->start();
         device->moveToThread(deviceThread);
         devices.insert(devicePath, QPair<QThread*, HidDev*>(deviceThread, device) );
         q->connect(device, SIGNAL(removed(DeviceInfo*)), SLOT(deviceRemoved(DeviceInfo*)));
+        q->connect(device, SIGNAL(noMoreEvents(DeviceInfo*)), SIGNAL(noMoreEvents(DeviceInfo*)));
         q->connect(device, SIGNAL(event(InputEvent*,DeviceInfo*)), SIGNAL(event(InputEvent*,DeviceInfo*)));
         q->connect(device, SIGNAL(connected(DeviceInfo*)), SIGNAL(connected(DeviceInfo*)));
         QMetaObject::invokeMethod(device, "start", Qt::QueuedConnection);
@@ -71,8 +75,8 @@ public:
     }
 };
 
-FindDevices::FindDevices(QObject *parent) :
-    QObject(parent), d_ptr(new FindDevicesPrivate(this))
+FindDevices::FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent) :
+    QObject(parent), d_ptr(new FindDevicesPrivate(keyboardDatabase, this))
 {
     Q_D(FindDevices);
     connect(&d->fileSystemWatcher, SIGNAL(directoryChanged(QString)), SLOT(deviceChanged()));

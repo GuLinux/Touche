@@ -49,7 +49,6 @@ InputEvent::InputEvent(QObject *parent) :
 
 InputEvent::~InputEvent()
 {
-    qDebug() << "InputEvent deleted";
     delete d_ptr;
 }
 
@@ -94,4 +93,10 @@ bool InputEvent::hasRegister(uint hid)
 {
     Q_D(InputEvent);
     return d->registers.contains(hid);
+}
+
+uint InputEvent::registersCount()
+{
+    Q_D(InputEvent);
+    return d->registers.values().count();
 }

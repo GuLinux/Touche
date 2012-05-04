@@ -26,7 +26,8 @@ SOURCES += backend/hiddev/hiddev.cpp \
     domain/configevent.cpp \
     backend/config/bindingsconfig.cpp \
     domain/donothingbinding.cpp \
-    touchecore.cpp
+    touchecore.cpp \
+    domain/nomoreeventsinputevent.cpp
 
 HEADERS += \
     backend/hiddev/hiddev.h \
@@ -44,7 +45,8 @@ HEADERS += \
     domain/configevent.h \
     backend/config/bindingsconfig.h \
     domain/donothingbinding.h \
-    touchecore.h
+    touchecore.h \
+    domain/nomoreeventsinputevent.h
 
 LIBS += -lqjson -lX11 -lXtst
 QMAKE_CXXFLAGS += "-std=c++0x"

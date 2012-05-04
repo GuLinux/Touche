@@ -25,14 +25,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class FindDevicesPrivate;
 class DeviceInfo;
 class InputEvent;
+class KeyboardDatabase;
 class FindDevices : public QObject
 {
     Q_OBJECT
 public:
-    explicit FindDevices(QObject *parent = 0);
+    explicit FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
     ~FindDevices();
 signals:
     void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void noMoreEvents(DeviceInfo *deviceInfo);
     void connected(DeviceInfo *deviceInfo);
     void disconnected(DeviceInfo *deviceInfo);
 

@@ -31,12 +31,12 @@ public:
     ~DeviceInfo();
     DeviceInfo * name(const QString &name);
     DeviceInfo * path(const QString &path);
-    DeviceInfo * vendor(quint32 vendor);
-    DeviceInfo * productID(quint32 productID);
-    DeviceInfo * version(quint32 version);
-    DeviceInfo * bus(quint32 bus);
-    DeviceInfo * deviceNumber(quint32 deviceNumber);
-    DeviceInfo * interfaceNumber(quint32 interfaceNumber);
+    DeviceInfo * vendor(quint16 vendor);
+    DeviceInfo * productID(quint16 productID);
+    DeviceInfo * version(quint16 version);
+    DeviceInfo * bus(quint16 bus);
+    DeviceInfo * deviceNumber(quint16 deviceNumber);
+    DeviceInfo * interfaceNumber(quint16 interfaceNumber);
 
     QString name();
     QString path();

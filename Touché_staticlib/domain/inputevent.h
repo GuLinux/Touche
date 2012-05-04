@@ -37,9 +37,10 @@ public:
     ~InputEvent();
     void addRegister(uint hid, uint value, uint index);
     QString asJSON();
+    uint registersCount();
     QList<RegisterValue> registersFor(uint hid);
     bool hasRegister(uint hid);
-    bool matches(InputEvent *other);
+    virtual bool matches(InputEvent *other);
 signals:
     
 public slots:

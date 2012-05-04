@@ -31,18 +31,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QThread>
 
+#include <QElapsedTimer>
+
 #include <QDebug>
+#include "backend/config/databaseentry.h"
 #include "domain/deviceinfo.h"
+#include "backend/config/keyboarddatabase.h"
+
+#define OPEN_TIMEOUT 5000
 
 
 class HidDevPrivate {
 public:
-    HidDevPrivate(const QString &device, HidDev *parent) : fd(-1), q_ptr(parent) { deviceInfo.path(device); }
+    HidDevPrivate(const QString &device, KeyboardDatabase* keyboardDatabase, HidDev *parent) : fd(-1), had_events(false), keyboardDatabase(keyboardDatabase), q_ptr(parent) { deviceInfo.path(device); }
     int fd;
     QTimer readTimer;
     fd_set fdset;
     DeviceInfo deviceInfo;
+    bool had_events;
+    KeyboardDatabase* keyboardDatabase;
     HidDev* const q_ptr;
+    QElapsedTimer errors_timer;
+    ulong read_timeout_milliseconds;
     Q_DECLARE_PUBLIC(HidDev)
 
     void stop()
@@ -61,8 +71,8 @@ public:
         if(fd<0) return;
 
         timeval tv;
-        tv.tv_sec=1;
-        tv.tv_usec=0;
+        tv.tv_sec=0;
+        tv.tv_usec=read_timeout_milliseconds*1000;
         FD_SET(fd, &(fdset));
         int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
 
@@ -74,6 +84,10 @@ public:
         }
 
         if(!selectRD>0) {
+            if(had_events) {
+                had_events=false;
+                emit q->noMoreEvents(&deviceInfo);
+            }
             return;
         }
 
@@ -90,7 +104,8 @@ public:
             keyEvent->addRegister(ev[i].hid, ev[i].value, i);
         }
         q->emit event(keyEvent, &deviceInfo);
-        QTimer::singleShot(60000, keyEvent, SLOT(deleteLater()));
+        had_events=true;
+        QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
     }
 };
 
@@ -98,8 +113,8 @@ public:
 
 
 
-HidDev::HidDev(const QString &path, QObject *parent):
-    QObject(parent), d_ptr(new HidDevPrivate(path, this))
+HidDev::HidDev(const QString &path, KeyboardDatabase *keyboardDatabase, QObject *parent):
+    QObject(parent), d_ptr(new HidDevPrivate(path, keyboardDatabase, this))
 {
 }
 
@@ -110,16 +125,20 @@ HidDev::~HidDev()
     delete d_ptr;
 }
 
+
 void HidDev::start()
 {
     Q_D(HidDev);
     struct hiddev_devinfo dinfo;
     char name[256] = "Unknown";
 
+    d->errors_timer.start();
     while(d->fd==-1) {
         d->fd = open(d->deviceInfo.path().toLatin1(), O_RDONLY);
-        if(d->fd==-1) {
-            qDebug() << "Error on open: " << strerror(errno) << "; retrying in a while";
+        if(d->fd==-1 && d->errors_timer.elapsed() > OPEN_TIMEOUT) {
+            qDebug() << "Error on open: " << strerror(errno) << " for more than " << OPEN_TIMEOUT << " milliseconds; giving up.";
+            // TODO: emit signal for gui notification
+            return;
         }
         qApp->processEvents();
     }
@@ -133,6 +152,7 @@ void HidDev::start()
     err << QString("hiddev driver version is %1.%2.%3\n").arg(version >> 16).arg((version >> 8) & 0xff).arg(version & 0xff);
 
     ioctl(d->fd, HIDIOCGDEVINFO, &dinfo);
+    qDebug() << "Product: " << QString("%1").arg((quint16) dinfo.product, 4, 16, QChar('0'));
     d->deviceInfo.vendor(dinfo.vendor)->productID(dinfo.product)->version(dinfo.version)
             ->bus(dinfo.busnum)->deviceNumber(dinfo.devnum)->interfaceNumber(dinfo.ifnum);
     err << QString("HID: vendor 0x%1 product 0x%2 version 0x%3\n")
@@ -148,6 +168,10 @@ void HidDev::start()
     err << QString("HID device name: \"%1\"\n").arg(d->deviceInfo.name());
     FD_ZERO(&(d->fdset));
 
+    QMap<QString, QVariant> keyboardDatabaseEntry = d->keyboardDatabase->deviceConfiguration(&d->deviceInfo);
+    d->read_timeout_milliseconds = keyboardDatabaseEntry.value("read_timeout_milliseconds", 300).toULongLong();
+
+    qDebug() << "Read timeout set to " << d->read_timeout_milliseconds << " milliseconds";
     emit connected(&d->deviceInfo);
     while(d->fd!=-1) {
         qApp->processEvents();

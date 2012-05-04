@@ -1,0 +1,71 @@
+#!/bin/bash
+set -e
+
+GUI_PROJECT="Touché"
+GUI_NAME="Qt"
+CORE_PROJECT="Touché_staticlib"
+BUILD_SUFFIX=".build"
+COMPILE_MODE="release"
+MAKE_INSTALL="sudo make install"
+
+function dohelp() {
+	echo "Usage: $0 [--kde] [--debug] [--dont-install] [--clean] [--help|-h]"
+	exit
+}
+
+
+while test "x$@" != "x"; do
+	CURRENT_OPTION="$1"; shift
+	case "$CURRENT_OPTION" in
+		"--kde")
+		GUI_PROJECT="Touché-kde"
+		GUI_NAME="KDE"
+		;;
+		"--debug")
+		COMPILE_MODE="debug"
+		;;
+		"--dont-install")
+		MAKE_DOINSTALL="true"
+		;;
+		"--clean")
+		DOCLEAN="true"
+		;;
+		"--help"|"-h")
+		dohelp
+		;;
+	esac
+done
+
+QMAKE_CFG="CONFIG+=$COMPILE_MODE"
+echo "Compiling with $GUI_NAME gui in $COMPILE_MODE mode"
+if ! [ -d $GUI_PROJECT ] || ! [ -d $CORE_PROJECT ]; then
+	echo "Error! this script must be executed from the root project directory"
+	exit 1
+fi
+
+if test "x$DOCLEAN" == "xtrue"; then
+	for file in $CORE_PROJECT*.build* $GUI_PROJECT*.build*; do
+		echo "Removing $file ..."
+		rm -rf "$file"
+	done
+	exit 0
+fi
+
+CORE_PROJECT_BUILD="${CORE_PROJECT}${BUILD_SUFFIX}-${COMPILE_MODE}"
+GUI_PROJECT_BUILD="${GUI_PROJECT}${BUILD_SUFFIX}-${COMPILE_MODE}"
+
+mkdir -p "$CORE_PROJECT_BUILD" "$GUI_PROJECT_BUILD"
+
+CORE_PROJECT="$( readlink -f "$CORE_PROJECT")"
+CORE_PROJECT_BUILD="$( readlink -f "$CORE_PROJECT_BUILD")"
+GUI_PROJECT="$( readlink -f "$GUI_PROJECT")"
+GUI_PROJECT_BUILD="$( readlink -f "$GUI_PROJECT_BUILD")"
+
+cd "$CORE_PROJECT_BUILD"
+qmake "$QMAKE_CFG" "$CORE_PROJECT"
+make install
+cd "$GUI_PROJECT_BUILD" 
+qmake "$QMAKE_CFG" "$GUI_PROJECT"
+make clean all
+$MAKE_INSTALL
+echo "Completed! you may now start using Touché"

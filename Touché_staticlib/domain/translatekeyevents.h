@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TRANSLATEKEYEVENTS_H
 
 #include <QObject>
+#include "domain/deviceinfo.h"
 
 class InputEvent;
 class TranslateKeyEventsPrivate;
@@ -37,6 +38,7 @@ signals:
     
 public slots:
     void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void noMoreEvents(DeviceInfo *deviceInfo);
 
 private:
     TranslateKeyEventsPrivate * const d_ptr;

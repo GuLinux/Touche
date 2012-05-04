@@ -38,7 +38,6 @@ ToKeyBinding::ToKeyBinding(const QString &keySymName, bool isKeypress, QObject *
 
 ToKeyBinding::~ToKeyBinding()
 {
-    qDebug() << "ToKeyBinding deleted";
     delete d_ptr;
 }
 

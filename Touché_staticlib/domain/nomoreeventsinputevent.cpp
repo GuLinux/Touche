@@ -17,19 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "donothingbinding.h"
-#include <QDebug>
+#include "nomoreeventsinputevent.h"
 
-DoNothingBinding::DoNothingBinding(QObject *parent) :
-    QObject(parent)
+NoMoreEventsInputEvent::NoMoreEventsInputEvent(QObject *parent) :
+    InputEvent(parent)
 {
 }
 
-DoNothingBinding::~DoNothingBinding()
+bool NoMoreEventsInputEvent::matches(InputEvent *other)
 {
-}
-
-void DoNothingBinding::execute()
-{
-    qDebug() << "Executing \"DoNothingBinding\"";
+    return other->registersCount()==0;
 }

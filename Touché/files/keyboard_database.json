@@ -14,5 +14,19 @@
       "MSLaunchStar": { "keypress": [ { "hid":    786818, "value":         1 } ], "keyrelease": [ { "hid":    786818, "value":         0 } ] },
       "MSSwitchWins": { "keypress": [ { "hid":    786850, "value":         1 } ], "keyrelease": [ { "hid":    786850, "value":         0 } ] }
     }
+  },
+  "0x5ac:0x8240": {
+    "name": "Apple IR receiver for Remote Control",
+    "vendor": "0x5ac",
+    "product": "0x8240",
+    "read_timeout_milliseconds": 200,
+    "keys": {
+      "Play_Pause": { "keypress": [ { "hid":4278190080, "value":         4, "index":003 } ], "keyrelease": "no_more_events" },
+      "Plus":       { "keypress": [ { "hid":4278190080, "value":        11, "index":003 } ], "keyrelease": "no_more_events" },
+      "Minus":      { "keypress": [ { "hid":4278190080, "value":        13, "index":003 } ], "keyrelease": "no_more_events" },
+      "Prev":       { "keypress": [ { "hid":4278190080, "value":         8, "index":003 } ], "keyrelease": "no_more_events" },
+      "Next":       { "keypress": [ { "hid":4278190080, "value":         7, "index":003 } ], "keyrelease": "no_more_events" },
+      "Menu":       { "keypress": [ { "hid":4278190080, "value":         2, "index":003 } ], "keyrelease": "no_more_events" }
+    }
   }
 }

@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class DeviceInfoPrivate {
 public:
     QString name, path;
-    quint32 vendor, productID, version;
-    quint32 bus, deviceNumber, interfaceNumber;
+    quint16 vendor, productID, version;
+    quint16 bus, deviceNumber, interfaceNumber;
 };
 
 DeviceInfo::DeviceInfo(QObject *parent)
@@ -50,42 +50,42 @@ DeviceInfo *DeviceInfo::path(const QString &path)
     return this;
 }
 
-DeviceInfo *DeviceInfo::vendor(quint32 vendor)
+DeviceInfo *DeviceInfo::vendor(quint16 vendor)
 {
     Q_D(DeviceInfo);
     d->vendor=vendor;
     return this;
 }
 
-DeviceInfo *DeviceInfo::productID(quint32 productID)
+DeviceInfo *DeviceInfo::productID(quint16 productID)
 {
     Q_D(DeviceInfo);
     d->productID=productID;
     return this;
 }
 
-DeviceInfo *DeviceInfo::version(quint32 version)
+DeviceInfo *DeviceInfo::version(quint16 version)
 {
     Q_D(DeviceInfo);
     d->version=version;
     return this;
 }
 
-DeviceInfo *DeviceInfo::bus(quint32 bus)
+DeviceInfo *DeviceInfo::bus(quint16 bus)
 {
     Q_D(DeviceInfo);
     d->bus=bus;
     return this;
 }
 
-DeviceInfo *DeviceInfo::deviceNumber(quint32 deviceNumber)
+DeviceInfo *DeviceInfo::deviceNumber(quint16 deviceNumber)
 {
     Q_D(DeviceInfo);
     d->deviceNumber=deviceNumber;
     return this;
 }
 
-DeviceInfo *DeviceInfo::interfaceNumber(quint32 interfaceNumber)
+DeviceInfo *DeviceInfo::interfaceNumber(quint16 interfaceNumber)
 {
     Q_D(DeviceInfo);
     d->interfaceNumber=interfaceNumber;
