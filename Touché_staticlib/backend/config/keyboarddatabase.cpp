@@ -40,7 +40,7 @@ public:
 KeyboardDatabase::KeyboardDatabase(QStringList databaseFiles, QObject *parent) :
     QObject(parent), d_ptr(new KeyboardDatabasePrivate(databaseFiles, this))
 {
-    qDebug() << "Opening database file: " << databaseFiles;
+    qDebug() << "Using keyboard database paths: " << databaseFiles;
 }
 
 KeyboardDatabase::~KeyboardDatabase()

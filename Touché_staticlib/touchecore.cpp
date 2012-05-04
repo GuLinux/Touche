@@ -29,8 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QTextStream>
 #include <QTimer>
+#include <QProcessEnvironment>
 
-#define DATABASE_FILES QStringList(QString("/usr/share/%1/keyboard_database.json").arg(qAppName()))
+#define GLOBAL_DATABASE QString("/usr/share/%1/keyboard_database.json").arg(qAppName())
+#define LOCAL_DATABASE QString("%1/.config/GuLinux/keyboard_database.json").arg(QProcessEnvironment::systemEnvironment().value("HOME"))
+#define DATABASE_FILES QStringList(GLOBAL_DATABASE) << LOCAL_DATABASE
 
 class ToucheCorePrivate {
 public:

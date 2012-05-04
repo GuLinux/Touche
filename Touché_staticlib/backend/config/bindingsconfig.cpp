@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QDebug>
 
+#define BINDING_DO_NOTHING "DoNothing"
+#define BINDING_RUN_COMMAND "RunCommand"
+#define BINDING_TO_KEY "TranslateToKey"
+
 typedef std::function<Binding*(QObject*, const QString&)> BindingFactory;
 
 
@@ -53,15 +57,15 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     d->settings->beginGroup("bindings");
     const QString params = QString("%1/%2/%3");
 
-    d->bindings["DoNothing"] = [d](QObject* p, const QString& e) {Q_UNUSED(e); Q_UNUSED(p); return &d->doNothingBinding; };
-    d->bindings["RunCommand"] = [d,params](QObject* p, const QString& eventName) {
-        QString commandName = d->settings->value(params.arg(eventName, "RunCommand", "ApplicationName"), "true").toString();
-        QStringList arguments = d->settings->value(params.arg(eventName, "RunCommand", "Arguments"), QStringList()).toStringList();
+    d->bindings[BINDING_DO_NOTHING] = [d](QObject* p, const QString& e) {Q_UNUSED(e); Q_UNUSED(p); return &d->doNothingBinding; };
+    d->bindings[BINDING_RUN_COMMAND] = [d,params](QObject* p, const QString& eventName) {
+        QString commandName = d->settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "ApplicationName"), "true").toString();
+        QStringList arguments = d->settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "Arguments"), QStringList()).toStringList();
         return d->moveToThreadAndReparent(p, new RunCommandBinding(commandName, arguments));
     };
-    d->bindings["TranslateToKey"] =[d,params](QObject* p, const QString& eventName) {
-        QString keySymbol = d->settings->value(params.arg(eventName, "TranslateToKey", "keysymbol"), QString()).toString();
-        QString isKeypress = d->settings->value(params.arg(eventName,"TranslateToKey", "eventtype"), "keypress").toString();
+    d->bindings[BINDING_TO_KEY] =[d,params](QObject* p, const QString& eventName) {
+        QString keySymbol = d->settings->value(params.arg(eventName, BINDING_TO_KEY, "keysymbol"), QString()).toString();
+        QString isKeypress = d->settings->value(params.arg(eventName,BINDING_TO_KEY, "eventtype"), "keypress").toString();
         return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress"));
     };
 
@@ -80,9 +84,9 @@ BindingsConfig::~BindingsConfig()
 Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 {
     Q_D(BindingsConfig);
-    QString bindingSetting = d->settings->value(eventName, "DoNothing").toString();
+    QString bindingSetting = d->settings->value(eventName, BINDING_DO_NOTHING).toString();
     qDebug() << "Setting for event " << eventName << ": " << bindingSetting;
-    BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value("DoNothing"));
+    BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value(BINDING_DO_NOTHING));
     return bindingFactory(parent, eventName);
 }
 
