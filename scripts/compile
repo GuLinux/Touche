@@ -68,7 +68,7 @@ GUI_PROJECT_BUILD="$( readlink -f "$GUI_PROJECT_BUILD")"
 
 cd "$CORE_PROJECT_BUILD"
 qmake "$QMAKE_CFG" "$CORE_PROJECT"
-make install
+make all
 cd "$GUI_PROJECT_BUILD" 
 qmake "$QMAKE_CFG" "$GUI_PROJECT"
 make clean all
