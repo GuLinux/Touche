@@ -56,3 +56,5 @@ CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
 
 target.path=/tmp/$$TARGET/$$COMPILE_MODE
 INSTALLS += target
+
+QMAKE_POST_LINK += make install
