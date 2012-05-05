@@ -32,7 +32,7 @@ udev_rules.path=/etc/udev/rules.d
 keyboard_database.files=files/keyboard_database.json
 keyboard_database.path=/usr/share/$$TARGET/
 
-desktop_entry.files += files/Touché.desktop
+desktop_entry.files += desktop/Touché.desktop
 desktop_entry.path = /usr/share/applications/
 
 INSTALLS += target udev_rules keyboard_database desktop_entry
