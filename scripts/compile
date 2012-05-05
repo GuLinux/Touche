@@ -19,7 +19,7 @@ function dohelp() {
 }
 
 
-while test "x$@" != "x"; do
+while test "x$*" != "x"; do
 	CURRENT_OPTION="$1"; shift
 	case "$CURRENT_OPTION" in
 		"--kde")
