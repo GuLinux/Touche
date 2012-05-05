@@ -1,15 +1,20 @@
 #!/bin/bash
 set -e
-
+PROJECT_NAME="Touché"
 GUI_PROJECT="Touché"
 GUI_NAME="Qt"
-CORE_PROJECT="Touché_staticlib"
+CORE_PROJECT="Touché_Core"
 BUILD_SUFFIX=".build"
 COMPILE_MODE="release"
 MAKE_INSTALL="sudo make install"
 
 function dohelp() {
-	echo "Usage: $0 [--kde] [--debug] [--dont-install] [--clean] [--help|-h]"
+	echo -e "Usage: $0 [--kde] [--debug] [--dont-install] [--clean] [--help|-h]\n"
+	echo -e "--kde:\t\tCompiles with KDE GUI (the \"pretty\" one)instead of the Qt one"
+	echo -e "--debug:\tEnables debug mode (useful if there are unexpected crashes)"
+	echo -e "--dont-install:\tDisables installation to system"
+	echo -e "--clean:\tRemoves build files"
+	echo ""
 	exit
 }
 
@@ -25,7 +30,7 @@ while test "x$@" != "x"; do
 		COMPILE_MODE="debug"
 		;;
 		"--dont-install")
-		MAKE_DOINSTALL="true"
+		MAKE_INSTALL="true"
 		;;
 		"--clean")
 		DOCLEAN="true"
@@ -44,7 +49,7 @@ if ! [ -d $GUI_PROJECT ] || ! [ -d $CORE_PROJECT ]; then
 fi
 
 if test "x$DOCLEAN" == "xtrue"; then
-	for file in $CORE_PROJECT*.build* $GUI_PROJECT*.build*; do
+	for file in $PROJECT_NAME*.build*; do
 		echo "Removing $file ..."
 		rm -rf "$file"
 	done

@@ -7,7 +7,7 @@
 QT       += core gui
 
 
-TARGET = Touché_staticlib
+TARGET = Touché_Core
 TEMPLATE = lib
 CONFIG += staticlib
 

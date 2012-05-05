@@ -11,13 +11,17 @@ Touché is released under GPLv3 license (included in the COPYING file)
 -----------------------------------------
 
 * Install Instructions:
+*** Update: you don't really need to follow the instructions below.
+*** Now you can find the script "scripts/compile" that automatically compiles and installs the application
+*** Run "./scripts/compile --help" to see usage and options
+
 First you need to build the static library, and install it to a temporary location.
 Then you can choose between the Qt GUI (simpler) and the KDE GUI (much more beautiful, using KDE styles and color settings).
 
 # Core library: 
-mkdir Touché_staticlib.build
-cd Touché_staticlib.build
-qmake ../Touché_staticlib
+mkdir Touché_Core.build
+cd Touché_Core.build
+qmake ../Touché_Core
 make install # it will only install the static library to /tmp, to allow compiling of the main application
 
 # Qt GUI: 
@@ -40,3 +44,10 @@ Just copy it in the this path:
   $HOME/.config/GuLinux/Touché.conf
 
 Inside you can find some configuration examples. Just follow the pattern: the key names are in the keyboard database file ( /usr/share/Touché/keyboard_database.json )
+You can now also use a "local" keyboard database, which can be installed in /home/marco/.config/GuLinux/keyboard_database.json and overrides the system one, if present. It comes handy if you wanna try adding support for a new keyboard.
+
+*** Important note: with the installation comes also a udev rule, which by default is installed in /etc/udev/rules.d/ and assigns the /dev/usb/hiddev* devices to the group "users".
+--- If this group is present in your distribution, your user must belong to this group to use Touché.
+--- If this group is not present in your distribution, just change the udev rule to match an existing group.
+
+
