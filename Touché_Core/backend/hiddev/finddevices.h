@@ -41,6 +41,7 @@ signals:
 public slots:
     void deviceRemoved(DeviceInfo *deviceInfo);
     void deviceChanged();
+    void stop();
 private:
     FindDevicesPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(FindDevices)

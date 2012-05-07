@@ -17,31 +17,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECORE_H
-#define TOUCHECORE_H
+#include "cfgdevice.h"
+#include "domain/deviceinfo.h"
+#include "models/cfgkey.h"
+#include <QStringList>
 
-#include <QObject>
-
-class DeviceInfo;
-class ToucheCorePrivate;
-class ToucheCore : public QObject
+CfgDevice::CfgDevice(DeviceInfo *deviceInfo, QObject *parent) :
+    QObject(parent), m_deviceInfo(deviceInfo)
 {
-    Q_OBJECT
-public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
-    ~ToucheCore();
-signals:
-    void connected(DeviceInfo*);
-    void disconnected(DeviceInfo*);
+    QMap<QString, QVariant> keysMap = deviceInfo->keyboardDatabaseEntry().value("keys").toMap();
+    QStringList keys = keysMap.keys();
+    foreach(const QString keyName, keys) {
+        m_keys << new CfgKey(keyName, keysMap.value(keyName).toMap(), this);
+    }
+}
 
-public slots:
-    void start();
-    void quit();
+QList<CfgKey*> CfgDevice::cfgKeys()
+{
+    return m_keys;
+}
 
-private:
-    ToucheCorePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheCore)
-    
-};
-
-#endif // TOUCHECORE_H

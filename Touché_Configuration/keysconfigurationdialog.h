@@ -17,31 +17,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECORE_H
-#define TOUCHECORE_H
+#ifndef KEYSCONFIGURATIONDIALOG_H
+#define KEYSCONFIGURATIONDIALOG_H
 
-#include <QObject>
-
+#include <QDialog>
+#include <QModelIndex>
+#include <QHash>
+class CfgKeyListModel;
+class CfgKey;
+class CfgKeyEventListModel;
 class DeviceInfo;
-class ToucheCorePrivate;
-class ToucheCore : public QObject
+class QSettings;
+class KeyBindingConfiguration;
+namespace Ui {
+class KeysConfigurationDialog;
+}
+
+class KeysConfigurationDialog : public QDialog
 {
     Q_OBJECT
-public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
-    ~ToucheCore();
-signals:
-    void connected(DeviceInfo*);
-    void disconnected(DeviceInfo*);
-
-public slots:
-    void start();
-    void quit();
-
-private:
-    ToucheCorePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheCore)
     
+public:
+    explicit KeysConfigurationDialog(DeviceInfo *deviceInfo, QWidget *parent = 0);
+    ~KeysConfigurationDialog();
+    
+public slots:
+    void cfgKeySelected(const QModelIndex & index );
+    void accept();
+private:
+    Ui::KeysConfigurationDialog *ui;
+    DeviceInfo *deviceInfo;
+    QHash<CfgKey*, KeyBindingConfiguration*> configuration_dialogs;
+    CfgKeyListModel *cfgKeyListModel;
+    QSettings *settings;
 };
 
-#endif // TOUCHECORE_H
+#endif // KEYSCONFIGURATIONDIALOG_H

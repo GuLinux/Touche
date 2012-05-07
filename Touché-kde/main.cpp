@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include <QApplication>
+#include <kuniqueapplication.h>
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
@@ -25,27 +25,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMap>
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
+#include <kaction.h>
+#include "toucheconfiguration.h"
+#include <QDebug>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
+#include <QTimer>
+#include <QDialog>
 
 class TrayManager : public QObject {
     Q_OBJECT
 public:
-    TrayManager(KStatusNotifierItem *tray, KMenu *connectedDevices) : QObject(0), tray(tray), connectedDevices(connectedDevices) {}
+    TrayManager(KStatusNotifierItem *tray, KMenu *connectedDevices, QAction *beforeAction) : QObject(0), tray(tray), connectedDevices(connectedDevices), beforeAction(beforeAction) {
+    }
+    ~TrayManager() {
+        qDebug() << "Deleting TrayManager";
+    }
+
 private:
     KStatusNotifierItem *tray;
     KMenu *connectedDevices;
-    QMap<DeviceInfo*, QAction*> actions;
+    QAction *beforeAction;
+    QMap<DeviceInfo*, KAction*> actions;
+    ToucheConfiguration toucheConfiguration;
+
 public slots:
     void connected(DeviceInfo *deviceInfo) {
         tray->showMessage(qAppName().prepend("<b>") + "</b>: Device Connected!", deviceInfo->name(), "input-keyboard");
-        QAction *action = connectedDevices->addAction(deviceInfo->name());
+        KAction *action = new KAction(deviceInfo->name(), connectedDevices);
+        connect(action, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
+        connectedDevices->insertAction(beforeAction, action);
         actions.insert(deviceInfo, action);
         updateTooltip();
+    }
 
+    void showConfigurationDialog() {
+        KAction *action = dynamic_cast<KAction*>(sender());
+        DeviceInfo *deviceInfo = actions.key(action);
+        toucheConfiguration.showConfigurationDialog(deviceInfo);
     }
 
     void disconnected(DeviceInfo *deviceInfo) {
         tray->showMessage(qAppName().prepend("<b>") + "</b>: Device Disconnected!", deviceInfo->name(), "input-keyboard");
-        QAction *action = actions.take(deviceInfo);
+        KAction *action = actions.take(deviceInfo);
         connectedDevices->removeAction(action);
         delete action;
         updateTooltip();
@@ -62,12 +84,23 @@ public slots:
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    KAboutData about("touche", 0, ki18n("Touché"), "0.1");
+    KCmdLineArgs::init(argc, argv, &about);
+//    KCmdLineArgs::addCmdLineOptions( myCmdOptions );
+    //KUniqueApplication::addCmdLineOptions();
 
+//    qDebug() << "Calling start";
+//    if (!KUniqueApplication::start()) {
+//       qDebug() << "myAppName is already running!";
+//       return 0;
+//    }
+    KApplication a;
+//    KUniqueApplication a;
+//    QApplication a(argc, argv);
+    a.setQuitOnLastWindowClosed(false);
     QStringList arguments = a.arguments();
 
     ToucheCore toucheCore(arguments);
-
 
     KStatusNotifierItem tray;
     tray.setIconByName("input-keyboard");
@@ -75,18 +108,18 @@ int main(int argc, char *argv[])
     KMenu trayMenu;
     KMenu connectedDevices;
     connectedDevices.setTitle("Connected devices");
-    trayMenu.addMenu(&connectedDevices);
-    trayMenu.addSeparator();
+    trayMenu.addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
     tray.setContextMenu(&trayMenu);
     tray.setCategory(KStatusNotifierItem::Hardware);
 
-    TrayManager trayManager(&tray, &connectedDevices);
+    TrayManager trayManager(&tray, &trayMenu, trayMenu.addSeparator());
     tray.setToolTipTitle(qAppName());
     tray.setTitle(qAppName());
 
     trayManager.connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
     trayManager.connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
 
+    a.connect(&a, SIGNAL(aboutToQuit()), &toucheCore, SLOT(quit()));
     toucheCore.start();
     return a.exec();
 }

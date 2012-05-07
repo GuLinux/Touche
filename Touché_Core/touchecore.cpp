@@ -53,7 +53,9 @@ ToucheCore::ToucheCore(const QStringList &options, QObject *parent) :
 
 ToucheCore::~ToucheCore()
 {
+    qDebug() << "deleting ToucheCore";
     delete d_ptr;
+    qDebug() << "deleted ToucheCore";
 }
 
 void ToucheCore::start()
@@ -84,4 +86,10 @@ void ToucheCore::start()
         d->dumpKeys = new DumpKeys(this);
         connect(d->findDevices, SIGNAL(event(InputEvent*,DeviceInfo*)), d->dumpKeys, SLOT(event(InputEvent*)));
     }
+}
+
+void ToucheCore::quit()
+{
+    Q_D(ToucheCore);
+    d->findDevices->stop();
 }

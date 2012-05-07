@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KeyBindingConfiguration</class>
+ <widget class="QWidget" name="KeyBindingConfiguration">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>355</width>
+    <height>55</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="bindingTypelabel">
+     <property name="text">
+      <string>binding.type.label</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="bindingTypeComboBox"/>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="bindingEvents">
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -6,3 +6,4 @@ Terminal=false
 X-KDE-StartupNotify=false
 Name=Touché
 Categories=Qt;KDE;System;TerminalEmulator;HardwareSettings;
+X-DBUS-StartupType=Unique

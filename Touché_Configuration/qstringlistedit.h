@@ -17,31 +17,37 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECORE_H
-#define TOUCHECORE_H
+#ifndef QSTRINGLISTEDIT_H
+#define QSTRINGLISTEDIT_H
 
-#include <QObject>
+#include <QWidget>
+#include <QModelIndex>
 
-class DeviceInfo;
-class ToucheCorePrivate;
-class ToucheCore : public QObject
+class QStringListModel;
+namespace Ui {
+class QStringListEdit;
+}
+
+class QStringListEdit : public QWidget
 {
     Q_OBJECT
-public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
-    ~ToucheCore();
-signals:
-    void connected(DeviceInfo*);
-    void disconnected(DeviceInfo*);
-
-public slots:
-    void start();
-    void quit();
-
-private:
-    ToucheCorePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheCore)
     
+public:
+    explicit QStringListEdit(QWidget *parent = 0);
+    ~QStringListEdit();
+    QStringList stringList() const;
+    void setStringList(const QStringList &stringList);
+private slots:
+    void on_qsle_delete_clicked();
+    void on_qsle_add_clicked();
+    void on_qsle_lineedit_textChanged(const QString &arg1);
+    void itemSelected(const QModelIndex &index);
+signals:
+    void stringListChanged(const QStringList &stringList);
+    void stringListEdited(const QStringList &stringList);
+private:
+    Ui::QStringListEdit *ui;
+    QStringListModel *model;
 };
 
-#endif // TOUCHECORE_H
+#endif // QSTRINGLISTEDIT_H

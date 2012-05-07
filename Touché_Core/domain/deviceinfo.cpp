@@ -21,9 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class DeviceInfoPrivate {
 public:
-    QString name, path;
+    QString deviceReportedName, path, name;
     quint16 vendor, productID, version;
     quint16 bus, deviceNumber, interfaceNumber;
+    QMap<QString, QVariant> keyboardDatabaseEntry;
 };
 
 DeviceInfo::DeviceInfo(QObject *parent)
@@ -40,6 +41,27 @@ DeviceInfo *DeviceInfo::name(const QString &name)
 {
     Q_D(DeviceInfo);
     d->name=name;
+    return this;
+}
+
+QString DeviceInfo::name()
+{
+    Q_D(DeviceInfo);
+    if(d->name.isEmpty()) return deviceReportedName();
+    return d->name;
+}
+
+
+QString DeviceInfo::deviceReportedName()
+{
+    Q_D(DeviceInfo);
+    return d->deviceReportedName;
+}
+
+DeviceInfo *DeviceInfo::deviceReportedName(const QString &deviceReportedName)
+{
+    Q_D(DeviceInfo);
+    d->deviceReportedName = deviceReportedName;
     return this;
 }
 
@@ -92,11 +114,6 @@ DeviceInfo *DeviceInfo::interfaceNumber(quint16 interfaceNumber)
     return this;
 }
 
-QString DeviceInfo::name()
-{
-    Q_D(DeviceInfo);
-    return d->name;
-}
 
 QString DeviceInfo::path()
 {
@@ -144,3 +161,18 @@ quint32 DeviceInfo::interfaceNumber()
     Q_D(DeviceInfo);
     return d->interfaceNumber;
 }
+
+QMap<QString, QVariant> DeviceInfo::keyboardDatabaseEntry()
+{
+    Q_D(DeviceInfo);
+    return d->keyboardDatabaseEntry;
+}
+
+DeviceInfo *DeviceInfo::keyboardDatabaseEntry(const QMap<QString, QVariant> &keyboardDatabaseEntry)
+{
+    Q_D(DeviceInfo);
+    d->keyboardDatabaseEntry=keyboardDatabaseEntry;
+    return this;
+}
+
+

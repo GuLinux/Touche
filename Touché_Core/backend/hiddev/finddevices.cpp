@@ -27,18 +27,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimer>
 #include <QThread>
 #include <QPair>
+#include <QCoreApplication>
 #include "backend/config/keyboarddatabase.h"
 
 
 #define HIDDEV_PATH "/dev/usb/"
 #define DEV_PATH "/dev"
 
+typedef QPair<QThread*, HidDev*> DevicePair;
 class FindDevicesPrivate {
 public:
     FindDevicesPrivate(KeyboardDatabase* keyboardDatabase, FindDevices *q) : keyboardDatabase(keyboardDatabase), q_ptr(q) {}
     QFileSystemWatcher fileSystemWatcher;
     KeyboardDatabase* keyboardDatabase;
-    QMap<QString, QPair<QThread*, HidDev*> > devices;
+    QMap<QString, DevicePair > devices;
     FindDevices * const q_ptr;
     Q_DECLARE_PUBLIC(FindDevices)
 
@@ -85,17 +87,26 @@ FindDevices::FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent) :
 
 FindDevices::~FindDevices()
 {
+    Q_D(FindDevices);
+    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
+    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.directories());
+    qDebug() << "deleting d on findDevices";
     delete d_ptr;
+    qDebug() << "FindDevices deleted";
 }
 
 void FindDevices::deviceRemoved(DeviceInfo *deviceInfo)
 {
+    qDebug() << "device removed: " << deviceInfo->name();
     Q_D(FindDevices);
-    QPair<QThread*, HidDev*> device = d->devices.take(deviceInfo->path());
-    device.first->wait(1000);
+    DevicePair device = d->devices.take(deviceInfo->path());
     emit disconnected(deviceInfo);
-    delete device.first;
     delete device.second;
+    device.first->quit();
+    device.first->wait();
+    qDebug() << "cleaning up on FindDevices";
+    delete device.first;
+    qDebug() << "Devices list is now " << d->devices;
 }
 
 void FindDevices::deviceChanged()
@@ -103,4 +114,13 @@ void FindDevices::deviceChanged()
     Q_D(FindDevices);
     qDebug() << "Device list changed";
     d->scanDevices();
+}
+
+void FindDevices::stop()
+{
+    disconnect(this);
+    Q_D(FindDevices);
+    foreach( DevicePair devicePair, d->devices.values()) {
+        devicePair.second->stop();
+    }
 }

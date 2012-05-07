@@ -17,31 +17,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECORE_H
-#define TOUCHECORE_H
+#ifndef KEYBINDINGCONFIGURATION_H
+#define KEYBINDINGCONFIGURATION_H
+#include <QHash>
+#include <QWidget>
+class CfgKey;
+class BindingConfigurationWidget;
+class QSettings;
+namespace Ui {
+class KeyBindingConfiguration;
+}
 
-#include <QObject>
-
-class DeviceInfo;
-class ToucheCorePrivate;
-class ToucheCore : public QObject
+class KeyBindingConfiguration : public QWidget
 {
     Q_OBJECT
-public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
-    ~ToucheCore();
-signals:
-    void connected(DeviceInfo*);
-    void disconnected(DeviceInfo*);
-
-public slots:
-    void start();
-    void quit();
-
-private:
-    ToucheCorePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheCore)
     
+public:
+    explicit KeyBindingConfiguration(CfgKey *cfgKey, QSettings *settings, QWidget *parent = 0);
+    ~KeyBindingConfiguration();
+    
+public slots:
+    void bindingChanged(int index);
+    void saveConfig();
+private:
+    Ui::KeyBindingConfiguration *ui;
+    CfgKey *m_cfgKey;
+    QSettings *settings;
+    QHash<QString, BindingConfigurationWidget*> tabsWidgets;
 };
 
-#endif // TOUCHECORE_H
+#endif // KEYBINDINGCONFIGURATION_H

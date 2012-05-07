@@ -17,31 +17,38 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECORE_H
-#define TOUCHECORE_H
+#ifndef CFGDEVICE_H
+#define CFGDEVICE_H
 
 #include <QObject>
-
+#include <QList>
+#include <QDebug>
+#include "cfgkey.h"
+#include "domain/deviceinfo.h"
 class DeviceInfo;
-class ToucheCorePrivate;
-class ToucheCore : public QObject
+class CfgDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
-    ~ToucheCore();
+    explicit CfgDevice(DeviceInfo *deviceInfo, QObject *parent = 0);
+    QList<CfgKey*> cfgKeys();
+
 signals:
-    void connected(DeviceInfo*);
-    void disconnected(DeviceInfo*);
-
-public slots:
-    void start();
-    void quit();
-
-private:
-    ToucheCorePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheCore)
     
+public slots:
+private:
+    QList<CfgKey*> m_keys;
+    DeviceInfo *m_deviceInfo;
+
+public:
+    inline friend QDebug operator<< (QDebug s, const CfgDevice* cfgDevice) {
+        s.nospace() << "(" << cfgDevice->m_deviceInfo->name() << ", " << cfgDevice->m_keys << ")";
+        return s.space();
+    }
+
+    inline friend QDebug operator<< (QDebug s, const CfgDevice& cfgDevice) {
+        return s << &cfgDevice;
+    }
 };
 
-#endif // TOUCHECORE_H
+#endif // CFGDEVICE_H

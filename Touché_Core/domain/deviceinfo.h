@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEVICEINFO_H
 
 #include <QObject>
+#include <QMap>
+#include <QVariant>
 
 class DeviceInfoPrivate;
 class DeviceInfo : public QObject
@@ -37,7 +39,8 @@ public:
     DeviceInfo * bus(quint16 bus);
     DeviceInfo * deviceNumber(quint16 deviceNumber);
     DeviceInfo * interfaceNumber(quint16 interfaceNumber);
-
+    DeviceInfo * deviceReportedName(const QString &deviceReportedName);
+    DeviceInfo * keyboardDatabaseEntry(const QMap<QString, QVariant> &keyboardDatabaseEntry);
     QString name();
     QString path();
     QString configID();
@@ -47,6 +50,8 @@ public:
     quint32 bus();
     quint32 deviceNumber();
     quint32 interfaceNumber();
+    QString deviceReportedName();
+    QMap<QString, QVariant> keyboardDatabaseEntry();
 signals:
     
 public slots:

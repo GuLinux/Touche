@@ -17,31 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECORE_H
-#define TOUCHECORE_H
-
-#include <QObject>
-
-class DeviceInfo;
-class ToucheCorePrivate;
-class ToucheCore : public QObject
+#include "toucheconfiguration.h"
+#include <QDialog>
+#include "keysconfigurationdialog.h"
+ToucheConfiguration::ToucheConfiguration()
 {
-    Q_OBJECT
-public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
-    ~ToucheCore();
-signals:
-    void connected(DeviceInfo*);
-    void disconnected(DeviceInfo*);
+}
 
-public slots:
-    void start();
-    void quit();
-
-private:
-    ToucheCorePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheCore)
-    
-};
-
-#endif // TOUCHECORE_H
+void ToucheConfiguration::showConfigurationDialog(DeviceInfo *deviceInfo)
+{
+    KeysConfigurationDialog(deviceInfo).exec();
+}

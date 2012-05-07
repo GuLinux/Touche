@@ -41,6 +41,7 @@ signals:
     void connected(DeviceInfo * deviceInfo);
 public slots:
     void start();
+    void stop();
 
 private:
     HidDevPrivate * const d_ptr;
