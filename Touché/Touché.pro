@@ -18,11 +18,11 @@ HEADERS  +=
 CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
    else                        { COMPILE_MODE='release' }
 
-LIBS += -L/tmp/Touché_Core/$$COMPILE_MODE -lTouché_Core
+LIBS += -L/tmp/Touché_Core/$$COMPILE_MODE -lTouché_Core -L/tmp/Touché_Configuration/$$COMPILE_MODE -lTouché_Configuration
 LIBS += -lqjson -lX11 -lXtst
 QMAKE_CXXFLAGS += "-std=c++0x"
 
-INCLUDEPATH += ../Touché_Core
+INCLUDEPATH += ../Touché_Core ../Touché_Configuration
 
 
 target.path=/usr/bin

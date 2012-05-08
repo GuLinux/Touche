@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMap>
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
+#include "toucheconfiguration.h"
 
 class TrayManager : public QObject {
     Q_OBJECT
@@ -33,12 +34,25 @@ private:
     QSystemTrayIcon *tray;
     QMenu *connectedDevices;
     QMap<DeviceInfo*, QAction*> actions;
+    ToucheConfiguration toucheConfiguration;
+
 public slots:
+
+    void showConfigurationDialog() {
+        QAction *action = dynamic_cast<QAction*>(sender());
+        DeviceInfo *deviceInfo = actions.key(action);
+        toucheConfiguration.showConfigurationDialog(deviceInfo);
+    }
+
     void connected(DeviceInfo *deviceInfo) {
         tray->showMessage("Device Connected!", deviceInfo->name());
         QAction *action = connectedDevices->addAction(deviceInfo->name());
+        connect(action, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
+
         actions.insert(deviceInfo, action);
     }
+
+
 
     void disconnected(DeviceInfo *deviceInfo) {
         QAction *action = actions.take(deviceInfo);
@@ -51,6 +65,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.setQuitOnLastWindowClosed(false);
     QStringList arguments = a.arguments();
 
     ToucheCore toucheCore(arguments);
@@ -71,6 +86,7 @@ int main(int argc, char *argv[])
 
     trayManager.connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
     trayManager.connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
+    a.connect(&a, SIGNAL(aboutToQuit()), &toucheCore, SLOT(quit()));
 
     toucheCore.start();
     return a.exec();
