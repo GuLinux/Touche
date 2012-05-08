@@ -13,7 +13,7 @@ KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *sett
     ui->setupUi(this);
     connect(ui->bindingTypeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bindingChanged(int)));
 
-    ui->bindingTypelabel->setText(tr("bindingconfiguration.binding.for.devicename").arg(cfgKey->keyName()) );
+    ui->bindingTypelabel->setText(tr("bindingconfiguration.binding.for.devicename.%1").arg(cfgKey->keyName()) );
     ui->bindingTypeComboBox->addItem(tr("DoNothing"), "DoNothing");
     ui->bindingTypeComboBox->addItem(tr("TranslateToKey"), "TranslateToKey");
     ui->bindingTypeComboBox->addItem(tr("RunCommand"), "RunCommand");

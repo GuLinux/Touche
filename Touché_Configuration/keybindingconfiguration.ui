@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="bindingTypelabel">
      <property name="text">
-      <string>binding.type.label</string>
+      <string>binding.type.label:</string>
      </property>
     </widget>
    </item>

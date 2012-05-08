@@ -21,15 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TOUCHECORE_H
 
 #include <QObject>
-
+#include <QMap>
 class DeviceInfo;
 class ToucheCorePrivate;
 class ToucheCore : public QObject
 {
     Q_OBJECT
 public:
-    explicit ToucheCore(const QStringList &options, QObject *parent = 0);
+    explicit ToucheCore(const QStringList &supportedOptions, QObject *parent = 0);
     ~ToucheCore();
+    static QMap<QString, QString> supportedOptions();
 signals:
     void connected(DeviceInfo*);
     void disconnected(DeviceInfo*);

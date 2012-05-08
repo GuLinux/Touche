@@ -83,19 +83,18 @@ int main(int argc, char *argv[])
 {
     KAboutData about("touche", 0, ki18n("Touché"), "0.1");
     KCmdLineArgs::init(argc, argv, &about);
-//    KCmdLineArgs::addCmdLineOptions( myCmdOptions );
-    //KUniqueApplication::addCmdLineOptions();
+    KCmdLineOptions options;
+    foreach(QString option, ToucheCore::supportedOptions().keys()) {
+        options.add(option.toLatin1(), ki18n(ToucheCore::supportedOptions().value(option).toLatin1()));
+    }
 
-//    qDebug() << "Calling start";
-//    if (!KUniqueApplication::start()) {
-//       qDebug() << "myAppName is already running!";
-//       return 0;
-//    }
+    KCmdLineArgs::addCmdLineOptions(options);
+
     KApplication a;
-//    KUniqueApplication a;
-//    QApplication a(argc, argv);
+//  KUniqueApplication::addCmdLineOptions();
+//  KUniqueApplication a;
     a.setQuitOnLastWindowClosed(false);
-    QStringList arguments = a.arguments();
+    QStringList arguments = KCmdLineArgs::allArguments();
 
     ToucheCore toucheCore(arguments);
 

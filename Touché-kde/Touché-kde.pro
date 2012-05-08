@@ -36,3 +36,4 @@ desktop_entry.files += desktop/Touché.desktop
 desktop_entry.path = /usr/share/applications/
 
 INSTALLS += target udev_rules keyboard_database desktop_entry
+

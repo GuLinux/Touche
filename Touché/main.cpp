@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QMap>
+#include <QTextStream>
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
 #include "toucheconfiguration.h"
@@ -45,7 +46,7 @@ public slots:
     }
 
     void connected(DeviceInfo *deviceInfo) {
-        tray->showMessage("Device Connected!", deviceInfo->name());
+        tray->showMessage(tr("tray.popup.deviceConnected!"), deviceInfo->name());
         QAction *action = connectedDevices->addAction(deviceInfo->name());
         connect(action, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
 
@@ -68,13 +69,25 @@ int main(int argc, char *argv[])
     a.setQuitOnLastWindowClosed(false);
     QStringList arguments = a.arguments();
 
+
+    if(arguments.contains("--help") || arguments.contains("-h")) {
+        QTextStream out(stdout);
+        out<< qAppName() << " supported options: \n";
+        foreach(QString option, ToucheCore::supportedOptions().keys()) {
+            out << "\t--" << a.translate("command line option", option.toLatin1()) << "\t\t" << a.translate("command line option description", ToucheCore::supportedOptions().value(option).toLatin1()) << endl;
+        }
+        out << endl;
+        return 0;
+    }
+
+
     ToucheCore toucheCore(arguments);
 
     QSystemTrayIcon tray(QIcon::fromTheme("input-keyboard"));
 
     QMenu trayMenu;
     QMenu connectedDevices;
-    connectedDevices.setTitle("Connected devices");
+    connectedDevices.setTitle(connectedDevices.tr("tray.menu.ConnectedDevices"));
     trayMenu.addMenu(&connectedDevices);
     trayMenu.addSeparator();
     trayMenu.addAction(QIcon::fromTheme("application-exit"), "Quit", qApp, SLOT(quit()));

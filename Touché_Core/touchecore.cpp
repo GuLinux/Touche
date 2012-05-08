@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backend/config/bindingsconfig.h"
 #include <QCoreApplication>
 #include <QDebug>
-#include <QTextStream>
 #include <QTimer>
 #include <QProcessEnvironment>
 
@@ -37,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class ToucheCorePrivate {
 public:
-    ToucheCorePrivate(const QStringList &options) : options(options) {}
+    ToucheCorePrivate(const QStringList &options) : options(options) { }
     DumpKeys *dumpKeys;
     BindingsConfig *bindingsConfig;
     FindDevices *findDevices;
@@ -60,13 +59,7 @@ void ToucheCore::start()
 {
     Q_D(ToucheCore);
 
-    if(d->options.contains("--help") || d->options.contains("-h")) {
-        QTextStream out(stdout);
-        out<< "Usage: " << qAppName() << " [--dump-events]\n";
-        out<<"\t--dump-events: dumps raw events (json-formatted, so they can be easly added to keyboard database\n";
-        QTimer::singleShot(0, qApp, SLOT(quit()));
-        return;
-    }
+    qDebug()<< "********** options:" << d->options;
 
     d->bindingsConfig = new BindingsConfig(this);
     d->keyboardDatabase = new KeyboardDatabase(DATABASE_FILES, this);
@@ -90,4 +83,11 @@ void ToucheCore::quit()
 {
     Q_D(ToucheCore);
     d->findDevices->stop();
+}
+
+QMap<QString,QString> ToucheCore::supportedOptions()
+{
+    QMap<QString, QString> m_supportedOptions;
+    m_supportedOptions.insert("dump-events", "dumps raw events (json-formatted, so they can be easly added to keyboard database)");
+    return m_supportedOptions;
 }
