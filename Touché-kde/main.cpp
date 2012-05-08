@@ -36,10 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class TrayManager : public QObject {
     Q_OBJECT
 public:
-    TrayManager(KStatusNotifierItem *tray, KMenu *connectedDevices, QAction *beforeAction) : QObject(0), tray(tray), connectedDevices(connectedDevices), beforeAction(beforeAction) {
-    }
-    ~TrayManager() {
-        qDebug() << "Deleting TrayManager";
+    TrayManager(KStatusNotifierItem *tray, KMenu *connectedDevices, QAction *beforeAction, QObject *parent=0) : QObject(parent), tray(tray), connectedDevices(connectedDevices), beforeAction(beforeAction) {
     }
 
 private:
@@ -102,22 +99,23 @@ int main(int argc, char *argv[])
 
     ToucheCore toucheCore(arguments);
 
-    KStatusNotifierItem tray;
-    tray.setIconByName("input-keyboard");
+    KStatusNotifierItem *tray = new KStatusNotifierItem(&toucheCore);
+    tray->setIconByName("input-keyboard");
 
-    KMenu trayMenu;
-    KMenu connectedDevices;
-    connectedDevices.setTitle("Connected devices");
-    trayMenu.addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
-    tray.setContextMenu(&trayMenu);
-    tray.setCategory(KStatusNotifierItem::Hardware);
+    // not a great approach, but having it autodelete on exit seems to make the app crash.
+    // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
+    KMenu *trayMenu = new KMenu(0);
 
-    TrayManager trayManager(&tray, &trayMenu, trayMenu.addSeparator());
-    tray.setToolTipTitle(qAppName());
-    tray.setTitle(qAppName());
+    trayMenu->addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
+    tray->setContextMenu(trayMenu);
+    tray->setCategory(KStatusNotifierItem::Hardware);
 
-    trayManager.connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
-    trayManager.connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
+    TrayManager *trayManager = new TrayManager(tray, trayMenu, trayMenu->addSeparator(), &toucheCore);
+    tray->setToolTipTitle(qAppName());
+    tray->setTitle(qAppName());
+
+    trayManager->connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
+    trayManager->connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
 
     a.connect(&a, SIGNAL(aboutToQuit()), &toucheCore, SLOT(quit()));
     toucheCore.start();

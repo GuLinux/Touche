@@ -53,9 +53,7 @@ ToucheCore::ToucheCore(const QStringList &options, QObject *parent) :
 
 ToucheCore::~ToucheCore()
 {
-    qDebug() << "deleting ToucheCore";
     delete d_ptr;
-    qDebug() << "deleted ToucheCore";
 }
 
 void ToucheCore::start()

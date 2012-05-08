@@ -87,12 +87,7 @@ FindDevices::FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent) :
 
 FindDevices::~FindDevices()
 {
-    Q_D(FindDevices);
-    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.files());
-    d->fileSystemWatcher.removePaths(d->fileSystemWatcher.directories());
-    qDebug() << "deleting d on findDevices";
     delete d_ptr;
-    qDebug() << "FindDevices deleted";
 }
 
 void FindDevices::deviceRemoved(DeviceInfo *deviceInfo)
