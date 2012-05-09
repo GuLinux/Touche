@@ -4,15 +4,15 @@
     "vendor": "0x45e",
     "product": "0x745",
     "keys": {
-      "ZoomOut":      { "keypress": [ { "hid":    786990, "value":         1 } ], "keyrelease": [ { "hid":    786990, "value":         0 } ] },
-      "ZoomIn":       { "keypress": [ { "hid":    786989, "value":         1 } ], "keyrelease": [ { "hid":    786989, "value":         0 } ] },
-      "MSLaunch1":    { "keypress": [ { "hid":4278255365, "value":         1 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
-      "MSLaunch2":    { "keypress": [ { "hid":4278255365, "value":         2 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
-      "MSLaunch3":    { "keypress": [ { "hid":4278255365, "value":         4 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
-      "MSLaunch4":    { "keypress": [ { "hid":4278255365, "value":         8 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
-      "MSLaunch5":    { "keypress": [ { "hid":4278255365, "value":        16 } ], "keyrelease": [ { "hid":4278255365, "value":         0 } ] },
-      "MSLaunchStar": { "keypress": [ { "hid":    786818, "value":         1 } ], "keyrelease": [ { "hid":    786818, "value":         0 } ] },
-      "MSSwitchWins": { "keypress": [ { "hid":    786850, "value":         1 } ], "keyrelease": [ { "hid":    786850, "value":         0 } ] }
+      "ZoomOut":      { "keypress": [ { "hid":    786990, "value": 1 } ], "keyrelease": [ { "hid":    786990, "value":0 } ] },
+      "ZoomIn":       { "keypress": [ { "hid":    786989, "value": 1 } ], "keyrelease": [ { "hid":    786989, "value":0 } ] },
+      "MSLaunch1":    { "keypress": [ { "hid":4278255365, "value": 1 } ], "keyrelease": [ { "hid":4278255365, "value":0 } ] },
+      "MSLaunch2":    { "keypress": [ { "hid":4278255365, "value": 2 } ], "keyrelease": [ { "hid":4278255365, "value":0 } ] },
+      "MSLaunch3":    { "keypress": [ { "hid":4278255365, "value": 4 } ], "keyrelease": [ { "hid":4278255365, "value":0 } ] },
+      "MSLaunch4":    { "keypress": [ { "hid":4278255365, "value": 8 } ], "keyrelease": [ { "hid":4278255365, "value":0 } ] },
+      "MSLaunch5":    { "keypress": [ { "hid":4278255365, "value":16 } ], "keyrelease": [ { "hid":4278255365, "value":0 } ] },
+      "MSLaunchStar": { "keypress": [ { "hid":    786818, "value": 1 } ], "keyrelease": [ { "hid":    786818, "value":0 } ] },
+      "MSSwitchWins": { "keypress": [ { "hid":    786850, "value": 1 } ], "keyrelease": [ { "hid":    786850, "value":0 } ] }
     }
   },
   "0x5ac:0x8240": {
@@ -21,12 +21,19 @@
     "product": "0x8240",
     "read_timeout_milliseconds": 200,
     "keys": {
-      "Play_Pause": { "keypress": [ { "hid":4278190080, "value":         4, "index":003 } ], "keyrelease": "no_more_events" },
-      "Plus":       { "keypress": [ { "hid":4278190080, "value":        11, "index":003 } ], "keyrelease": "no_more_events" },
-      "Minus":      { "keypress": [ { "hid":4278190080, "value":        13, "index":003 } ], "keyrelease": "no_more_events" },
-      "Prev":       { "keypress": [ { "hid":4278190080, "value":         8, "index":003 } ], "keyrelease": "no_more_events" },
-      "Next":       { "keypress": [ { "hid":4278190080, "value":         7, "index":003 } ], "keyrelease": "no_more_events" },
-      "Menu":       { "keypress": [ { "hid":4278190080, "value":         2, "index":003 } ], "keyrelease": "no_more_events" }
+      "Play_Pause.r95": { "keypress": [ { "hid":4278190080, "value": 95, "index":002 }, { "hid":4278190080, "value": 4, "index":003 } ], "keyrelease": "no_more_events" },
+      "Plus.r95":       { "keypress": [ { "hid":4278190080, "value": 95, "index":002 }, { "hid":4278190080, "value":11, "index":003 } ], "keyrelease": "no_more_events" },
+      "Minus.r95":      { "keypress": [ { "hid":4278190080, "value": 95, "index":002 }, { "hid":4278190080, "value":13, "index":003 } ], "keyrelease": "no_more_events" },
+      "Prev.r95":       { "keypress": [ { "hid":4278190080, "value": 95, "index":002 }, { "hid":4278190080, "value": 8, "index":003 } ], "keyrelease": "no_more_events" },
+      "Next.r95":       { "keypress": [ { "hid":4278190080, "value": 95, "index":002 }, { "hid":4278190080, "value": 7, "index":003 } ], "keyrelease": "no_more_events" },
+      "Menu.r95":       { "keypress": [ { "hid":4278190080, "value": 95, "index":002 }, { "hid":4278190080, "value": 2, "index":003 } ], "keyrelease": "no_more_events" },
+
+      "Play_Pause.r199": { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value": 5, "index":003 } ], "keyrelease": "no_more_events" },
+      "Plus.r199":       { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value":10, "index":003 } ], "keyrelease": "no_more_events" },
+      "Minus.r199":      { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value":12, "index":003 } ], "keyrelease": "no_more_events" },
+      "Prev.r199":       { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value": 9, "index":003 } ], "keyrelease": "no_more_events" },
+      "Next.r199":       { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value": 6, "index":003 } ], "keyrelease": "no_more_events" },
+      "Menu.r199":       { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value": 3, "index":003 } ], "keyrelease": "no_more_events" }
     }
   }
 }
