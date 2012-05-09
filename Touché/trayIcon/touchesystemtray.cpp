@@ -9,12 +9,13 @@
 class ToucheSystemTrayPrivate {
 public:
     ToucheSystemTrayPrivate(QMenu *systemTrayMenu, QAction *separator, TrayManager *trayManager)
-        : systemTrayMenu(systemTrayMenu), separator(separator), trayManager(trayManager) {}
+        : systemTrayMenu(systemTrayMenu), separator(separator), trayManager(trayManager), aboutToQuit(false) {}
     QMenu *systemTrayMenu;
     QAction *separator;
     ToucheConfiguration *toucheConfiguration;
     QMap<DeviceInfo*, QAction*> actions;
     TrayManager *trayManager;
+    bool aboutToQuit;
 };
 
 ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QAction *separator, TrayManager *trayManager) :
@@ -23,6 +24,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu
     connect(toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
     connect(toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
 
+    connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     connect(qApp, SIGNAL(aboutToQuit()), toucheCore, SLOT(quit()));
     updateTooltip();
 }
@@ -55,6 +57,8 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
+    if(d->aboutToQuit)
+        return;
     QString messageTitle = QString("<b>%1</b>: %2").arg(qAppName()).arg(tr("Device Disconnected!", "device disconnected tray popup"));
     d->trayManager->showMessage(messageTitle, deviceInfo->name(), "input-keyboard");
     QAction *action = d->actions.take(deviceInfo);
@@ -72,6 +76,12 @@ void ToucheSystemTray::updateTooltip()
         devices << deviceInfo->name();
     }
     d->trayManager->updateTooltip(devices.join("\n"));
+}
+
+void ToucheSystemTray::aboutToQuit()
+{
+    Q_D(ToucheSystemTray);
+    d->aboutToQuit=true;
 }
 
 

@@ -22,6 +22,7 @@ public slots:
     void deviceConnected(DeviceInfo *deviceInfo);
     void deviceDisconnected(DeviceInfo *deviceInfo);
     void showConfigurationDialog();
+    void aboutToQuit();
 
 private:
     ToucheSystemTrayPrivate * const d_ptr;

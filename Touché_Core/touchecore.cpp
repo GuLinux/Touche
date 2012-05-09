@@ -59,8 +59,6 @@ void ToucheCore::start()
 {
     Q_D(ToucheCore);
 
-    qDebug()<< "********** options:" << d->options;
-
     d->bindingsConfig = new BindingsConfig(this);
     d->keyboardDatabase = new KeyboardDatabase(DATABASE_FILES, this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
