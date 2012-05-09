@@ -38,7 +38,6 @@ void BindingConfigurationWidget::stringListChanged(const QStringList &stringList
     QString configItemName = senderConfigName();
     if(configItemName.isEmpty()) return;
     configuration.insert(configurationSubKey.arg(configItemName), stringList);
-    qDebug() << "config changed: " << configuration;
 }
 
 void BindingConfigurationWidget::stringChanged(const QString &string)
@@ -47,7 +46,6 @@ void BindingConfigurationWidget::stringChanged(const QString &string)
     QString configItemName = senderConfigName();
     if(configItemName.isEmpty()) return;
     configuration.insert(configurationSubKey.arg(configItemName), string);
-    qDebug() << "config changed: " << configuration;
 }
 
 void BindingConfigurationWidget::radioButtonChanged(bool enabled)
@@ -57,7 +55,6 @@ void BindingConfigurationWidget::radioButtonChanged(bool enabled)
     QStringList configEntry = configItemName.split("_");
 
     configuration.insert(configurationSubKey.arg(configEntry.first()), configEntry.last());
-    qDebug() << "config changed: " << configuration;
 }
 
 QString BindingConfigurationWidget::senderConfigName()
@@ -70,10 +67,8 @@ QString BindingConfigurationWidget::senderConfigName()
 
 void BindingConfigurationWidget::saveConfiguration()
 {
-    qDebug() << "Saving configuration for " << configurationName;
     foreach(const QString &key, configuration.keys()) {
         QVariant value = configuration.value(key);
-        qDebug() << key << "-->" << value;
         switch(value.type()) {
         case QVariant::String:
             settings->setValue(key, value.toString());

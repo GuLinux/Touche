@@ -56,7 +56,6 @@ KeysConfigurationDialog::~KeysConfigurationDialog()
 void KeysConfigurationDialog::cfgKeySelected(const QModelIndex &index)
 {
     CfgKey *cfgKey = cfgKeyListModel->item(index);
-    qDebug() << "Key selected: " << cfgKey;
     if(!configuration_dialogs.contains(cfgKey)) {
         KeyBindingConfiguration *bindingConfig = new KeyBindingConfiguration(cfgKey, settings, this);
         configuration_dialogs.insert(cfgKey, bindingConfig);

@@ -72,7 +72,6 @@ void QStringListEdit::on_qsle_lineedit_textChanged(const QString &arg1)
 
 
 void QStringListEdit::itemSelected(const QModelIndex &index) {
-    qDebug() << "INDEX: " << index;
     ui->qsle_delete->setEnabled(ui->qsle_listview->currentIndex().isValid());
 }
 
