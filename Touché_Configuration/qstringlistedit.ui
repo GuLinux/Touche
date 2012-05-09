@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -30,7 +30,7 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>qsle.add</string>
+          <string extracomment="qstringlist edit: add button">Add</string>
          </property>
         </widget>
        </item>
@@ -40,7 +40,7 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>qsle.delete</string>
+          <string extracomment="qstringlist edit: delete button">Delete</string>
          </property>
         </widget>
        </item>

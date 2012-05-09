@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>keys.configuration.dialog.title</string>
+   <string extracomment="conf dialog title">Touché Keys Configuration</string>
   </property>
   <property name="windowIcon">
    <iconset theme="input-keyboard">
@@ -33,7 +33,7 @@
        <item>
         <widget class="QLabel" name="device_keys_label">
          <property name="text">
-          <string>device.keys:</string>
+          <string extracomment="config dialog: avail keys list label">Avaliable Keys:</string>
          </property>
         </widget>
        </item>

@@ -32,7 +32,7 @@ KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, QWidget
     ui(new Ui::KeysConfigurationDialog), deviceInfo(deviceInfo)
 {
     ui->setupUi(this);
-    ui->device_name_label->setText(tr("configuration.dialog.label").arg(deviceInfo->name()));
+    ui->device_name_label->setText(tr("Configuration for %1", "label for dialog conf; %1 is the device name").arg(deviceInfo->name()));
 
     CfgDevice *device = new CfgDevice(deviceInfo, this);
 

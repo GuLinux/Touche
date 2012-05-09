@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="bindingTypelabel">
      <property name="text">
-      <string>binding.type.label:</string>
+      <string notr="true" extracomment="Key event association label">associated.event.label</string>
      </property>
     </widget>
    </item>

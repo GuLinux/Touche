@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>bindingConfig.convertToKey</string>
+      <string extracomment="ToKey conf dialog, label for X symbol qlineedit">Convert to this Key:</string>
      </property>
     </widget>
    </item>
@@ -27,20 +27,20 @@
    <item>
     <widget class="QGroupBox" name="cfg_eventtype">
      <property name="title">
-      <string>Event Type</string>
+      <string extracomment="ToKey conf dialog: label for groupButton">Event Type</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QRadioButton" name="cfg_eventtype_keypress">
         <property name="text">
-         <string>event.type.keypress</string>
+         <string extracomment="ToKey conf dialog: label for checkbox">keypress</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="cfg_eventtype_keyrelease">
         <property name="text">
-         <string>event.type.keyrelease</string>
+         <string extracomment="ToKey conf dialog: label for checkbox">keyrelease</string>
         </property>
        </widget>
       </item>

@@ -13,10 +13,10 @@ KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *sett
     ui->setupUi(this);
     connect(ui->bindingTypeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bindingChanged(int)));
 
-    ui->bindingTypelabel->setText(tr("bindingconfiguration.binding.for.devicename.%1").arg(cfgKey->keyName()) );
-    ui->bindingTypeComboBox->addItem(tr("DoNothing"), "DoNothing");
-    ui->bindingTypeComboBox->addItem(tr("TranslateToKey"), "TranslateToKey");
-    ui->bindingTypeComboBox->addItem(tr("RunCommand"), "RunCommand");
+    ui->bindingTypelabel->setText(tr("Associated Event for Key %1:", "label for associated event; %1 is keyevent name").arg(cfgKey->keyName()) );
+    ui->bindingTypeComboBox->addItem(tr("DoNothing", "Do Nothing Action"), "DoNothing");
+    ui->bindingTypeComboBox->addItem(tr("TranslateToKey", "Translate to Key Action"), "TranslateToKey");
+    ui->bindingTypeComboBox->addItem(tr("RunCommand", "Run Command Action"), "RunCommand");
     ui->bindingTypeComboBox->setCurrentIndex(ui->bindingTypeComboBox->findData(settings->value(cfgKey->cfgKeyEvents().first()->configKey(), "DoNothing")));
 }
 
