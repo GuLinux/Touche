@@ -26,41 +26,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
 #include "toucheconfiguration.h"
+#include "trayIcon/touchesystemtray.h"
+#include "trayIcon/traymanager.h"
 
-class TrayManager : public QObject {
-    Q_OBJECT
+
+class QtTrayManager : public TrayManager {
 public:
-    TrayManager(QSystemTrayIcon *tray, QMenu *connectedDevices) : QObject(0), tray(tray), connectedDevices(connectedDevices) {}
+    QtTrayManager(QSystemTrayIcon *tray) : tray(tray) {}
+    virtual QAction *createAction(const QString &text, QObject *parent=0) {
+        return new QAction(text, parent);
+    }
+
+    virtual void showMessage(const QString &title, const QString &text, const QString &iconTheme = QString()) {
+        Q_UNUSED(iconTheme);
+        tray->showMessage(title, text);
+    }
+
+    void updateTooltip(const QString &tooltip) {
+        Q_UNUSED(tooltip);
+        tray->setToolTip(qAppName());
+    }
+
 private:
     QSystemTrayIcon *tray;
-    QMenu *connectedDevices;
-    QMap<DeviceInfo*, QAction*> actions;
-    ToucheConfiguration toucheConfiguration;
-
-public slots:
-
-    void showConfigurationDialog() {
-        QAction *action = dynamic_cast<QAction*>(sender());
-        DeviceInfo *deviceInfo = actions.key(action);
-        toucheConfiguration.showConfigurationDialog(deviceInfo);
-    }
-
-    void connected(DeviceInfo *deviceInfo) {
-        tray->showMessage(tr("tray.popup.deviceConnected!"), deviceInfo->name());
-        QAction *action = connectedDevices->addAction(deviceInfo->name());
-        connect(action, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
-
-        actions.insert(deviceInfo, action);
-    }
-
-
-
-    void disconnected(DeviceInfo *deviceInfo) {
-        QAction *action = actions.take(deviceInfo);
-        connectedDevices->removeAction(action);
-        delete action;
-    }
 };
+
 
 int main(int argc, char *argv[])
 {
@@ -93,16 +83,12 @@ int main(int argc, char *argv[])
     trayMenu.addAction(QIcon::fromTheme("application-exit"), "Quit", qApp, SLOT(quit()));
     tray.setContextMenu(&trayMenu);
 
-    TrayManager trayManager(&tray, &connectedDevices);
+    QtTrayManager trayManager(&tray);
     tray.show();
-    tray.setToolTip(qAppName());
+    //tray.setToolTip(qAppName());
 
-    trayManager.connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
-    trayManager.connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
-    a.connect(&a, SIGNAL(aboutToQuit()), &toucheCore, SLOT(quit()));
-
+    new ToucheSystemTray(&toucheCore, &connectedDevices, 0, &trayManager);
     toucheCore.start();
     return a.exec();
 }
 
-#include "main.moc"

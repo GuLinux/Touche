@@ -32,52 +32,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmdlineargs.h>
 #include <QTimer>
 #include <QDialog>
+#include "trayIcon/touchesystemtray.h"
+#include "trayIcon/traymanager.h"
 
-class TrayManager : public QObject {
-    Q_OBJECT
+class KDETrayManager : public TrayManager {
 public:
-    TrayManager(KStatusNotifierItem *tray, KMenu *connectedDevices, QAction *beforeAction, QObject *parent=0) : QObject(parent), tray(tray), connectedDevices(connectedDevices), beforeAction(beforeAction) {
+    KDETrayManager(KStatusNotifierItem *tray) : tray(tray) {}
+    virtual QAction *createAction(const QString &text, QObject *parent=0) {
+        return new KAction(text, parent);
+    }
+
+    virtual void showMessage(const QString &title, const QString &text, const QString &iconTheme = QString()) {
+        tray->showMessage(title, text, iconTheme);
+    }
+
+    void updateTooltip(const QString &tooltip) {
+        tray->setToolTip(QIcon::fromTheme("input-keyboard"), qAppName(), QString());
+        tray->setToolTipSubTitle(tooltip);
     }
 
 private:
     KStatusNotifierItem *tray;
-    KMenu *connectedDevices;
-    QAction *beforeAction;
-    QMap<DeviceInfo*, KAction*> actions;
-    ToucheConfiguration toucheConfiguration;
-
-public slots:
-    void connected(DeviceInfo *deviceInfo) {
-        tray->showMessage(qAppName().prepend("<b>") + "</b>: Device Connected!", deviceInfo->name(), "input-keyboard");
-        KAction *action = new KAction(deviceInfo->name(), connectedDevices);
-        connect(action, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
-        connectedDevices->insertAction(beforeAction, action);
-        actions.insert(deviceInfo, action);
-        updateTooltip();
-    }
-
-    void showConfigurationDialog() {
-        KAction *action = dynamic_cast<KAction*>(sender());
-        DeviceInfo *deviceInfo = actions.key(action);
-        toucheConfiguration.showConfigurationDialog(deviceInfo);
-    }
-
-    void disconnected(DeviceInfo *deviceInfo) {
-        tray->showMessage(qAppName().prepend("<b>") + "</b>: Device Disconnected!", deviceInfo->name(), "input-keyboard");
-        KAction *action = actions.take(deviceInfo);
-        connectedDevices->removeAction(action);
-        delete action;
-        updateTooltip();
-    }
-
-    void updateTooltip() {
-        QStringList devices;
-        foreach(DeviceInfo* deviceInfo, actions.keys()) {
-            devices << deviceInfo->name();
-        }
-        tray->setToolTipSubTitle(devices.join("\n"));
-    }
 };
+
 
 int main(int argc, char *argv[])
 {
@@ -89,10 +66,11 @@ int main(int argc, char *argv[])
     }
 
     KCmdLineArgs::addCmdLineOptions(options);
-
     KApplication a;
-//  KUniqueApplication::addCmdLineOptions();
-//  KUniqueApplication a;
+
+//    KUniqueApplication::addCmdLineOptions();
+//    KUniqueApplication a;
+
     a.setQuitOnLastWindowClosed(false);
     QStringList arguments = KCmdLineArgs::allArguments();
 
@@ -104,21 +82,15 @@ int main(int argc, char *argv[])
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
     KMenu *trayMenu = new KMenu(0);
-
     trayMenu->addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
     tray->setContextMenu(trayMenu);
     tray->setCategory(KStatusNotifierItem::Hardware);
-
-    TrayManager *trayManager = new TrayManager(tray, trayMenu, trayMenu->addSeparator(), &toucheCore);
-    tray->setToolTipTitle(qAppName());
     tray->setTitle(qAppName());
+    KDETrayManager trayManager(tray);
 
-    trayManager->connect(&toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(connected(DeviceInfo*)));
-    trayManager->connect(&toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(disconnected(DeviceInfo*)));
+    new ToucheSystemTray(&toucheCore, trayMenu, trayMenu->addSeparator(), &trayManager);
 
-    a.connect(&a, SIGNAL(aboutToQuit()), &toucheCore, SLOT(quit()));
     toucheCore.start();
     return a.exec();
 }
 
-#include "main.moc"

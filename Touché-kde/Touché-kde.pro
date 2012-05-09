@@ -10,7 +10,12 @@ TARGET = Touché
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    trayIcon/touchesystemtray.cpp
+
+HEADERS  += \
+    trayIcon/touchesystemtray.h \
+    trayIcon/traymanager.h
 
 HEADERS  +=
 

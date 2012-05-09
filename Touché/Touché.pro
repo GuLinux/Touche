@@ -10,9 +10,12 @@ TARGET = Touché
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    trayIcon/touchesystemtray.cpp
 
-HEADERS  +=
+HEADERS  += \
+    trayIcon/touchesystemtray.h \
+    trayIcon/traymanager.h
 
 
 CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
