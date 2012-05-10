@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextStream>
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
-#include "toucheconfiguration.h"
 #include "trayIcon/touchesystemtray.h"
 #include "trayIcon/traymanager.h"
 
@@ -76,10 +75,7 @@ int main(int argc, char *argv[])
     QSystemTrayIcon tray(QIcon::fromTheme("input-keyboard"));
 
     QMenu trayMenu;
-    QMenu connectedDevices;
-    connectedDevices.setTitle(connectedDevices.tr("tray.menu.ConnectedDevices"));
-    trayMenu.addMenu(&connectedDevices);
-    trayMenu.addSeparator();
+    QAction *separator = trayMenu.addSeparator();
     trayMenu.addAction(QIcon::fromTheme("application-exit"), "Quit", qApp, SLOT(quit()));
     tray.setContextMenu(&trayMenu);
 
@@ -87,7 +83,7 @@ int main(int argc, char *argv[])
     tray.show();
     //tray.setToolTip(qAppName());
 
-    new ToucheSystemTray(&toucheCore, &connectedDevices, 0, &trayManager);
+    new ToucheSystemTray(&toucheCore, &trayMenu, separator, &trayManager);
     toucheCore.start();
     return a.exec();
 }
