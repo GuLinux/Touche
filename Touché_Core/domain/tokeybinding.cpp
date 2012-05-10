@@ -46,6 +46,6 @@ void ToKeyBinding::execute()
     Q_D(ToKeyBinding);
     KeySym keysym = XStringToKeysym(d->keySymName.toLatin1());
     KeyCode keycode = XKeysymToKeycode(QX11Info::display(), keysym);
-    qDebug() << "executing \"ToKeyBinding\": sending key" << (d->isKeypress ? "press" : "release") << " with keysym:" << keysym << "; keycode: " << keycode;
+    qDebug() << "executing \"ToKeyBinding\": sending key" << (d->isKeypress ? "press" : "release") << " with keysym:" <<  d->keySymName << "[" << QString("0x%1").arg(keysym, 0,16) << "]; keycode: " << keycode;
     XTestFakeKeyEvent(QX11Info::display(), keycode, d->isKeypress, 0 );
 }
