@@ -37,7 +37,11 @@ QMAKE_CXXFLAGS += "-std=c++0x"
 CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
    else                        { COMPILE_MODE='release' }
 
-target.path=/tmp/$$TARGET/$$COMPILE_MODE
+isEmpty(TMP_INSTALL_DIR) {
+     TMP_INSTALL_DIR="/tmp"
+ }
+
+target.path=$$TMP_INSTALL_DIR/$$TARGET/$$COMPILE_MODE
 INSTALLS += target
 
 QMAKE_POST_LINK += make install

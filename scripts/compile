@@ -16,6 +16,10 @@ function dohelp() {
 	echo -e "--dont-install:\tDisables installation to system"
 	echo -e "--clean:\tRemoves build files"
 	echo ""
+	echo -e "You can also pass extra configuration to qmake by setting the QMAKE_APPEND_CFG variable."
+	echo -e "For instance, to install the static libraries in the local directory, run this script as follows:"
+	echo -e "QMAKE_APPEND_CFG=TMP_INSTALL_DIR=\$PWD/static_lib_install $0"
+	echo ""
 	exit
 }
 
@@ -71,13 +75,13 @@ GUI_PROJECT_BUILD="$( readlink -f "$GUI_PROJECT_BUILD")"
 CONFIGURATION_PROJECT_BUILD="$( readlink -f "$CONFIGURATION_PROJECT_BUILD")"
 
 cd "$CORE_PROJECT_BUILD"
-qmake "$QMAKE_CFG" "$CORE_PROJECT"
+qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CORE_PROJECT"
 make all
 cd "$CONFIGURATION_PROJECT_BUILD"
-qmake "$QMAKE_CFG" "$CONFIGURATION_PROJECT"
+qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CONFIGURATION_PROJECT"
 make all
 cd "$GUI_PROJECT_BUILD" 
-qmake "$QMAKE_CFG" "$GUI_PROJECT"
+qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$GUI_PROJECT"
 make clean all
 $MAKE_INSTALL
 echo "Completed! you may now start using Touché"
