@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>258</width>
-    <height>175</height>
+    <width>328</width>
+    <height>156</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,6 +33,9 @@
      <property name="title">
       <string extracomment="ToKey conf dialog: label for groupButton">Event Type</string>
      </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QRadioButton" name="cfg_eventtype_keypress">
@@ -52,16 +55,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>* please remember to update settings on all tabs (keypress AND keyrelease)</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -73,6 +66,16 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>* please remember to update settings on all tabs (keypress AND keyrelease)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
