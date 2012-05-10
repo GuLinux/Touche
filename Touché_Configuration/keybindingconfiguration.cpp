@@ -1,3 +1,22 @@
+/***********************************************************************
+Copyright (c) 2012 "Marco Gulino <marco.gulino@gmail.com>"
+
+This file is part of Touché: https://github.com/rockman81/Touche
+
+Touché is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details (included the COPYING file).
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+***********************************************************************/
+
 #include "keybindingconfiguration.h"
 #include "models/cfgkey.h"
 #include "ui_keybindingconfiguration.h"
@@ -5,6 +24,7 @@
 #include "ui_RunCommand_cfg.h"
 #include "ui_ToKey_cfg.h"
 #include "bindingconfigurationwidget.h"
+#include "x11keysymbolscompleter.h"
 
 KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *settings, QWidget *parent) :
     QWidget(parent),
@@ -47,8 +67,13 @@ void KeyBindingConfiguration::bindingChanged(int index)
                 connect(cfgUI->cfg_eventtype_keypress, SIGNAL(toggled(bool)), widget, SLOT(radioButtonChanged(bool)));
                 connect(cfgUI->cfg_eventtype_keyrelease, SIGNAL(toggled(bool)), widget, SLOT(radioButtonChanged(bool)));
                 connect(cfgUI->cfg_keysymbol, SIGNAL(textChanged(QString)), widget, SLOT(stringChanged(QString)));
+                cfgUI->cfg_keysymbol->setCompleter(new X11KeySymbolsCompleter(widget));
+                foreach(const QString keySym, X11KeySymbolsCompleter::keySymbols()) {
+                    cfgUI->cfg_keysymbol->addItem(keySym, keySym);
+                }
+
                 QString eventtype = settings->value(bindingSettingsKey.arg("eventtype"), event->label()).toString();
-                cfgUI->cfg_keysymbol->setText(settings->value(bindingSettingsKey.arg("keysymbol")).toString());
+                cfgUI->cfg_keysymbol->lineEdit()->setText(settings->value(bindingSettingsKey.arg("keysymbol")).toString());
                 cfgUI->cfg_eventtype_keypress->setChecked(eventtype=="keypress");
                 cfgUI->cfg_eventtype_keyrelease->setChecked(eventtype=="keyrelease");
             };

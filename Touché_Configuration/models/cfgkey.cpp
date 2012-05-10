@@ -75,3 +75,13 @@ QList<CfgKeyEvent*> CfgKey::cfgKeyEvents()
 {
     return m_keyEvents;
 }
+
+QModelIndex CfgKeyListModel::findKey(const QString &keyName)
+{
+    for(int m_index=0; m_index<m_items.size(); m_index++) {
+        CfgKey *cfgKey = m_items[m_index];
+        if(cfgKey->keyName() == keyName)
+            return index(m_index);
+    }
+    return QModelIndex();
+}

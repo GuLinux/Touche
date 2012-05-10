@@ -35,10 +35,13 @@ public:
     explicit TranslateKeyEvents(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig, QObject *parent = 0);
     ~TranslateKeyEvents();
 signals:
+    void keyEvent(const QString &keyName);
     
 public slots:
     void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
     void noMoreEvents(DeviceInfo *deviceInfo);
+    void suspend();
+    void resume();
 
 private:
     TranslateKeyEventsPrivate * const d_ptr;

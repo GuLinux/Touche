@@ -31,22 +31,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class TranslateKeyEventsPrivate {
 public:
-    TranslateKeyEventsPrivate(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig) : keyboardDatabase(keyboardDatabase), lastMatch(0), bindingsConfig(bindingsConfig) {}
+    TranslateKeyEventsPrivate(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig, TranslateKeyEvents* parent)
+        : keyboardDatabase(keyboardDatabase), lastMatch(0), bindingsConfig(bindingsConfig), suspended(false), q_ptr(parent) {}
     KeyboardDatabase *keyboardDatabase;
     ConfigEvent *lastMatch;
     BindingsConfig *bindingsConfig;
+    bool suspended;
+    TranslateKeyEvents* const q_ptr;
+    Q_DECLARE_PUBLIC(TranslateKeyEvents)
 
-    bool match(ConfigEvent *configuredEvent, InputEvent *inputEvent, QStringList tagsToMatch) {
+    Binding* match(ConfigEvent *configuredEvent, InputEvent *inputEvent, QStringList tagsToMatch) {
+        Q_Q(TranslateKeyEvents);
         if(!configuredEvent)
-            return false;
-        bool matches = configuredEvent->matches(inputEvent, tagsToMatch, bindingsConfig);
-        if(matches) lastMatch = configuredEvent;
-        return matches;
+            return 0;
+        Binding *binding = configuredEvent->matches(inputEvent, tagsToMatch, bindingsConfig);
+        if(binding) {
+            lastMatch = configuredEvent;
+            if(!suspended) binding->execute();
+            emit q->keyEvent(configuredEvent->property("keyName").toString());
+        }
+        return binding;
     }
 };
 
 TranslateKeyEvents::TranslateKeyEvents(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig, QObject *parent) :
-    QObject(parent), d_ptr(new TranslateKeyEventsPrivate(keyboardDatabase, bindingsConfig))
+    QObject(parent), d_ptr(new TranslateKeyEventsPrivate(keyboardDatabase, bindingsConfig, this))
 {
 }
 
@@ -79,4 +88,16 @@ void TranslateKeyEvents::noMoreEvents(DeviceInfo *deviceInfo)
     if(d->match(d->lastMatch, voidInputEvent, QStringList("keyrelease"))) {
         d->lastMatch=0;
     }
+}
+
+void TranslateKeyEvents::resume()
+{
+    Q_D(TranslateKeyEvents);
+    d->suspended=false;
+}
+
+void TranslateKeyEvents::suspend()
+{
+    Q_D(TranslateKeyEvents);
+    d->suspended=true;
 }

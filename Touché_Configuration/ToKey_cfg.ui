@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>235</width>
-    <height>136</height>
+    <width>258</width>
+    <height>175</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,12 +17,16 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string extracomment="ToKey conf dialog, label for X symbol qlineedit">Convert to this Key:</string>
+      <string extracomment="ToKey conf dialog, label for X symbol qlineedit">Convert to this Key *:</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="cfg_keysymbol"/>
+    <widget class="QComboBox" name="cfg_keysymbol">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="cfg_eventtype">
@@ -45,6 +49,16 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>* please remember to update settings on all tabs (keypress AND keyrelease)</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>

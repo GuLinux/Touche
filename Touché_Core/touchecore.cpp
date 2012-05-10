@@ -58,7 +58,6 @@ ToucheCore::~ToucheCore()
 void ToucheCore::start()
 {
     Q_D(ToucheCore);
-
     d->bindingsConfig = new BindingsConfig(this);
     d->keyboardDatabase = new KeyboardDatabase(DATABASE_FILES, this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
@@ -68,14 +67,30 @@ void ToucheCore::start()
     connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceRemoved(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), this, SIGNAL(connected(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), this, SIGNAL(disconnected(DeviceInfo*)));
+    connect(d->translateEvents, SIGNAL(keyEvent(QString)), this, SIGNAL(event(QString)));
     connect(d->findDevices, SIGNAL(event(InputEvent*,DeviceInfo*)), d->translateEvents, SLOT(event(InputEvent*, DeviceInfo*)));
     connect(d->findDevices, SIGNAL(noMoreEvents(DeviceInfo*)), d->translateEvents, SLOT(noMoreEvents(DeviceInfo*)));
+    resumeEventsTranslation();
 
     if(d->options.contains("--dump-events")) {
         d->dumpKeys = new DumpKeys(this);
         connect(d->findDevices, SIGNAL(event(InputEvent*,DeviceInfo*)), d->dumpKeys, SLOT(event(InputEvent*)));
     }
 }
+
+
+void ToucheCore::suspendEventsTranslation()
+{
+    Q_D(ToucheCore);
+    d->translateEvents->suspend();
+}
+
+void ToucheCore::resumeEventsTranslation()
+{
+    Q_D(ToucheCore);
+    d->translateEvents->resume();
+}
+
 
 void ToucheCore::quit()
 {

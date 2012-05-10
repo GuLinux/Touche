@@ -17,14 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "toucheconfiguration.h"
-#include <QDialog>
-#include "keysconfigurationdialog.h"
-ToucheConfiguration::ToucheConfiguration()
-{
-}
+#ifndef UPDATEKEYSYMBOLMAPPING_H
+#define UPDATEKEYSYMBOLMAPPING_H
 
-void ToucheConfiguration::showConfigurationDialog(DeviceInfo *deviceInfo)
+#include <QObject>
+
+class UpdateKeySymbolMappingPrivate;
+class UpdateKeySymbolMapping : public QObject
 {
-    KeysConfigurationDialog(deviceInfo).exec();
-}
+    Q_OBJECT
+public:
+    explicit UpdateKeySymbolMapping(const QString &keySymbol, QObject *parent = 0);
+    ~UpdateKeySymbolMapping();
+    int bind();
+signals:
+    
+public slots:
+private:
+    UpdateKeySymbolMappingPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(UpdateKeySymbolMapping)
+};
+
+#endif // UPDATEKEYSYMBOLMAPPING_H

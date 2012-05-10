@@ -73,3 +73,10 @@ void KeysConfigurationDialog::accept()
     QDialog::accept();
 }
 
+void KeysConfigurationDialog::keyEvent(const QString &keyName)
+{
+    qDebug() << "keyEvent: " << keyName;
+    QModelIndex index = cfgKeyListModel->findKey(keyName);
+    ui->keys_listview->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
+}
+

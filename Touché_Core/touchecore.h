@@ -34,10 +34,13 @@ public:
 signals:
     void connected(DeviceInfo*);
     void disconnected(DeviceInfo*);
+    void event(const QString &eventName);
 
 public slots:
     void start();
     void quit();
+    void suspendEventsTranslation();
+    void resumeEventsTranslation();
 
 private:
     ToucheCorePrivate * const d_ptr;

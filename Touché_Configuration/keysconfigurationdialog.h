@@ -44,6 +44,8 @@ public:
 public slots:
     void cfgKeySelected(const QModelIndex & index );
     void accept();
+    void keyEvent(const QString &keyName);
+
 private:
     Ui::KeysConfigurationDialog *ui;
     DeviceInfo *deviceInfo;

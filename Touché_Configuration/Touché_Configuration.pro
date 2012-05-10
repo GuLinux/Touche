@@ -8,23 +8,25 @@ TARGET = Touché_Configuration
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += toucheconfiguration.cpp \
+SOURCES += \
     keysconfigurationdialog.cpp \
     models/cfgdevice.cpp \
     models/cfgkey.cpp \
     models/cfgkeyevent.cpp \
     keybindingconfiguration.cpp \
     bindingconfigurationwidget.cpp \
-    qstringlistedit.cpp
+    qstringlistedit.cpp \
+    x11keysymbolscompleter.cpp
 
-HEADERS += toucheconfiguration.h \
+HEADERS += \
     keysconfigurationdialog.h \
     models/cfgdevice.h \
     models/cfgkey.h \
     models/cfgkeyevent.h \
     keybindingconfiguration.h \
     bindingconfigurationwidget.h \
-    qstringlistedit.h
+    qstringlistedit.h \
+    x11keysymbolscompleter.h
 
 INCLUDEPATH += ../Touché_Core
 LIBS += -L/tmp/Touché_Core/$$COMPILE_MODE -lTouché_Core

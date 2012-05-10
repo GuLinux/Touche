@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class InputEvent;
 class ConfigEventPrivate;
 class BindingsConfig;
+class Binding;
 class ConfigEvent : public QObject
 {
     Q_OBJECT
@@ -34,7 +35,7 @@ public:
     ~ConfigEvent();
     void addInputEvent(const QString &tag, InputEvent *inputEvent);
 
-    bool matches(InputEvent *other, const QStringList &tags, BindingsConfig *bindingsConfig);
+    Binding* matches(InputEvent *other, const QStringList &tags, BindingsConfig *bindingsConfig);
 signals:
     
 public slots:

@@ -42,7 +42,7 @@ ConfigEvent::~ConfigEvent()
     delete d_ptr;
 }
 
-bool ConfigEvent::matches(InputEvent *other, const QStringList &tags, BindingsConfig *bindingsConfig)
+Binding *ConfigEvent::matches(InputEvent *other, const QStringList &tags, BindingsConfig *bindingsConfig)
 {
     Q_D(ConfigEvent);
 
@@ -53,12 +53,10 @@ bool ConfigEvent::matches(InputEvent *other, const QStringList &tags, BindingsCo
                     .arg(property("keyName").toString() )
                     .arg(tag);
             qDebug() << "Got match: " << eventName;
-            bindingsConfig->bindingFor(eventName, other)->execute();
-            return true;
+            return bindingsConfig->bindingFor(eventName, other);
         }
     }
-
-    return false;
+    return 0;
 }
 
 void ConfigEvent::addInputEvent(const QString &tag, InputEvent *inputEvent)

@@ -66,7 +66,7 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     d->bindings[BINDING_TO_KEY] =[d,params](QObject* p, const QString& eventName) {
         QString keySymbol = d->settings->value(params.arg(eventName, BINDING_TO_KEY, "keysymbol"), QString()).toString();
         QString isKeypress = d->settings->value(params.arg(eventName,BINDING_TO_KEY, "eventtype"), "keypress").toString();
-        return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress"));
+        return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress", true));
     };
 
     qDebug() << "Configured bindings: ";

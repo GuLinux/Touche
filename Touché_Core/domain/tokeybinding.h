@@ -27,7 +27,7 @@ class ToKeyBinding : public QObject, public Binding
 {
     Q_OBJECT
 public:
-    explicit ToKeyBinding(const QString &keySymName, bool isKeypress, QObject *parent = 0);
+    explicit ToKeyBinding(const QString &keySymName, bool isKeypress, bool associateXModMap = false, QObject *parent = 0);
     ~ToKeyBinding();
     virtual void execute();
 signals:

@@ -36,6 +36,7 @@ public:
     virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     CfgKey *item(const QModelIndex &index) const;
+    QModelIndex findKey(const QString &keyName);
 private:
     QList<CfgKey*> const m_items;
 signals:

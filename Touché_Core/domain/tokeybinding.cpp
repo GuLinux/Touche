@@ -19,20 +19,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "tokeybinding.h"
 #include <QDebug>
-
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
+#include <QTextStream>
+#include <QProcessEnvironment>
+#include "backend/updatekeysymbolmapping.h"
 
 class ToKeyBindingPrivate {
 public:
-    ToKeyBindingPrivate(const QString &keysymname, bool isKeypress) : keySymName(keysymname), isKeypress(isKeypress) {}
+    ToKeyBindingPrivate(const QString &keysymname, bool isKeypress, bool associateXModMap) : keySymName(keysymname), isKeypress(isKeypress), associateXModMap(associateXModMap) {}
     QString const keySymName;
     bool isKeypress;
+    bool associateXModMap;
 };
 
-ToKeyBinding::ToKeyBinding(const QString &keySymName, bool isKeypress, QObject *parent) :
-    QObject(parent), d_ptr(new ToKeyBindingPrivate(keySymName, isKeypress))
+ToKeyBinding::ToKeyBinding(const QString &keySymName, bool isKeypress, bool associateXModMap, QObject *parent) :
+    QObject(parent), d_ptr(new ToKeyBindingPrivate(keySymName, isKeypress, associateXModMap))
 {
 }
 
@@ -46,6 +49,25 @@ void ToKeyBinding::execute()
     Q_D(ToKeyBinding);
     KeySym keysym = XStringToKeysym(d->keySymName.toLatin1());
     KeyCode keycode = XKeysymToKeycode(QX11Info::display(), keysym);
-    qDebug() << "executing \"ToKeyBinding\": sending key" << (d->isKeypress ? "press" : "release") << " with keysym:" <<  d->keySymName << "[" << QString("0x%1").arg(keysym, 0,16) << "]; keycode: " << keycode;
+    if(!keycode) {
+        QTextStream err(stderr);
+        err << "****** Warning: keysym \"" << d->keySymName << "\" seems to not being associated with any keycode.\n";
+        if(d->associateXModMap) {
+            err.flush();
+            (new UpdateKeySymbolMapping(d->keySymName, this))->bind();
+        } else {
+            err << "****** You can associate it with xmodmap.\n";
+            err << "The following procedure can apply:\n";
+            err << "- Run \"xmodmap -pke\"\n";
+            err << "- Find the first line with a keycode not associated (highly reccomended choosing a keycode > 100)\n";
+            err << "- Open the file " << QProcessEnvironment::systemEnvironment().value("HOME") << "/.Xmodmap (create it if it doesn't exist)\n";
+            err << "- append the line \n\tkeycode nnn = " << d->keySymName << endl;
+            err << "- run \"xmodmap " << QProcessEnvironment::systemEnvironment().value("HOME") << "/.Xmodmap\"\n";
+            err << "you can also add the last command to Autostart if your distribution doesn't do it already.\n";
+            err.flush();
+        }
+        return;
+    }
+    qDebug() << QString("executing \"ToKeyBinding\": sending key%1  with keysym: \"%2\" [0x%3]; keycode:  %4").arg(d->isKeypress ? "press" : "release").arg(d->keySymName).arg(keysym, 0,16).arg(keycode);
     XTestFakeKeyEvent(QX11Info::display(), keycode, d->isKeypress, 0 );
 }

@@ -17,16 +17,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHECONFIGURATION_H
-#define TOUCHECONFIGURATION_H
-#include <QObject>
+#ifndef X11KEYSYMBOLSCOMPLETER_H
+#define X11KEYSYMBOLSCOMPLETER_H
+#include <QStringList>
 
-class DeviceInfo;
-class ToucheConfiguration : public QObject {
+#include <QCompleter>
+
+class X11KeySymbolsCompleter : public QCompleter
+{
     Q_OBJECT
 public:
-    ToucheConfiguration();
-    void showConfigurationDialog(DeviceInfo* deviceInfo);
+    explicit X11KeySymbolsCompleter(QObject *parent = 0);
+    ~X11KeySymbolsCompleter();
+    static QStringList keySymbols();
 };
 
-#endif // TOUCHECONFIGURATION_H
+#endif // X11KEYSYMBOLSCOMPLETER_H
