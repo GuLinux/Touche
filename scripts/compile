@@ -1,17 +1,18 @@
 #!/bin/bash
 set -e
 PROJECT_NAME="Touché"
-GUI_PROJECT="Touché"
+GUI_PROJECT="$PROJECT_NAME"
 GUI_NAME="Qt"
-CORE_PROJECT="Touché_Core"
-CONFIGURATION_PROJECT="Touché_Configuration"
+CORE_PROJECT="${PROJECT_NAME}_Core"
+CONFIGURATION_PROJECT="${PROJECT_NAME}_Configuration"
 BUILD_SUFFIX=".build"
 COMPILE_MODE="release"
 MAKE_INSTALL="sudo make install"
 
 function dohelp() {
 	echo -e "Usage: $0 [--kde] [--debug] [--dont-install] [--clean] [--help|-h]\n"
-	echo -e "--kde:\t\tCompiles with KDE GUI (the \"pretty\" one)instead of the Qt one"
+	echo -e "--kde:\t\tCompiles with KDE GUI (the \"pretty\" one)instead of the Qt one. Default if KDE is found"
+	echo -e "--no-kde:\tDisables KDE GUI, using plain Qt. Default if KDE is not found"
 	echo -e "--debug:\tEnables debug mode (useful if there are unexpected crashes)"
 	echo -e "--dont-install:\tDisables installation to system"
 	echo -e "--clean:\tRemoves build files"
@@ -23,13 +24,21 @@ function dohelp() {
 	exit
 }
 
-
+if which kde-config > /dev/null 2>/dev/null || which kde4-config > /dev/null 2>/dev/null; then
+	echo "kde4 found"
+	GUI_PROJECT="$PROJECT_NAME-kde"
+	GUI_NAME="KDE"
+fi
 while test "x$*" != "x"; do
 	CURRENT_OPTION="$1"; shift
 	case "$CURRENT_OPTION" in
 		"--kde")
-		GUI_PROJECT="Touché-kde"
+		GUI_PROJECT="$PROJECT_NAME-kde"
 		GUI_NAME="KDE"
+		;;
+		"--no-kde")
+		GUI_NAME="Qt"
+		GUI_PROJECT="$PROJECT_NAME"
 		;;
 		"--debug")
 		COMPILE_MODE="debug"
@@ -84,4 +93,4 @@ cd "$GUI_PROJECT_BUILD"
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$GUI_PROJECT"
 make clean all
 $MAKE_INSTALL
-echo "Completed! you may now start using Touché"
+echo "Completed! you may now start using $PROJECT_NAME"
