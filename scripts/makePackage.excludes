@@ -1,0 +1,6 @@
+.git
+.gitignore
+scripts/LicenseHeader.txt
+scripts/applyLicenseHeader.sh
+scripts/makePackage
+scripts/makePackage.excludes

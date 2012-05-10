@@ -1,0 +1,19 @@
+#!/bin/bash
+if ! [ -r Touché_Core ]; then
+	echo "Error! you must run this script from the top project directory"
+	exit 1
+fi
+
+if test "x$1" == "x"; then
+	echo "Usage: $0 version"
+	exit 1
+fi
+
+version="$1"
+save_to="${2-/tmp}"
+archive_name="$save_to/Touché-$version.tar.gz"
+cp .gitignore /tmp/touche_pkg_excludes
+cat "$0.excludes" >> /tmp/touche_pkg_excludes
+tar czf $archive_name -X /tmp/touche_pkg_excludes --xform "s/^\./Touché/g" -h .
+echo "Created source tarball: $archive_name"
+

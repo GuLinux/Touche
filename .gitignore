@@ -1,4 +1,6 @@
+releases_archive
 *-build-*
+*.swp
 *.build*
 *~
 *.pro.user*

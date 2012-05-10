@@ -24,6 +24,12 @@ cd Touché_Core.build
 qmake ../Touché_Core
 make install # it will only install the static library to /tmp, to allow compiling of the main application
 
+# Configuration GUI:
+mkdir Touché_Configuration.build
+cd Touché_Configuration.build
+qmake ../Touché_Configuration
+make install
+
 # Qt GUI: 
 mkdir ../Touché.build
 cd ../Touché.build
@@ -38,8 +44,9 @@ make install
 
 
 * Configuration:
-Currently there is no gui for configuration. Hopefully it will be added soon enough :)
-There is a sample configuration file in Touché/files/samples_config/.
+The application bindings are now fully configurable in a user interface accessible from tray icon.
+Just right click the little "keyboard" icon in your system tray, then click your device name.
+There is also a sample configuration file in Touché/files/samples_config/.
 Just copy it in the this path:
   $HOME/.config/GuLinux/Touché.conf
 

@@ -1,0 +1,13 @@
+2012-05-10  Marco Gulino <marco.gulino@gmail.com>
+
+  Initial release. Here there are the main highlights:
+    * Catch input event from /dev/usb/hiddevX, otherwise ignored by the system
+    * Json Devices Database: pretty easy syntax for adding new devices.
+    * Both Qt (simpler) and KDE (stilish) main applications are supported.
+    * Fully configurable by a simple user interface.
+    * Provides an udev rule to easly fix permissions on your usb devices.
+    * Automatically configures xmodmap to bind your unrecognized keys.
+    * Full support for Microsoft Wireless Keyboard 3000 (a.k.a. Microsoft Wireless Destkop 3000);
+      possibly similar variants too.
+    * Support for Apple IR remotes (old MacBook pro tested); there are different variants,
+      two of them are configured right now.
