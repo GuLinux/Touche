@@ -113,7 +113,6 @@ void FindDevices::deviceChanged()
 
 void FindDevices::stop()
 {
-    disconnect(this);
     Q_D(FindDevices);
     foreach( DevicePair devicePair, d->devices.values()) {
         devicePair.second->stop();

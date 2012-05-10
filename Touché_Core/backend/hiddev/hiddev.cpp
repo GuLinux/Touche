@@ -63,18 +63,11 @@ public:
     void stop()
     {
         if(fd<0) return;
-        QMutexLocker locker(&mutex);
         aboutToQuit=true;
-        Q_UNUSED(locker);
-        Q_Q(HidDev);
-        qDebug() << "Current thread: " << QThread::currentThread();
-        qDebug() << "fd now: " << fd;
         if(fd>=0) {
             close(fd);
             fd=-1;
         }
-        qDebug() << "fd closed: " << fd;
-        emit q->removed(&deviceInfo);
     }
 
     void read_events()
@@ -89,7 +82,6 @@ public:
         tv.tv_usec=read_timeout_milliseconds*1000;
         FD_SET(fd, &(fdset));
         int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
-
         if(selectRD==-1) {
             qDebug() << "Error on select: " << strerror(errno);
             stop();
@@ -192,12 +184,15 @@ void HidDev::start()
         d->read_events();
     }
     qDebug() << "Device loop stopped";
+    emit removed(&d->deviceInfo);
 }
 
 void HidDev::stop()
 {
     Q_D(HidDev);
     qDebug() << "qapp said it's time to go...";
+    QMutexLocker locker(&d->mutex);
+    Q_UNUSED(locker);
     d->stop();
 }
 

@@ -1,7 +1,7 @@
-2012-05-10  Marco Gulino <marco.gulino@gmail.com>
+2012-05-11  Marco Gulino <marco.gulino@gmail.com>
 
   Initial release. Here there are the main highlights:
-    * Catch input event from /dev/usb/hiddevX, otherwise ignored by the system
+    * Catch input event from /dev/usb/hiddevX, otherwise ignored by the system.
     * Json Devices Database: pretty easy syntax for adding new devices.
     * Both Qt (simpler) and KDE (stilish) main applications are supported.
     * Fully configurable by a simple user interface.
