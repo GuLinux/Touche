@@ -52,8 +52,10 @@ void QStringListEdit::on_qsle_delete_clicked()
 {
     qDebug() << ui->qsle_listview->currentIndex();
     QStringList stringList = this->stringList();
-    stringList.removeAt(ui->qsle_listview->currentIndex().row());
+    QString deletedString = stringList.takeAt(ui->qsle_listview->currentIndex().row());
     setStringList(stringList);
+    ui->qsle_lineedit->setText(deletedString);
+    ui->qsle_delete->setEnabled(false);
     emit stringListEdited(this->stringList());
 }
 
