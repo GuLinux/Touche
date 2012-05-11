@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Touché by rockman81</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Touché</h1>
+        <p>Touché - Special keys recognizer for GNU/Linux, written in Qt</p>
+        <p class="view"><a href="https://github.com/rockman81/Touche">View the Project on GitHub <small>rockman81/Touche</small></a></p>
+        <ul>
+          <li><a href="https://github.com/rockman81/Touche/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rockman81/Touche/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rockman81/Touche">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Touché is an application aimed at making "just work" every key on your keyboard.
+It's still in heavy development stage, and therefore is missing lots of stuff, but it's already usable.
+The current "reference" keyboard is mine, a "Microsoft Wireless Keyboard 3000".
+The "standard" special keys, like "Media Play", or "Volume Up" do work out of the box on every GNU/Linux distribution, 
+but other keys, like "ZoomIn/Out", and the "1-2-3-4-5-*" keys in the upper part don't. Instead they send an event to /dev/usb/hiddev0.
+Touché does detect these events, and allows you to transform them to known X key symbols, or to execute arbitrary commands.
+Support for new keyboards should be easly added, the application does print the events when they're sent, so they can be added in a ney "keyboard database" entry.</p>
+
+<p>Touché is released under GPLv3 license (included in the COPYING file)</p>
+
+<hr><ul>
+<li>Install Instructions:
+*** Update: you don't really need to follow the instructions below.
+*** Now you can find the script "scripts/compile" that automatically compiles and installs the application
+*** Run "./scripts/compile --help" to see usage and options</li>
+</ul><p>First you need to build the static library, and install it to a temporary location.
+Then you can choose between the Qt GUI (simpler) and the KDE GUI (much more beautiful, using KDE styles and color settings).</p>
+
+<h1>Core library:</h1>
+
+<p>mkdir Touché_Core.build
+cd Touché_Core.build
+qmake ../Touché_Core
+make install # it will only install the static library to /tmp, to allow compiling of the main application</p>
+
+<h1>Configuration GUI:</h1>
+
+<p>mkdir Touché_Configuration.build
+cd Touché_Configuration.build
+qmake ../Touché_Configuration
+make install</p>
+
+<h1>Qt GUI:</h1>
+
+<p>mkdir ../Touché.build
+cd ../Touché.build
+qmake ../Touché
+make install # this will install both the binary and its required dependencies, like udev rule for permissions and keyboard database.</p>
+
+<h1>KDE GUI:</h1>
+
+<p>mkdir ../Touché-kde.build
+cd ../ Touché-kde.build
+qmake ../Touché-kde
+make install</p>
+
+<ul>
+<li>Configuration:
+The application bindings are now fully configurable in a user interface accessible from tray icon.
+Just right click the little "keyboard" icon in your system tray, then click your device name.
+There is also a sample configuration file in Touché/files/samples_config/.
+Just copy it in the this path:
+$HOME/.config/GuLinux/Touché.conf</li>
+</ul><p>Inside you can find some configuration examples. Just follow the pattern: the key names are in the keyboard database file ( /usr/share/Touché/keyboard_database.json )
+You can now also use a "local" keyboard database, which can be installed in /home/marco/.config/GuLinux/keyboard_database.json and overrides the system one, if present. It comes handy if you wanna try adding support for a new keyboard.</p>
+
+<p>*** Important note: with the installation comes also a udev rule, which by default is installed in /etc/udev/rules.d/ and assigns the /dev/usb/hiddev* devices to the group "users".
+--- If this group is present in your distribution, your user must belong to this group to use Touché.
+--- If this group is not present in your distribution, just change the udev rule to match an existing group.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rockman81">rockman81</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
