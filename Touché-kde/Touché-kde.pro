@@ -23,7 +23,12 @@ HEADERS  +=
 CONFIG(debug, debug|release)   { COMPILE_MODE='debug' }
    else                        { COMPILE_MODE='release' }
 
-LIBS += -L/tmp/Touché_Core/$$COMPILE_MODE -lTouché_Core -L/tmp/Touché_Configuration/$$COMPILE_MODE -lTouché_Configuration
+
+isEmpty(TMP_INSTALL_DIR) {
+     TMP_INSTALL_DIR="/tmp"
+ }
+
+LIBS += -L$$TMP_INSTALL_DIR/Touché_Core/$$COMPILE_MODE -lTouché_Core -L/tmp/Touché_Configuration/$$COMPILE_MODE -lTouché_Configuration
 LIBS += -lqjson -lX11 -lXtst -lkdeui -lkdecore
 QMAKE_CXXFLAGS += "-std=c++0x"
 

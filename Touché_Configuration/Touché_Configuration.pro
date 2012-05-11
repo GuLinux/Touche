@@ -29,7 +29,6 @@ HEADERS += \
     x11keysymbolscompleter.h
 
 INCLUDEPATH += ../Touché_Core
-LIBS += -L/tmp/Touché_Core/$$COMPILE_MODE -lTouché_Core
 
 LIBS += -lqjson
 QMAKE_CXXFLAGS += "-std=c++0x"
@@ -41,6 +40,7 @@ isEmpty(TMP_INSTALL_DIR) {
      TMP_INSTALL_DIR="/tmp"
  }
 
+LIBS += -L$$TMP_INSTALL_DIR/Touché_Core/$$COMPILE_MODE -lTouché_Core
 target.path=$$TMP_INSTALL_DIR/$$TARGET/$$COMPILE_MODE
 INSTALLS += target
 

@@ -7,7 +7,7 @@ CORE_PROJECT="${PROJECT_NAME}_Core"
 CONFIGURATION_PROJECT="${PROJECT_NAME}_Configuration"
 BUILD_SUFFIX=".build"
 COMPILE_MODE="release"
-MAKE_INSTALL="sudo make install"
+MAKE_INSTALL="make install"
 
 function dohelp() {
 	echo -e "Usage: $0 [--kde] [--debug] [--dont-install] [--clean] [--help|-h]\n"
