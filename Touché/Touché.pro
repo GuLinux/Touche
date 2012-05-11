@@ -25,7 +25,7 @@ isEmpty(TMP_INSTALL_DIR) {
      TMP_INSTALL_DIR="/tmp"
  }
 
-LIBS += -L$$TMP_INSTALL_DIR/Touché_Core/$$COMPILE_MODE -lTouché_Core -L-L$$TMP_INSTALL_DIR/Touché_Configuration/$$COMPILE_MODE -lTouché_Configuration
+LIBS += -L$$TMP_INSTALL_DIR/Touché_Core/$$COMPILE_MODE -lTouché_Core -L$$TMP_INSTALL_DIR/Touché_Configuration/$$COMPILE_MODE -lTouché_Configuration
 LIBS += -lqjson -lX11 -lXtst
 QMAKE_CXXFLAGS += "-std=c++0x"
 
