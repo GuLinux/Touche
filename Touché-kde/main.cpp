@@ -65,10 +65,15 @@ int main(int argc, char *argv[])
     }
 
     KCmdLineArgs::addCmdLineOptions(options);
-    KApplication a;
 
-//    KUniqueApplication::addCmdLineOptions();
-//    KUniqueApplication a;
+#ifdef QT_NO_DEBUG
+#warning "Release mode: enabling KUniaueApplication"
+    KUniqueApplication::addCmdLineOptions();
+    KUniqueApplication a;
+#else
+#warning "Debug mode: disabling KUniaueApplication"
+    KApplication a;
+#endif
 
     a.setQuitOnLastWindowClosed(false);
     QStringList arguments = KCmdLineArgs::allArguments();
