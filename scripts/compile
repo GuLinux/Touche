@@ -91,6 +91,6 @@ qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CONFIGURATION_PROJECT"
 make all
 cd "$GUI_PROJECT_BUILD" 
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$GUI_PROJECT"
-make clean all
+make clean && make all
 $MAKE_INSTALL
 echo "Completed! you may now start using $PROJECT_NAME"
