@@ -91,6 +91,17 @@ qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CONFIGURATION_PROJECT"
 make all
 cd "$GUI_PROJECT_BUILD" 
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$GUI_PROJECT"
+sed -i 's/-$(INSTALL_PROGRAM)/$(INSTALL_PROGRAM)/g' Makefile # this way it will skip immediatly installation on errors
 make clean && make all
-$MAKE_INSTALL
+if ! $MAKE_INSTALL; then
+	echo ""
+	echo "****** Installation failed; try:"
+	echo "cd \"$PWD\" && sudo $MAKE_INSTALL"
+	echo ""
+	echo "or, if your distribution doesn't supports sudo, try this instead:"
+	echo "su"
+	echo "cd \"$PWD\" && $MAKE_INSTALL"
+	echo ""
+	exit 1
+fi
 echo "Completed! you may now start using $PROJECT_NAME"
