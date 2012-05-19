@@ -85,14 +85,14 @@ CONFIGURATION_PROJECT_BUILD="$( readlink -f "$CONFIGURATION_PROJECT_BUILD")"
 
 cd "$CORE_PROJECT_BUILD"
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CORE_PROJECT"
-make all
+make
 cd "$CONFIGURATION_PROJECT_BUILD"
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CONFIGURATION_PROJECT"
-make all
+make
 cd "$GUI_PROJECT_BUILD" 
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$GUI_PROJECT"
 sed -i 's/-$(INSTALL_PROGRAM)/$(INSTALL_PROGRAM)/g' Makefile # this way it will skip immediatly installation on errors
-make clean && make all
+make clean && make
 if ! $MAKE_INSTALL; then
 	echo ""
 	echo "****** Installation failed; try:"
