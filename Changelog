@@ -1,3 +1,11 @@
+2012-05-19  Marco Gulino <marco.gulino@gmail.com>
+  Build and desktop fixes only.
+    * Make build more reliable.
+    * Desktop file fixed for kdeinit launch error.
+    * Use of kuniqueapplication in release mode (no need for multiple instances).
+    * Fix crash when removing a device with configuration dialog open.
+    * Microsoft Wireless Keyboard 3000: added "F-Block" key mapping.
+
 2012-05-11  Marco Gulino <marco.gulino@gmail.com>
 
   Initial release. Here there are the main highlights:
