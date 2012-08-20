@@ -7,12 +7,12 @@ set(Touche_qt_includes ${Touche_common_includes}
 
 qt4_wrap_cpp(Touche_qt_mocs trayIcon/touchesystemtray.h)
 include_directories(${Touche_qt_includes}) 
-add_executable(Touche ${Touche_qt_SRCS} ${Touche_qt_mocs} )
+add_executable(${PROJECT_NAME} ${Touche_qt_SRCS} ${Touche_qt_mocs} )
 
-target_link_libraries(Touche ${Touche_libs} )
+target_link_libraries(${PROJECT_NAME} ${Touche_libs} )
 
 # TODO for /etc/udev it would be better to use variables, although this one is not going to change that easly...
 INSTALL(FILES files/99-hiddev-input.rules DESTINATION /etc/udev/rules.d)
-INSTALL(FILES files/keyboard_database.json DESTINATION share/Touche)
+INSTALL(FILES files/keyboard_database.json DESTINATION share/${PROJECT_NAME})
 INSTALL(FILES desktop/Touche.desktop DESTINATION share/applications)
-INSTALL(TARGETS Touche RUNTIME DESTINATION bin)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

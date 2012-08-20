@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTimer>
 #include <QProcessEnvironment>
 
-#define GLOBAL_DATABASE QString("/usr/share/%1/keyboard_database.json").arg(qAppName())
+#define GLOBAL_DATABASE QString("/usr/share/%1/keyboard_database.json").arg(PROJECT_NAME)
 #define LOCAL_DATABASE QString("%1/.config/GuLinux/keyboard_database.json").arg(QProcessEnvironment::systemEnvironment().value("HOME"))
 #define DATABASE_FILES QStringList(LOCAL_DATABASE) << GLOBAL_DATABASE
 

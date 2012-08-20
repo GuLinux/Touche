@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include <kuniqueapplication.h>
-
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
 #include <QMenu>

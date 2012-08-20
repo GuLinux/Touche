@@ -16,6 +16,7 @@ set(Touche_common_includes ${QT_INCLUDES}
 
 
 add_definitions(${QT_DEFINITIONS})
+add_definitions(-DPROJECT_NAME="${PROJECT_NAME}")
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 include(${QT_USE_FILE})
 
