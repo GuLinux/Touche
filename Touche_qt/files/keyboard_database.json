@@ -19,6 +19,7 @@
       "Home":          { "keypress": [ { "hid":    786979, "value": 1 } ], "keyrelease": [ { "hid":    786979, "value":0 } ] },
       "Contacts":      { "keypress": [ { "hid":    786841, "value": 1 } ], "keyrelease": [ { "hid":    786841, "value":0 } ] },
       "Headphones":    { "keypress": [ { "hid":    786819, "value": 1 } ], "keyrelease": [ { "hid":    786819, "value":0 } ] },
+      "F-Block":       { "keypress": [ { "hid":4278255108, "value": 1 } ], "keyrelease": [ { "hid":4278255108, "value":0 } ] },
       
       "Help":          { "keypress": [ { "hid":    786581, "value": 1 } ], "keyrelease": [ { "hid":    786581, "value":0 } ] },      
       "Undo":          { "keypress": [ { "hid":    786970, "value": 1 } ], "keyrelease": [ { "hid":    786970, "value":0 } ] },      

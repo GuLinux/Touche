@@ -5,12 +5,17 @@ if ! [ -r Touché_Core ]; then
 fi
 
 if test "x$1" == "x"; then
-	echo "Usage: $0 version"
+	echo "Usage: $0 version [archive directory]"
 	exit 1
 fi
 
 version="$1"
-save_to="${2-/tmp}"
+save_to="$( readlink -f "${2-/tmp}" )"
+if ! [ -d  "$save_to" ]; then
+	echo "Error! second parameter must be a directory"
+	exit 1
+fi
+
 archive_name="$save_to/Touché-$version.tar.gz"
 cp .gitignore /tmp/touche_pkg_excludes
 cat "$0.excludes" >> /tmp/touche_pkg_excludes

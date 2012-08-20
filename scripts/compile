@@ -7,7 +7,7 @@ CORE_PROJECT="${PROJECT_NAME}_Core"
 CONFIGURATION_PROJECT="${PROJECT_NAME}_Configuration"
 BUILD_SUFFIX=".build"
 COMPILE_MODE="release"
-MAKE_INSTALL="sudo make install"
+MAKE_INSTALL="make INSTALL_ROOT=${DESTDIR-/} install"
 
 function dohelp() {
 	echo -e "Usage: $0 [--kde] [--debug] [--dont-install] [--clean] [--help|-h]\n"
@@ -85,12 +85,23 @@ CONFIGURATION_PROJECT_BUILD="$( readlink -f "$CONFIGURATION_PROJECT_BUILD")"
 
 cd "$CORE_PROJECT_BUILD"
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CORE_PROJECT"
-make all
+make
 cd "$CONFIGURATION_PROJECT_BUILD"
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$CONFIGURATION_PROJECT"
-make all
+make
 cd "$GUI_PROJECT_BUILD" 
 qmake "$QMAKE_CFG" $QMAKE_APPEND_CFG "$GUI_PROJECT"
-make clean all
-$MAKE_INSTALL
+sed -i 's/-$(INSTALL_PROGRAM)/$(INSTALL_PROGRAM)/g' Makefile # this way it will skip immediatly installation on errors
+make clean && make
+if ! $MAKE_INSTALL; then
+	echo ""
+	echo "****** Installation failed; try:"
+	echo "cd \"$PWD\" && sudo $MAKE_INSTALL"
+	echo ""
+	echo "or, if your distribution doesn't supports sudo, try this instead:"
+	echo "su"
+	echo "cd \"$PWD\" && $MAKE_INSTALL"
+	echo ""
+	exit 1
+fi
 echo "Completed! you may now start using $PROJECT_NAME"
