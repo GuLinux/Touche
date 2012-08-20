@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 
 class InputEventPrivate;
-class InputRegister;
 
 typedef QPair<uint, uint> RegisterValue;
 

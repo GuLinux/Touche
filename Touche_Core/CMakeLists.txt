@@ -9,7 +9,6 @@ set(Touche_Core_SRCS backend/hiddev/hiddev.cpp
     backend/config/keyboarddatabase.cpp
     backend/config/databaseentry.cpp
     domain/inputevent.cpp
-    domain/inputregister.cpp
     domain/configevent.cpp
     backend/config/bindingsconfig.cpp
     domain/donothingbinding.cpp
@@ -29,7 +28,6 @@ qt4_wrap_cpp(Touche_Core_mocs
   domain/nomoreeventsinputevent.h
   domain/deviceinfo.h
   domain/inputevent.h
-  domain/inputregister.h
   domain/donothingbinding.h
   domain/configevent.h
   domain/translatekeyevents.h

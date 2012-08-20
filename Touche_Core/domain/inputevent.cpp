@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "inputevent.h"
 #include <QMultiMap>
-#include "inputregister.h"
 #include <QDebug>
 #include <QStringList>
 #include <QPair>
