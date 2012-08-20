@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     KCmdLineArgs::addCmdLineOptions(options);
 
 #ifdef QT_NO_DEBUG
-#warning "Release mode: enabling KUniaueApplication"
+#warning "Release mode: enabling KUniqueApplication"
     KUniqueApplication::addCmdLineOptions();
     KUniqueApplication a;
 #else

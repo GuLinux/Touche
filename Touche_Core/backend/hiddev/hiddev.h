@@ -35,7 +35,7 @@ public:
     ~HidDev();
     
 signals:
-    void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void inputEvent(InputEvent *keyEvent, DeviceInfo *deviceInfo);
     void noMoreEvents(DeviceInfo *deviceInfo);
     void removed(DeviceInfo *deviceInfo);
     void connected(DeviceInfo * deviceInfo);

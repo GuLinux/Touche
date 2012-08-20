@@ -64,7 +64,7 @@ TranslateKeyEvents::~TranslateKeyEvents()
     delete d_ptr;
 }
 
-void TranslateKeyEvents::event(InputEvent *keyEvent, DeviceInfo *deviceInfo)
+void TranslateKeyEvents::inputEvent(InputEvent *keyEvent, DeviceInfo *deviceInfo)
 {
     Q_D(TranslateKeyEvents);
     DatabaseEntry *databaseEntry = d->keyboardDatabase->keyboard(deviceInfo);

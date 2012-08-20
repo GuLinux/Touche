@@ -33,7 +33,7 @@ public:
     explicit FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
     ~FindDevices();
 signals:
-    void event(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void inputEvent(InputEvent *keyEvent, DeviceInfo *deviceInfo);
     void noMoreEvents(DeviceInfo *deviceInfo);
     void connected(DeviceInfo *deviceInfo);
     void disconnected(DeviceInfo *deviceInfo);

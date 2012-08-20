@@ -32,7 +32,7 @@ public:
 signals:
     
 public slots:
-    void event(InputEvent *keyEvent);
+    void inputEvent(InputEvent *keyEvent);
 private:
 };
 

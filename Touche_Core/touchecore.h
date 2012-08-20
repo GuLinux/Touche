@@ -34,7 +34,7 @@ public:
 signals:
     void connected(DeviceInfo*);
     void disconnected(DeviceInfo*);
-    void event(const QString &eventName);
+    void inputEvent(const QString &eventName);
 
 public slots:
     void start();

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 class TrayManager {
 public:
+    virtual ~TrayManager() {}
     virtual QAction *createAction(const QString &text, QObject *parent=0) =0;
     virtual void showMessage(const QString &title, const QString &text, const QString &iconTheme = QString()) =0;
     virtual void updateTooltip(const QString &tooltip) = 0;

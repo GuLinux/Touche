@@ -31,7 +31,7 @@ DumpKeys::~DumpKeys()
 {
 }
 
-void DumpKeys::event(InputEvent *keyEvent)
+void DumpKeys::inputEvent(InputEvent *keyEvent)
 {
     QTextStream out(stdout);
     out << keyEvent->asJSON();

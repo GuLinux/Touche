@@ -61,7 +61,7 @@ void ToucheSystemTray::showConfigurationDialog()
     DeviceInfo *deviceInfo = d->actions.key(action);
     KeysConfigurationDialog configDialog(deviceInfo);
     connect(d->toucheCore, SIGNAL(disconnected(DeviceInfo*)), &configDialog, SLOT(reject()));
-    connect(d->toucheCore, SIGNAL(event(QString)), &configDialog, SLOT(keyEvent(QString)));
+    connect(d->toucheCore, SIGNAL(inputEvent(QString)), &configDialog, SLOT(keyEvent(QString)));
     d->toucheCore->suspendEventsTranslation();
     configDialog.exec();
     d->toucheCore->resumeEventsTranslation();

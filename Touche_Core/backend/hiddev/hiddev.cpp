@@ -108,7 +108,7 @@ public:
         for(int i=0; i<rd; i++) {
             keyEvent->addRegister(ev[i].hid, ev[i].value, i);
         }
-        q->emit event(keyEvent, &deviceInfo);
+        q->emit inputEvent(keyEvent, &deviceInfo);
         had_events=true;
         QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
     }
