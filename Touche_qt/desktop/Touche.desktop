@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=Touche
+Icon=input-keyboard
+Terminal=false
+X-KDE-StartupNotify=false
+Name=Touché
+Categories=Qt;System;HardwareSettings;

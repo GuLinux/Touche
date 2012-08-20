@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Exec=Touché
-Icon=input-keyboard
-Terminal=false
-X-KDE-StartupNotify=false
-Name=Touché
-Categories=Qt;KDE;System;TerminalEmulator;HardwareSettings;
-X-DBUS-StartupType=Unique
