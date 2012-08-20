@@ -29,6 +29,6 @@ qt4_wrap_cpp(Touche_Configuration_mocs  bindingconfigurationwidget.h
 set(Touche_Configuration_includes ${Touche_common_includes} )
 
 include_directories(${Touche_Configuration_includes}) 
-add_library(Touche_Configuration ${Touche_Configuration_SRCS} ${Touche_Configuration_FORMS_HEADERS} ${Touche_Configuration_mocs} )
+add_library(Touche_Configuration STATIC ${Touche_Configuration_SRCS} ${Touche_Configuration_FORMS_HEADERS} ${Touche_Configuration_mocs} )
 
 

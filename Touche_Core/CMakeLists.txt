@@ -40,5 +40,5 @@ qt4_wrap_cpp(Touche_Core_mocs
 set(Touche_Core_includes ${Touche_common_includes} )
 
 include_directories(${Touche_Core_includes}) 
-add_library(Touche_Core ${Touche_Core_SRCS} ${Touche_Core_mocs} )
+add_library(Touche_Core STATIC ${Touche_Core_SRCS} ${Touche_Core_mocs} )
 
