@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include <QPair>
 #include <QList>
-#include "inputevent.h"
+#include "domain/inputevent.h"
 
 class HidInputEventPrivate;
 

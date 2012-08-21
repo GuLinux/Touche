@@ -1,23 +1,25 @@
 set(Touche_Core_SRCS
+    backend/config/keyboarddatabase.cpp
+    backend/config/databaseentry.cpp
+    backend/config/bindingsconfig.cpp
+    backend/hiddev/finddevices.cpp
     backend/hiddev/hiddev.cpp
+    backend/hiddev/hid_inputevent.cpp
+    backend/updatekeysymbolmapping.cpp
     domain/dumpkeys.cpp
     domain/translatekeyevents.cpp
     domain/runcommandbinding.cpp
     domain/tokeybinding.cpp
-    backend/hiddev/finddevices.cpp
     domain/deviceinfo.cpp
-    backend/config/keyboarddatabase.cpp
-    backend/config/databaseentry.cpp
-    domain/hid_inputevent.cpp
     domain/configevent.cpp
-    backend/config/bindingsconfig.cpp
     domain/donothingbinding.cpp
-    touchecore.cpp
     domain/nomoreeventsinputevent.cpp
-    backend/updatekeysymbolmapping.cpp)
+    touchecore.cpp
+)
 
 qt4_wrap_cpp(Touche_Core_mocs
   backend/hiddev/finddevices.h
+  backend/hiddev/hid_inputevent.h
   backend/hiddev/hiddev.h
   backend/config/databaseentry.h
   backend/config/bindingsconfig.h
@@ -27,7 +29,6 @@ qt4_wrap_cpp(Touche_Core_mocs
   domain/dumpkeys.h
   domain/nomoreeventsinputevent.h
   domain/deviceinfo.h
-  domain/hid_inputevent.h
   domain/donothingbinding.h
   domain/configevent.h
   domain/translatekeyevents.h

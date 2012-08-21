@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backend/config/databaseentry.h"
 #include "domain/deviceinfo.h"
 #include "backend/config/keyboarddatabase.h"
-#include "domain/hid_inputevent.h"
+#include "backend/hiddev/hid_inputevent.h"
 
 #define OPEN_TIMEOUT 5000
 
