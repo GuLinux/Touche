@@ -27,6 +27,21 @@ class HidInputEventPrivate {
 public:
     HidInputEventPrivate() {}
     QMultiMap<uint, uint> registers;
+
+    bool matchesVersion(const QString &versionName, QVariantList registers) {
+        foreach(QVariant hidRegister, registers) {
+            uint hid = hidRegister.toMap().value("hid").toUInt();
+            uint value = hidRegister.toMap().value("value").toUInt();
+
+            if(!this->registers.contains(hid))
+                return false;
+            if(!this->registers.values(hid).contains(value))
+                return false;
+        }
+        qDebug() << "Match for version " << versionName;
+        return true;
+    }
+
 };
 
 HidInputEvent::HidInputEvent(QObject *parent) :
@@ -65,20 +80,16 @@ bool HidInputEvent::matches(const QVariantMap &payload)
 {
     Q_D(HidInputEvent);
 
-    const QVariantList registers = payload.value("hiddev_registers").toList();
+    const QVariantMap registers = payload.value("hiddev_registers").toMap();
     if(registers.isEmpty()) {
         return false;
     }
-    foreach(QVariant hidRegister, registers) {
-        uint hid = hidRegister.toMap().value("hid").toUInt();
-        uint value = hidRegister.toMap().value("value").toUInt();
 
-        if(!d->registers.contains(hid))
-            return false;
-        if(!d->registers.values(hid).contains(value))
-            return false;
+    foreach(QString version, registers.keys()) {
+        if(d->matchesVersion(version, registers.value(version).toList()))
+            return true;
     }
-    return true;
+    return false;
 }
 
 HidInputEvent::operator QString()
