@@ -17,35 +17,38 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef HIDDEV_H
-#define HIDDEV_H
+#ifndef HID_INPUTEVENT_H
+#define HID_INPUTEVENT_H
 
 #include <QtCore/QObject>
-#include "domain/inputevent.h"
+#include <QPair>
+#include <QList>
+#include "inputevent.h"
 
-class DeviceInfo;
-class HidDevPrivate;
-class KeyboardDatabase;
+class HidInputEventPrivate;
 
-class HidDev : public QObject
+typedef QPair<uint, uint> RegisterValue;
+
+class HidInputEvent : public QObject, public InputEvent
 {
     Q_OBJECT
 public:
-    explicit HidDev(const QString &path, KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
-    ~HidDev();
-    
+    explicit HidInputEvent(QObject *parent = 0);
+    ~HidInputEvent();
+    void addRegister(uint hid, uint value, uint index);
+    QString asJSON();
+    uint registersCount();
+    QList<RegisterValue> registersFor(uint hid);
+    bool hasRegister(uint hid);
+    virtual bool matches(const QVariantMap &payload);
+    virtual operator QString();
 signals:
-    void inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo);
-    void noMoreEvents(DeviceInfo *deviceInfo);
-    void removed(DeviceInfo *deviceInfo);
-    void connected(DeviceInfo * deviceInfo);
+    
 public slots:
-    void start();
-    void stop();
-
+    
 private:
-    HidDevPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(HidDev)
+    HidInputEventPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(HidInputEvent)
 };
 
-#endif // HIDDEV_H
+#endif // HID_INPUTEVENT_H

@@ -22,8 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QObject>
 #include "domain/deviceinfo.h"
-
-class InputEvent;
+#include "domain/inputevent.h"
 class TranslateKeyEventsPrivate;
 class KeyboardDatabase;
 class DeviceInfo;
@@ -38,7 +37,7 @@ signals:
     void keyEvent(const QString &keyName);
     
 public slots:
-    void inputEvent(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo);
     void noMoreEvents(DeviceInfo *deviceInfo);
     void suspend();
     void resume();

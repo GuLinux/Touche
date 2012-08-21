@@ -45,6 +45,16 @@ public:
     QStringList const options;
 };
 
+class __RegisterMetatypes__ {
+public:
+    __RegisterMetatypes__() {
+        qDebug() << "Registering InputEventP";
+        qRegisterMetaType<InputEventP>();
+    }
+};
+
+static __RegisterMetatypes__ __registerMetatypes;
+
 ToucheCore::ToucheCore(const QStringList &options, QObject *parent) :
     QObject(parent), d_ptr(new ToucheCorePrivate(options) )
 {
@@ -68,13 +78,13 @@ void ToucheCore::start()
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), this, SIGNAL(connected(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), this, SIGNAL(disconnected(DeviceInfo*)));
     connect(d->translateEvents, SIGNAL(keyEvent(QString)), this, SIGNAL(inputEvent(QString)));
-    connect(d->findDevices, SIGNAL(inputEvent(InputEvent*,DeviceInfo*)), d->translateEvents, SLOT(inputEvent(InputEvent*, DeviceInfo*)));
+    connect(d->findDevices, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), d->translateEvents, SLOT(inputEvent(InputEventP, DeviceInfo*)));
     connect(d->findDevices, SIGNAL(noMoreEvents(DeviceInfo*)), d->translateEvents, SLOT(noMoreEvents(DeviceInfo*)));
     resumeEventsTranslation();
 
     if(d->options.contains("--dump-events")) {
         d->dumpKeys = new DumpKeys(this);
-        connect(d->findDevices, SIGNAL(inputEvent(InputEvent*,DeviceInfo*)), d->dumpKeys, SLOT(inputEvent(InputEvent*)));
+        connect(d->findDevices, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), d->dumpKeys, SLOT(inputEvent(InputEventP)));
     }
 }
 

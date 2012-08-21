@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "nomoreeventsinputevent.h"
 
 NoMoreEventsInputEvent::NoMoreEventsInputEvent(QObject *parent) :
-    InputEvent(parent)
+    QObject(parent)
 {
 }
 
-bool NoMoreEventsInputEvent::matches(InputEvent *other)
+bool NoMoreEventsInputEvent::matches(const QVariantMap &payload)
 {
-    return other->registersCount()==0;
+    return payload.value("registers").toMap().values().count()==0;
 }

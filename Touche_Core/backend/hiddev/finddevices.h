@@ -21,10 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FINDDEVICES_H
 
 #include <QtCore/QObject>
+#include "domain/inputevent.h"
 
 class FindDevicesPrivate;
 class DeviceInfo;
-class InputEvent;
 class KeyboardDatabase;
 class FindDevices : public QObject
 {
@@ -33,7 +33,7 @@ public:
     explicit FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
     ~FindDevices();
 signals:
-    void inputEvent(InputEvent *keyEvent, DeviceInfo *deviceInfo);
+    void inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo);
     void noMoreEvents(DeviceInfo *deviceInfo);
     void connected(DeviceInfo *deviceInfo);
     void disconnected(DeviceInfo *deviceInfo);

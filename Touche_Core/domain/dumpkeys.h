@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DUMPKEYS_H
 
 #include <QtCore/QObject>
+#include "domain/inputevent.h"
 
-class InputEvent;
 class DumpKeys : public QObject
 {
     Q_OBJECT
@@ -32,7 +32,7 @@ public:
 signals:
     
 public slots:
-    void inputEvent(InputEvent *keyEvent);
+    void inputEvent(InputEventP keyEvent);
 private:
 };
 

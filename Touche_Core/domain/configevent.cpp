@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class BindingsConfig;
 class ConfigEventPrivate {
 public:
-    QMap<QString, InputEvent*> cfgInputEvents;
+    QMap<QString, QVariantMap> cfgInputEvents;
 };
 
 ConfigEvent::ConfigEvent(QObject *parent) :
@@ -47,20 +47,20 @@ Binding *ConfigEvent::matches(InputEvent *other, const QStringList &tags, Bindin
     Q_D(ConfigEvent);
 
     foreach(QString tag, tags) {
-        InputEvent *cfgInputEvent = d->cfgInputEvents.value(tag);
-        if(cfgInputEvent->matches(other)) {
+        QVariantMap cfgInputEvent = d->cfgInputEvents.value(tag);
+        if(other->matches(cfgInputEvent)) {
             QString eventName = QString("%1/%2")
                     .arg(property("keyName").toString() )
                     .arg(tag);
             qDebug() << "Got match: " << eventName;
-            return bindingsConfig->bindingFor(eventName, other);
+            return bindingsConfig->bindingFor(eventName, (QObject*)(other)); // TODO: not very elegant..
         }
     }
     return 0;
 }
 
-void ConfigEvent::addInputEvent(const QString &tag, InputEvent *inputEvent)
+void ConfigEvent::addInputEvent(const QString &tag, const QVariantMap &payload)
 {
     Q_D(ConfigEvent);
-    d->cfgInputEvents.insert(tag, inputEvent);
+    d->cfgInputEvents.insert(tag, payload);
 }

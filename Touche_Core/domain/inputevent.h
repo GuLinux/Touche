@@ -17,36 +17,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef KEYEVENT_H
-#define KEYEVENT_H
 
-#include <QtCore/QObject>
-#include <QPair>
-#include <QList>
 
-class InputEventPrivate;
+#ifndef INPUTEVENT_H
+#define INPUTEVENT_H
 
-typedef QPair<uint, uint> RegisterValue;
-
-class InputEvent : public QObject
+#include <QVariantMap>
+#include <QString>
+class InputEvent
 {
-    Q_OBJECT
 public:
-    explicit InputEvent(QObject *parent = 0);
-    ~InputEvent();
-    void addRegister(uint hid, uint value, uint index);
-    QString asJSON();
-    uint registersCount();
-    QList<RegisterValue> registersFor(uint hid);
-    bool hasRegister(uint hid);
-    virtual bool matches(InputEvent *other);
-signals:
-    
-public slots:
-    
-private:
-    InputEventPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(InputEvent)
+    virtual ~InputEvent() {}
+    virtual bool matches(const QVariantMap &payload) = 0;
+    virtual operator QString() { return QString(); }
 };
 
-#endif // KEYEVENT_H
+typedef InputEvent* InputEventP;
+Q_DECLARE_METATYPE(InputEventP)
+
+#endif // INPUTEVENT_H

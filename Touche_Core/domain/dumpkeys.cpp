@@ -31,10 +31,10 @@ DumpKeys::~DumpKeys()
 {
 }
 
-void DumpKeys::inputEvent(InputEvent *keyEvent)
+void DumpKeys::inputEvent(InputEventP keyEvent)
 {
     QTextStream out(stdout);
-    out << keyEvent->asJSON();
+    out << *keyEvent;
     out << endl;
     out.flush();
 }

@@ -17,49 +17,49 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "inputevent.h"
+#include "hid_inputevent.h"
 #include <QMultiMap>
 #include <QDebug>
 #include <QStringList>
 #include <QPair>
 
-class InputEventPrivate {
+class HidInputEventPrivate {
 public:
-    InputEventPrivate() {}
+    HidInputEventPrivate() {}
     QMultiMap<uint, RegisterValue> registers;
 
-    QList<uint> valuesFor(const QList<RegisterValue> registerValues) {
+    QList<uint> valuesFor(const QList<QVariant> registerValues) {
         QList<uint> result;
-        foreach(RegisterValue registerValue, registerValues) {
-            result << registerValue.first;
+        foreach(QVariant registerValue, registerValues) {
+            result << registerValue.toList().first().toUInt();
         }
         return result;
     }
 
-    bool registersAreDifferent(const RegisterValue &mine, const QList<RegisterValue> &other) {
+    bool registersAreDifferent(const RegisterValue &mine, const QList<QVariant> &other) {
         return !valuesFor(other).contains(mine.first);
     }
 };
 
-InputEvent::InputEvent(QObject *parent) :
-    QObject(parent), d_ptr(new InputEventPrivate())
+HidInputEvent::HidInputEvent(QObject *parent) :
+    QObject(parent), d_ptr(new HidInputEventPrivate())
 {
 }
 
-InputEvent::~InputEvent()
+HidInputEvent::~HidInputEvent()
 {
     delete d_ptr;
 }
 
-void InputEvent::addRegister(uint hid, uint value, uint index)
+void HidInputEvent::addRegister(uint hid, uint value, uint index)
 {
-    Q_D(InputEvent);
+    Q_D(HidInputEvent);
     d->registers.insert(hid, RegisterValue(value, index));
 }
 
-QString InputEvent::asJSON()
+QString HidInputEvent::asJSON()
 {
-    Q_D(InputEvent);
+    Q_D(HidInputEvent);
     QStringList registers;
     QList<RegisterValue> values = d->registers.values();
     auto sortByIndex = [](const RegisterValue &first, const RegisterValue &second) {return first.second<second.second;};
@@ -70,32 +70,43 @@ QString InputEvent::asJSON()
     return QString("[\n%1\n]\n").arg(registers.join(",\n"));
 }
 
-bool InputEvent::matches(InputEvent *other)
+
+bool HidInputEvent::matches(const QVariantMap &payload)
 {
-    Q_D(InputEvent);
-    foreach(uint key, d->registers.keys()) {
-        if(!other->hasRegister(key))
+    Q_D(HidInputEvent);
+    const QVariantMap registers = payload.value("registers").toMap();
+    foreach(QString key, registers.keys()) {
+        uint hid = key.toUInt();
+        if(!hasRegister(hid))
             return false;
-        if( d->registersAreDifferent(registersFor(key).first(), other->registersFor(key) )) // we are on ConfigRegister, therefore we assume we've only one value
+        if(d->registersAreDifferent(registersFor(hid).first(), registers.values(key)))
             return false;
     }
     return true;
 }
 
-QList<RegisterValue> InputEvent::registersFor(uint hid)
+
+QList<RegisterValue> HidInputEvent::registersFor(uint hid)
 {
-    Q_D(InputEvent);
+    Q_D(HidInputEvent);
     return d->registers.values(hid);
 }
 
-bool InputEvent::hasRegister(uint hid)
+bool HidInputEvent::hasRegister(uint hid)
 {
-    Q_D(InputEvent);
+    Q_D(HidInputEvent);
     return d->registers.contains(hid);
 }
 
-uint InputEvent::registersCount()
+uint HidInputEvent::registersCount()
 {
-    Q_D(InputEvent);
+    Q_D(HidInputEvent);
     return d->registers.values().count();
+}
+
+
+
+HidInputEvent::operator QString()
+{
+    return asJSON();
 }

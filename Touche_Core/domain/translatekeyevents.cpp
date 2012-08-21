@@ -29,6 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/configevent.h"
 #include "backend/config/bindingsconfig.h"
 
+
+#include "hid_inputevent.h" // TODO remove
+
 class TranslateKeyEventsPrivate {
 public:
     TranslateKeyEventsPrivate(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig, TranslateKeyEvents* parent)
@@ -64,7 +67,7 @@ TranslateKeyEvents::~TranslateKeyEvents()
     delete d_ptr;
 }
 
-void TranslateKeyEvents::inputEvent(InputEvent *keyEvent, DeviceInfo *deviceInfo)
+void TranslateKeyEvents::inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo)
 {
     Q_D(TranslateKeyEvents);
     DatabaseEntry *databaseEntry = d->keyboardDatabase->keyboard(deviceInfo);
@@ -84,7 +87,7 @@ void TranslateKeyEvents::noMoreEvents(DeviceInfo *deviceInfo)
     Q_UNUSED(deviceInfo);
     if(!d->lastMatch) return;
 
-    InputEvent * voidInputEvent = new InputEvent(d->lastMatch);
+    InputEvent * voidInputEvent = new HidInputEvent(d->lastMatch);
     if(d->match(d->lastMatch, voidInputEvent, QStringList("keyrelease"))) {
         d->lastMatch=0;
     }

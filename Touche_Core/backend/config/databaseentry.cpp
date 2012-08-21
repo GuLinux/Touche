@@ -37,19 +37,22 @@ public:
                 addRegisters(configEvent, eventValue.toList(), eventName);
             }
             if(eventValue.type() == QVariant::String && eventValue.toString() == "no_more_events") {
-                configEvent->addInputEvent(eventName, new NoMoreEventsInputEvent(configEvent) );
+//                configEvent->addInputEvent(eventName, new NoMoreEventsInputEvent(configEvent) ); TODO: restore
             }
         }
         configuredEvents << configEvent;
     }
 
     void addRegisters(ConfigEvent *configEvent, QList<QVariant> configuredRegisters, const QString &eventName) {
-        InputEvent *inputEvent = new InputEvent(configEvent);
+        QVariantMap payload;
+        QVariantMap registers;
         foreach(QVariant keyRegister, configuredRegisters) {
-            inputEvent->addRegister(keyRegister.toMap().value("hid").toUInt(), keyRegister.toMap().value("value").toUInt(), 0); // TODO: index doesn't mean anything, here
+            registers.insert(keyRegister.toMap().value("hid").toString(), keyRegister.toMap().value("value"));
+//            inputEvent->addRegister(keyRegister.toMap().value("hid").toUInt(), keyRegister.toMap().value("value").toUInt(), 0); // TODO: index doesn't mean anything, here
         }
-        inputEvent->setProperty("eventType", eventName);
-        configEvent->addInputEvent(eventName, inputEvent);
+//        inputEvent->setProperty("eventType", eventName); TODO: what was this for?
+        payload.insert("registers", registers); // TODO: maybe we shouldn't parse at all, now...
+        configEvent->addInputEvent(eventName, payload);
     }
 };
 

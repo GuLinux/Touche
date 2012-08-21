@@ -70,7 +70,7 @@ public:
         devices.insert(devicePath, QPair<QThread*, HidDev*>(deviceThread, device) );
         q->connect(device, SIGNAL(removed(DeviceInfo*)), SLOT(deviceRemoved(DeviceInfo*)));
         q->connect(device, SIGNAL(noMoreEvents(DeviceInfo*)), SIGNAL(noMoreEvents(DeviceInfo*)));
-        q->connect(device, SIGNAL(event(InputEvent*,DeviceInfo*)), SIGNAL(event(InputEvent*,DeviceInfo*)));
+        q->connect(device, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), SIGNAL(inputEvent(InputEventP,DeviceInfo*)));
         q->connect(device, SIGNAL(connected(DeviceInfo*)), SIGNAL(connected(DeviceInfo*)));
         QMetaObject::invokeMethod(device, "start", Qt::QueuedConnection);
 

@@ -20,13 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef NOMOREEVENTSINPUTEVENT_H
 #define NOMOREEVENTSINPUTEVENT_H
 #include "domain/inputevent.h"
-
-class NoMoreEventsInputEvent : public InputEvent
+#include <QObject>
+class NoMoreEventsInputEvent : public QObject, public InputEvent
 {
     Q_OBJECT
 public:
     explicit NoMoreEventsInputEvent(QObject *parent = 0);
-    virtual bool matches(InputEvent *other);
+    virtual bool matches(const QVariantMap &payload);
 signals:
     
 public slots:

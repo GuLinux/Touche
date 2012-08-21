@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backend/config/databaseentry.h"
 #include "domain/deviceinfo.h"
 #include "backend/config/keyboarddatabase.h"
+#include "domain/hid_inputevent.h"
 
 #define OPEN_TIMEOUT 5000
 
@@ -104,7 +105,7 @@ public:
             qDebug() << "Error on read: " << strerror(errno);
             return;
         }
-        InputEvent *keyEvent = new InputEvent(q);
+        HidInputEvent *keyEvent = new HidInputEvent(q);
         for(int i=0; i<rd; i++) {
             keyEvent->addRegister(ev[i].hid, ev[i].value, i);
         }
