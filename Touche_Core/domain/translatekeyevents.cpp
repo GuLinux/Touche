@@ -30,15 +30,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backend/config/bindingsconfig.h"
 #include "nomoreeventsinputevent.h"
 
-
-#include "hid_inputevent.h" // TODO remove
-
 class TranslateKeyEventsPrivate {
 public:
     TranslateKeyEventsPrivate(KeyboardDatabase *keyboardDatabase, BindingsConfig *bindingsConfig, TranslateKeyEvents* parent)
-        : keyboardDatabase(keyboardDatabase), lastMatch(0), bindingsConfig(bindingsConfig), suspended(false), q_ptr(parent) {}
+        : keyboardDatabase(keyboardDatabase),
+          bindingsConfig(bindingsConfig), suspended(false), q_ptr(parent) {
+        resetLastMatch();
+    }
     KeyboardDatabase *keyboardDatabase;
-    ConfigEvent *lastMatch;
+    QPair<QStringList,ConfigEvent*> lastMatch;
+    inline bool hasLastMatch() { return lastMatch.second!=0; }
+    inline void resetLastMatch() { lastMatch = QPair<QStringList,ConfigEvent*>(QStringList(), 0); }
     BindingsConfig *bindingsConfig;
     bool suspended;
     TranslateKeyEvents* const q_ptr;
@@ -49,11 +51,9 @@ public:
         if(!configuredEvent)
             return 0;
         Binding *binding = configuredEvent->matches(inputEvent, tagsToMatch, bindingsConfig);
-        if(binding) {
-            qDebug() << "Found match; lastMatch=" << lastMatch << ", thisMatch=" << configuredEvent;
-        }
-        if(binding && lastMatch != configuredEvent) {
-            lastMatch = configuredEvent;
+        QPair<QStringList,ConfigEvent*> currentMatch(tagsToMatch, configuredEvent);
+        if(binding && lastMatch != currentMatch) {
+            lastMatch = currentMatch;
             if(!suspended) binding->execute();
             emit q->keyEvent(configuredEvent->property("keyName").toString());
         }
@@ -75,10 +75,9 @@ void TranslateKeyEvents::inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo
 {
     Q_D(TranslateKeyEvents);
     DatabaseEntry *databaseEntry = d->keyboardDatabase->keyboard(deviceInfo);
-    qDebug() << "LastMatch: " << d->lastMatch;
 
-    if(d->match(d->lastMatch, keyEvent, QStringList("keyrelease"))) {
-        d->lastMatch=0;
+    if(d->match(d->lastMatch.second, keyEvent, QStringList("keyrelease"))) {
+        d->resetLastMatch();
         return;
     }
     foreach(ConfigEvent *configKeyEvent, databaseEntry->configuredEvents()) {
@@ -91,12 +90,11 @@ void TranslateKeyEvents::noMoreEvents(DeviceInfo *deviceInfo)
 {
     Q_D(TranslateKeyEvents);
     Q_UNUSED(deviceInfo);
-    if(!d->lastMatch) return;
+    if(!d->hasLastMatch()) return;
 
-    qDebug() << "NoMoreEvents";
-    InputEvent * voidInputEvent = new NoMoreEventsInputEvent(d->lastMatch); // TODO: verify
-    if(d->match(d->lastMatch, voidInputEvent, QStringList("keyrelease"))) {
-        d->lastMatch=0;
+    InputEvent * voidInputEvent = new NoMoreEventsInputEvent(d->lastMatch.second);
+    if(d->match(d->lastMatch.second, voidInputEvent, QStringList("keyrelease"))) {
+        d->resetLastMatch();
     }
 }
 

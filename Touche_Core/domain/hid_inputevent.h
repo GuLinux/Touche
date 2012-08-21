@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class HidInputEventPrivate;
 
-typedef QPair<uint, uint> RegisterValue;
-
 class HidInputEvent : public QObject, public InputEvent
 {
     Q_OBJECT
@@ -37,9 +35,6 @@ public:
     ~HidInputEvent();
     void addRegister(uint hid, uint value, uint index);
     QString asJSON();
-    uint registersCount();
-    QList<RegisterValue> registersFor(uint hid);
-    bool hasRegister(uint hid);
     virtual bool matches(const QVariantMap &payload);
     virtual operator QString();
 signals:

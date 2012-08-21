@@ -32,27 +32,12 @@ public:
         ConfigEvent *configEvent = new ConfigEvent(parent);
         foreach(QString eventName, events.keys()) {
             configEvent->setProperty("keyName", keyName);
-            QVariant eventValue = events.value(eventName);
-            if(eventValue.type() ==QVariant::List) {
-                addRegisters(configEvent, eventValue.toList(), eventName);
-            }
-            if(eventValue.type() == QVariant::String && eventValue.toString() == "no_more_events") {
-//                configEvent->addInputEvent(eventName, new NoMoreEventsInputEvent(configEvent) ); TODO: restore
-            }
+            QVariantMap payload = events.value(eventName).toMap();
+            configEvent->addInputEvent(eventName, payload);
         }
         configuredEvents << configEvent;
     }
 
-    void addRegisters(ConfigEvent *configEvent, QList<QVariant> configuredRegisters, const QString &eventName) {
-        QVariantMap payload;
-        QVariantMap registers;
-        foreach(QVariant keyRegister, configuredRegisters) {
-            registers.insertMulti(keyRegister.toMap().value("hid").toString(), keyRegister.toMap().value("value"));
-        }
-//        inputEvent->setProperty("eventType", eventName); TODO: what was this for?
-        payload.insert("registers", registers); // TODO: maybe we shouldn't parse at all, now...
-        configEvent->addInputEvent(eventName, payload);
-    }
 };
 
 DatabaseEntry::DatabaseEntry(QObject *parent) : QObject(parent), d_ptr(new DatabaseEntryPrivate())

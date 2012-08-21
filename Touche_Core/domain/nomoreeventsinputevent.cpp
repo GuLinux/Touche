@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "nomoreeventsinputevent.h"
+#include <QDebug>
 
 NoMoreEventsInputEvent::NoMoreEventsInputEvent(QObject *parent) :
     QObject(parent)
@@ -26,5 +27,5 @@ NoMoreEventsInputEvent::NoMoreEventsInputEvent(QObject *parent) :
 
 bool NoMoreEventsInputEvent::matches(const QVariantMap &payload)
 {
-    return payload.value("registers").toMap().values().count()==0; // TODO: now a better check on a generic payload is possible
+    return payload.value("rule").toString() == "no_more_events";
 }

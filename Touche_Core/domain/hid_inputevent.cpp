@@ -26,19 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class HidInputEventPrivate {
 public:
     HidInputEventPrivate() {}
-    QMultiMap<uint, RegisterValue> registers;
-
-    QList<uint> valuesFor(const QList<QVariant> registerValues) {
-        QList<uint> result;
-        foreach(QVariant registerValue, registerValues) {
-            result << registerValue.toUInt();
-        }
-        return result;
-    }
-
-    bool registersAreDifferent(const RegisterValue &mine, const QList<QVariant> &other) {
-        return !valuesFor(other).contains(mine.first);
-    }
+    QMultiMap<uint, uint> registers;
 };
 
 HidInputEvent::HidInputEvent(QObject *parent) :
@@ -54,60 +42,44 @@ HidInputEvent::~HidInputEvent()
 void HidInputEvent::addRegister(uint hid, uint value, uint index)
 {
     Q_D(HidInputEvent);
-    d->registers.insert(hid, RegisterValue(value, index));
+    Q_UNUSED(index);
+    d->registers.insert(hid, value);
 }
 
 QString HidInputEvent::asJSON()
 {
     Q_D(HidInputEvent);
     QStringList registers;
-    QList<RegisterValue> values = d->registers.values();
-    auto sortByIndex = [](const RegisterValue &first, const RegisterValue &second) {return first.second<second.second;};
-    qSort(values.begin(), values.end(), sortByIndex );
-    foreach(RegisterValue value, values) {
-        registers << QString("{ \"hid\":%1, \"value\":%2, \"index\":%3 }").arg(d->registers.key(value), 10).arg(value.first, 10).arg(value.second, 3, 10, QChar('0'));
+    foreach(uint hid, d->registers.keys()) {
+        foreach(uint value, d->registers.values(hid))
+            registers << QString("{ \"hid\":%1, \"value\":%2 }")
+                     .arg(hid, 10)
+                     .arg(value, 10);
     }
     return QString("[\n%1\n]\n").arg(registers.join(",\n"));
+    return QString();
 }
 
 
 bool HidInputEvent::matches(const QVariantMap &payload)
 {
     Q_D(HidInputEvent);
-    const QVariantMap registers = payload.value("registers").toMap();
+
+    const QVariantList registers = payload.value("hiddev_registers").toList();
     if(registers.isEmpty()) {
         return false;
     }
-    foreach(QString key, registers.keys()) {
-        uint hid = key.toUInt();
-        if(!hasRegister(hid))
+    foreach(QVariant hidRegister, registers) {
+        uint hid = hidRegister.toMap().value("hid").toUInt();
+        uint value = hidRegister.toMap().value("value").toUInt();
+
+        if(!d->registers.contains(hid))
             return false;
-        if(d->registersAreDifferent(registersFor(hid).first(), registers.values(key)))
+        if(!d->registers.values(hid).contains(value))
             return false;
     }
     return true;
 }
-
-
-QList<RegisterValue> HidInputEvent::registersFor(uint hid)
-{
-    Q_D(HidInputEvent);
-    return d->registers.values(hid);
-}
-
-bool HidInputEvent::hasRegister(uint hid)
-{
-    Q_D(HidInputEvent);
-    return d->registers.contains(hid);
-}
-
-uint HidInputEvent::registersCount()
-{
-    Q_D(HidInputEvent);
-    return d->registers.values().count();
-}
-
-
 
 HidInputEvent::operator QString()
 {

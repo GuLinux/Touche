@@ -46,8 +46,8 @@ Binding *ConfigEvent::matches(InputEvent *other, const QStringList &tags, Bindin
 {
     Q_D(ConfigEvent);
     foreach(QString tag, tags) {
-        QVariantMap cfgInputEvent = d->cfgInputEvents.value(tag);
-        if(other->matches(cfgInputEvent)) {
+        QVariantMap payload = d->cfgInputEvents.value(tag);
+        if(other->matches(payload)) {
             QString eventName = QString("%1/%2")
                     .arg(property("keyName").toString() )
                     .arg(tag);
