@@ -37,6 +37,7 @@ public:
     QString asJSON();
     virtual bool matches(const QVariantMap &payload);
     virtual operator QString();
+    virtual QObject *nearestQObject();
 signals:
     
 public slots:

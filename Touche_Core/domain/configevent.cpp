@@ -52,7 +52,7 @@ Binding *ConfigEvent::matches(InputEvent *other, const QStringList &tags, Bindin
                     .arg(property("keyName").toString() )
                     .arg(tag);
             qDebug() << "Got match: " << eventName;
-            return bindingsConfig->bindingFor(eventName, (QObject*)(other)); // TODO: not very elegant..
+            return bindingsConfig->bindingFor(eventName, other->nearestQObject());
         }
     }
     return 0;

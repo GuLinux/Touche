@@ -27,6 +27,7 @@ class NoMoreEventsInputEvent : public QObject, public InputEvent
 public:
     explicit NoMoreEventsInputEvent(QObject *parent = 0);
     virtual bool matches(const QVariantMap &payload);
+    virtual QObject *nearestQObject();
 signals:
     
 public slots:

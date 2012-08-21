@@ -24,11 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QVariantMap>
 #include <QString>
+#include <QObject>
+
 class InputEvent
 {
 public:
     virtual ~InputEvent() {}
     virtual bool matches(const QVariantMap &payload) = 0;
+    virtual QObject *nearestQObject() = 0;
     virtual operator QString() { return QString(); }
 };
 

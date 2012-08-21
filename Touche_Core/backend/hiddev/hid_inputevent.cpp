@@ -96,3 +96,9 @@ HidInputEvent::operator QString()
 {
     return asJSON();
 }
+
+
+QObject *HidInputEvent::nearestQObject()
+{
+    return this;
+}

@@ -29,3 +29,9 @@ bool NoMoreEventsInputEvent::matches(const QVariantMap &payload)
 {
     return payload.value("rule").toString() == "no_more_events";
 }
+
+
+QObject *NoMoreEventsInputEvent::nearestQObject()
+{
+    return this;
+}
