@@ -47,8 +47,7 @@ public:
         QVariantMap payload;
         QVariantMap registers;
         foreach(QVariant keyRegister, configuredRegisters) {
-            registers.insert(keyRegister.toMap().value("hid").toString(), keyRegister.toMap().value("value"));
-//            inputEvent->addRegister(keyRegister.toMap().value("hid").toUInt(), keyRegister.toMap().value("value").toUInt(), 0); // TODO: index doesn't mean anything, here
+            registers.insertMulti(keyRegister.toMap().value("hid").toString(), keyRegister.toMap().value("value"));
         }
 //        inputEvent->setProperty("eventType", eventName); TODO: what was this for?
         payload.insert("registers", registers); // TODO: maybe we shouldn't parse at all, now...

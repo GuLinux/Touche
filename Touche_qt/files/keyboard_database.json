@@ -56,5 +56,26 @@
       "Next.r199":       { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value": 6, "index":003 } ], "keyrelease": "no_more_events" },
       "Menu.r199":       { "keypress": [ { "hid":4278190080, "value":199, "index":002 }, { "hid":4278190080, "value": 3, "index":003 } ], "keyrelease": "no_more_events" }
     }
+  },
+  "0x5ac:0x8242": {
+    "name": "Apple IR receiver for Remote Control",
+    "vendor": "0x5ac",
+    "product": "0x8240",
+    "read_timeout_milliseconds": 200,
+    "keys": {
+      "Play_Pause.r95": { "keypress": [ { "hid":786432, "value": 95, "index":002 }, { "hid":786432, "value": 4, "index":003 } ], "keyrelease": "no_more_events" },
+      "Plus.r95":       { "keypress": [ { "hid":786432, "value": 95, "index":002 }, { "hid":786432, "value":11, "index":003 } ], "keyrelease": "no_more_events" },
+      "Minus.r95":      { "keypress": [ { "hid":786432, "value": 95, "index":002 }, { "hid":786432, "value":13, "index":003 } ], "keyrelease": "no_more_events" },
+      "Prev.r95":       { "keypress": [ { "hid":786432, "value": 95, "index":002 }, { "hid":786432, "value": 8, "index":003 } ], "keyrelease": "no_more_events" },
+      "Next.r95":       { "keypress": [ { "hid":786432, "value": 95, "index":002 }, { "hid":786432, "value": 7, "index":003 } ], "keyrelease": "no_more_events" },
+      "Menu.r95":       { "keypress": [ { "hid":786432, "value": 95, "index":002 }, { "hid":786432, "value": 2, "index":003 } ], "keyrelease": "no_more_events" },
+
+      "Play_Pause.r199": { "keypress": [ { "hid":786432, "value":199, "index":002 }, { "hid":786432, "value": 5, "index":003 } ], "keyrelease": "no_more_events" },
+      "Plus.r199":       { "keypress": [ { "hid":786432, "value":199, "index":002 }, { "hid":786432, "value":10, "index":003 } ], "keyrelease": "no_more_events" },
+      "Minus.r199":      { "keypress": [ { "hid":786432, "value":199, "index":002 }, { "hid":786432, "value":12, "index":003 } ], "keyrelease": "no_more_events" },
+      "Prev.r199":       { "keypress": [ { "hid":786432, "value":199, "index":002 }, { "hid":786432, "value": 9, "index":003 } ], "keyrelease": "no_more_events" },
+      "Next.r199":       { "keypress": [ { "hid":786432, "value":199, "index":002 }, { "hid":786432, "value": 6, "index":003 } ], "keyrelease": "no_more_events" },
+      "Menu.r199":       { "keypress": [ { "hid":786432, "value":199, "index":002 }, { "hid":786432, "value": 3, "index":003 } ], "keyrelease": "no_more_events" }
+    }
   }
 }

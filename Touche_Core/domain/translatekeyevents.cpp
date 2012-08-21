@@ -87,7 +87,7 @@ void TranslateKeyEvents::noMoreEvents(DeviceInfo *deviceInfo)
     Q_UNUSED(deviceInfo);
     if(!d->lastMatch) return;
 
-    InputEvent * voidInputEvent = new HidInputEvent(d->lastMatch);
+    InputEvent * voidInputEvent = new HidInputEvent(d->lastMatch); // TODO: implement as other separate class?
     if(d->match(d->lastMatch, voidInputEvent, QStringList("keyrelease"))) {
         d->lastMatch=0;
     }

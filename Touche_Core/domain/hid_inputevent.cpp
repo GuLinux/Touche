@@ -31,7 +31,7 @@ public:
     QList<uint> valuesFor(const QList<QVariant> registerValues) {
         QList<uint> result;
         foreach(QVariant registerValue, registerValues) {
-            result << registerValue.toList().first().toUInt();
+            result << registerValue.toUInt();
         }
         return result;
     }
