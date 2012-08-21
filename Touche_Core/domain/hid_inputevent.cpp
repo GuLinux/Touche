@@ -75,6 +75,9 @@ bool HidInputEvent::matches(const QVariantMap &payload)
 {
     Q_D(HidInputEvent);
     const QVariantMap registers = payload.value("registers").toMap();
+    if(registers.isEmpty()) {
+        return false;
+    }
     foreach(QString key, registers.keys()) {
         uint hid = key.toUInt();
         if(!hasRegister(hid))

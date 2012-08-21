@@ -26,5 +26,5 @@ NoMoreEventsInputEvent::NoMoreEventsInputEvent(QObject *parent) :
 
 bool NoMoreEventsInputEvent::matches(const QVariantMap &payload)
 {
-    return payload.value("registers").toMap().values().count()==0;
+    return payload.value("registers").toMap().values().count()==0; // TODO: now a better check on a generic payload is possible
 }

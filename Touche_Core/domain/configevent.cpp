@@ -45,7 +45,6 @@ ConfigEvent::~ConfigEvent()
 Binding *ConfigEvent::matches(InputEvent *other, const QStringList &tags, BindingsConfig *bindingsConfig)
 {
     Q_D(ConfigEvent);
-
     foreach(QString tag, tags) {
         QVariantMap cfgInputEvent = d->cfgInputEvents.value(tag);
         if(other->matches(cfgInputEvent)) {

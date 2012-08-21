@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backend/config/databaseentry.h"
 #include "domain/configevent.h"
 #include "backend/config/bindingsconfig.h"
+#include "nomoreeventsinputevent.h"
 
 
 #include "hid_inputevent.h" // TODO remove
@@ -49,6 +50,9 @@ public:
             return 0;
         Binding *binding = configuredEvent->matches(inputEvent, tagsToMatch, bindingsConfig);
         if(binding) {
+            qDebug() << "Found match; lastMatch=" << lastMatch << ", thisMatch=" << configuredEvent;
+        }
+        if(binding && lastMatch != configuredEvent) {
             lastMatch = configuredEvent;
             if(!suspended) binding->execute();
             emit q->keyEvent(configuredEvent->property("keyName").toString());
@@ -71,6 +75,8 @@ void TranslateKeyEvents::inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo
 {
     Q_D(TranslateKeyEvents);
     DatabaseEntry *databaseEntry = d->keyboardDatabase->keyboard(deviceInfo);
+    qDebug() << "LastMatch: " << d->lastMatch;
+
     if(d->match(d->lastMatch, keyEvent, QStringList("keyrelease"))) {
         d->lastMatch=0;
         return;
@@ -87,7 +93,8 @@ void TranslateKeyEvents::noMoreEvents(DeviceInfo *deviceInfo)
     Q_UNUSED(deviceInfo);
     if(!d->lastMatch) return;
 
-    InputEvent * voidInputEvent = new HidInputEvent(d->lastMatch); // TODO: implement as other separate class?
+    qDebug() << "NoMoreEvents";
+    InputEvent * voidInputEvent = new NoMoreEventsInputEvent(d->lastMatch); // TODO: verify
     if(d->match(d->lastMatch, voidInputEvent, QStringList("keyrelease"))) {
         d->lastMatch=0;
     }
