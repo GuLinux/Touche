@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "models/cfgkeyevent.h"
 
 
-BindingConfigurationWidget *RunCommandConfigFactory::build(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, QWidget *parent)
+BindingConfigurationWidget *RunCommandConfigFactory::build(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, SiblingsList *, QWidget *parent)
 {
     return new RunCommandConfig(settings, bindingType, event, parent);
 }

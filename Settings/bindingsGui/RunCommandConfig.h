@@ -26,7 +26,7 @@ class Ui_RunCommandConfig;
 class RunCommandConfigFactory : public BindingConfigurationWidgetFactory {
 public:
     virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
-                CfgKeyEvent *event, QWidget *parent);
+                CfgKeyEvent *event, SiblingsList *, QWidget *parent);
 };
 
 class RunCommandConfig : public BindingConfigurationWidget

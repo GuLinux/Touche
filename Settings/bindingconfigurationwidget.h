@@ -24,17 +24,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "functional"
 #include <QHash>
 #include <QVariant>
+#include <QList>
+
 class QSettings;
 class CfgKeyEvent;
 class BindingConfigurationWidget;
 
-typedef std::function<void(BindingConfigurationWidget*)> BindUI;
-typedef std::function<void()> DeleteUI;
+class SiblingsList : public QObject {
+public:
+    explicit SiblingsList(QObject *parent = 0);
+    void addSibling(BindingConfigurationWidget *sibling);
+    QList<BindingConfigurationWidget*> siblings(BindingConfigurationWidget* current);
+private:
+    QList<BindingConfigurationWidget*> m_siblings;
+};
 
 class BindingConfigurationWidgetFactory {
 public:
     virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
-                CfgKeyEvent* event, QWidget *parent=0) = 0;
+                CfgKeyEvent* event, SiblingsList *siblingsList, QWidget *parent=0) = 0;
     static QString bindingSettingsKey(CfgKeyEvent *event, const QString configBindingKey);
 };
 

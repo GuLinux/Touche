@@ -26,20 +26,23 @@ class Ui_ToKeyConfig;
 class ToKeyConfigFactory : public BindingConfigurationWidgetFactory {
 public:
     virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
-                CfgKeyEvent *event, QWidget *parent);
+                CfgKeyEvent *event, SiblingsList *siblingsList, QWidget *parent);
 };
 
 class ToKeyConfig : public BindingConfigurationWidget
 {
     Q_OBJECT
 public:
-    explicit ToKeyConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, QWidget *parent=0);
+    explicit ToKeyConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, SiblingsList *siblingsList, QWidget *parent=0);
     virtual ~ToKeyConfig();
 signals:
     
 public slots:
+    void updateSiblings(const QString &text);
 private:
     Ui_ToKeyConfig *ui;
+    SiblingsList *siblingsList;
+    QString keySymbol;
     
 };
 

@@ -86,3 +86,24 @@ QString BindingConfigurationWidgetFactory::bindingSettingsKey(CfgKeyEvent *event
 {
     return QString("%1/%2/%3").arg(event->configKey(), configBindingKey);
 }
+
+
+void SiblingsList::addSibling(BindingConfigurationWidget *sibling)
+{
+    m_siblings << sibling;
+}
+
+
+QList<BindingConfigurationWidget *> SiblingsList::siblings(BindingConfigurationWidget *current)
+{
+    QList<BindingConfigurationWidget*> siblingsOfCurrent;
+    foreach(BindingConfigurationWidget *sibling, m_siblings) {
+        if(current != sibling) siblingsOfCurrent << sibling;
+    }
+    return siblingsOfCurrent;
+}
+
+
+SiblingsList::SiblingsList(QObject *parent) : QObject(parent)
+{
+}

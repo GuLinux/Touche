@@ -61,10 +61,11 @@ void KeyBindingConfiguration::bindingChanged(int index)
 
     if(configBindingKey == "DoNothing") return;
     qDebug() << "configBindingKey: " << configBindingKey;
+    SiblingsList *siblingsList = new SiblingsList(this);
     foreach(CfgKeyEvent* event, m_cfgKey->cfgKeyEvents()) {
         BindingConfigurationWidget *widget = widgetsFactories.value(configBindingKey)
-                ->build(settings, configBindingKey, event, this);
-        qDebug() << "Got widget: " << widget << ", " << widget->metaObject()->className();
+                ->build(settings, configBindingKey, event, siblingsList, this);
+        siblingsList->addSibling(widget);
         tabsWidgets.insert(event->label(), widget);
         ui->bindingEvents->addTab(widget, event->label());
     }
