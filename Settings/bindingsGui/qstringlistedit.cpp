@@ -23,12 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringListModel>
 #include <QDebug>
 
-QStringListEdit::QStringListEdit(QWidget *parent) :
+QStringListEdit::QStringListEdit(QWidget *parent, bool disableDelete) :
     QWidget(parent),
     ui(new Ui::QStringListEdit), model(new QStringListModel(this))
 {
     ui->setupUi(this);
     ui->qsle_listview->setModel(model);
+    if(disableDelete)
+        ui->qsle_delete->setEnabled(false);
     connect(ui->qsle_listview, SIGNAL(activated(QModelIndex)), SLOT(itemSelected(QModelIndex)));
     connect(ui->qsle_listview, SIGNAL(clicked(QModelIndex)), SLOT(itemSelected(QModelIndex)));
     connect(ui->qsle_listview, SIGNAL(doubleClicked(QModelIndex)), SLOT(itemSelected(QModelIndex)));

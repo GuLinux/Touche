@@ -21,13 +21,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TOUCHESYSTEMTRAY_H
 
 #include <QtCore/QObject>
-
+#include <QDialog>
 class QMenu;
 class DeviceInfo;
 class ToucheSystemTrayPrivate;
 class TrayManager;
 class ToucheCore;
 class QAction;
+class QSettings;
+class QStringListEdit;
+class EditProfilesDialog : public QDialog {
+    Q_OBJECT
+public:
+    EditProfilesDialog(ToucheCore *core);
+public slots:
+    void accept();
+private:
+    QStringListEdit *profilesList;
+    QSettings *settings;
+};
+
 class ToucheSystemTray : public QObject
 {
     Q_OBJECT
@@ -44,6 +57,7 @@ public slots:
     void aboutToQuit();
     void updateProfilesList();
     void setProfile();
+    void editProfiles();
 
 private:
     ToucheSystemTrayPrivate * const d_ptr;

@@ -33,7 +33,7 @@ class QStringListEdit : public QWidget
     Q_OBJECT
     
 public:
-    explicit QStringListEdit(QWidget *parent = 0);
+    explicit QStringListEdit(QWidget *parent = 0, bool disableDelete = false);
     ~QStringListEdit();
     QStringList stringList() const;
     void setStringList(const QStringList &stringList);

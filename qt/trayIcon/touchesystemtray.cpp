@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include "traymanager.h"
 #include <QMessageBox>
+#include "bindingsGui/qstringlistedit.h"
 
 class ToucheSystemTrayPrivate {
 public:
@@ -64,7 +65,7 @@ ToucheSystemTray::~ToucheSystemTray()
 void ToucheSystemTray::showConfigurationDialog()
 {
     Q_D(ToucheSystemTray);
-    if(d->toucheCore->currentProfile().isEmpty()) {
+    if(d->toucheCore->currentProfile().isEmpty() || ! d->toucheCore->availableProfiles().contains(d->toucheCore->currentProfile() )) {
         QMessageBox::warning(0, tr("Profile missing"), "Error! You have to add and select a profile first.");
         return;
     }
@@ -128,6 +129,9 @@ void ToucheSystemTray::updateProfilesList()
 {
     Q_D(ToucheSystemTray);
     d->profilesMenu->clear();
+    QAction *editProfiles = d->profilesMenu->addAction(tr("Edit Profiles..."));
+    editProfiles->setCheckable(false);
+    connect(editProfiles, SIGNAL(triggered()), this, SLOT(editProfiles()));
     foreach(QString profile, d->toucheCore->availableProfiles()) {
         QAction *profileAction = d->profilesMenu->addAction(profile);
         profileAction->setObjectName(profile);
@@ -143,4 +147,52 @@ void ToucheSystemTray::setProfile()
     Q_D(ToucheSystemTray);
     QAction *profileAction = (QAction*) sender();
     d->toucheCore->setProfile(profileAction->objectName());
+}
+
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QSettings>
+
+EditProfilesDialog::EditProfilesDialog(ToucheCore *core)
+    : QDialog(){
+    QVBoxLayout *vlayout = new QVBoxLayout(this);
+    settings = new QSettings("GuLinux", qAppName(), this);
+    profilesList = new QStringListEdit();
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    vlayout->addWidget(new QLabel("You can add new profiles here.\nEach profile will have its own key bindings."));
+    vlayout->addWidget(profilesList);
+    vlayout->addWidget(buttonBox);
+    profilesList->setStringList(core->availableProfiles());
+}
+
+void ToucheSystemTray::editProfiles()
+{
+    Q_D(ToucheSystemTray);
+    EditProfilesDialog editProfilesDialog(d->toucheCore);
+    editProfilesDialog.exec();
+    updateProfilesList();
+}
+
+
+void EditProfilesDialog::accept()
+{
+    foreach(QString profile, settings->childGroups()) {
+        if(!profile.startsWith("bindings_")) continue;
+        if(profilesList->stringList().contains(QString(profile).replace("bindings_", ""))) continue;
+        settings->beginGroup(profile);
+        settings->remove("");
+        settings->endGroup();
+    }
+
+    foreach(QString profile, profilesList->stringList()) {
+        if(settings->childGroups().contains(QString("bindings_%1").arg(profile))) continue;
+        settings->beginGroup(QString("bindings_%1").arg(profile));
+        settings->setValue("name", profile);
+        settings->endGroup();
+    }
+
+    QDialog::accept();
 }
