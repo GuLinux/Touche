@@ -30,7 +30,7 @@ BindingConfigurationWidget *RunCommandConfigFactory::build(QSettings *settings, 
 
 
 RunCommandConfig::RunCommandConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, QWidget *parent)
-    : BindingConfigurationWidget(settings, bindingType, BindingConfigurationWidgetFactory::bindingSettingsKey(event, bindingType), parent)
+    : BindingConfigurationWidget(settings, bindingType, event->configKey(), parent)
 {
     ui = new Ui_RunCommandConfig();
     const QString m_bindingSettingsKey = BindingConfigurationWidgetFactory::bindingSettingsKey(event, bindingType);

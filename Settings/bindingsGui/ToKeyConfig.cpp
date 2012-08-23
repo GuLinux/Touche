@@ -38,7 +38,7 @@ ToKeyConfig::~ToKeyConfig()
 
 
 ToKeyConfig::ToKeyConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, SiblingsList *siblingsList, QWidget *parent)
-    : BindingConfigurationWidget(settings, bindingType, BindingConfigurationWidgetFactory::bindingSettingsKey(event, bindingType), parent),
+    : BindingConfigurationWidget(settings, bindingType, event->configKey(), parent),
       siblingsList(siblingsList)
 {
     ui = new Ui_ToKeyConfig();

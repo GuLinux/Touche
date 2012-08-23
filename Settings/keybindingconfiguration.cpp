@@ -40,6 +40,7 @@ KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *sett
     ui->bindingTypeComboBox->addItem(tr("DoNothing", "Do Nothing Action"), "DoNothing");
     ui->bindingTypeComboBox->addItem(tr("TranslateToKey", "Translate to Key Action"), "TranslateToKey");
     ui->bindingTypeComboBox->addItem(tr("RunCommand", "Run Command Action"), "RunCommand");
+    qDebug() << "ConfigKey: " << cfgKey->cfgKeyEvents().first()->configKey();
     ui->bindingTypeComboBox->setCurrentIndex(ui->bindingTypeComboBox->findData(settings->value(cfgKey->cfgKeyEvents().first()->configKey(), "DoNothing")));
 }
 
