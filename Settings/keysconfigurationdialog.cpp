@@ -27,12 +27,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keybindingconfiguration.h"
 #include <QSettings>
 
-KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, QWidget *parent) :
+KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, const QString &profile, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::KeysConfigurationDialog), deviceInfo(deviceInfo)
 {
     ui->setupUi(this);
-    ui->device_name_label->setText(tr("Configuration for %1", "label for dialog conf; %1 is the device name").arg(deviceInfo->name()));
+    ui->device_name_label->setText(tr("Configuration for %1, current profile: %2",
+        "label for dialog conf; %1 is the device name, %2 profile name")
+        .arg(deviceInfo->name())
+        .arg(profile));
 
     CfgDevice *device = new CfgDevice(deviceInfo, this);
 
@@ -46,7 +49,7 @@ KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, QWidget
 
     settings = new QSettings("GuLinux", qAppName(), this);
     qDebug() << "avail groups: " << settings->childGroups();
-    settings->beginGroup("bindings");
+    settings->beginGroup(QString("bindings_%1").arg(profile));
 }
 
 KeysConfigurationDialog::~KeysConfigurationDialog()

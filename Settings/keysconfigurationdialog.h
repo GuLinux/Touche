@@ -38,7 +38,7 @@ class KeysConfigurationDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit KeysConfigurationDialog(DeviceInfo *deviceInfo, QWidget *parent = 0);
+    explicit KeysConfigurationDialog(DeviceInfo *deviceInfo, const QString &profile, QWidget *parent = 0);
     ~KeysConfigurationDialog();
     
 public slots:

@@ -52,6 +52,7 @@ public:
 
     void loadBindings() {
         settings->endGroup();
+        settings->setValue("last_profile", profile);
         settings->beginGroup(profile);
         const QString params = QString("%1/%2/%3");
 
@@ -77,6 +78,10 @@ BindingsConfig::BindingsConfig(QObject *parent) :
             Q_UNUSED(p);
             return &d->doNothingBinding; };
 
+    foreach(QString profile, availableProfiles()) {
+    if(QString("bindings_%1").arg(profile) == d->settings->value("last_profile"))
+        setCurrentProfile(profile);
+    }
 }
 
 BindingsConfig::~BindingsConfig()
@@ -88,7 +93,6 @@ Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 {
     Q_D(BindingsConfig);
     QString bindingSetting = d->settings->value(eventName, BINDING_DO_NOTHING).toString();
-    qDebug() << "Setting for event " << eventName << ": " << bindingSetting;
     BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value(BINDING_DO_NOTHING));
     return bindingFactory(parent, eventName);
 }
@@ -98,9 +102,9 @@ Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 void BindingsConfig::setCurrentProfile(const QString &profileName)
 {
     Q_D(BindingsConfig);
-    qDebug() << "Using profile " << profileName;
     d->profile = QString("bindings_%1").arg(profileName);
     d->loadBindings();
+    emit profileChanged(profileName);
 }
 
 

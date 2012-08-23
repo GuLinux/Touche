@@ -37,6 +37,7 @@ signals:
     void connected(DeviceInfo*);
     void disconnected(DeviceInfo*);
     void inputEvent(const QString &eventName);
+    void profileChanged(const QString &profileName);
 
 public slots:
     void start();

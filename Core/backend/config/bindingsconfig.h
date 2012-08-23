@@ -35,7 +35,7 @@ public:
     QString currentProfile()const ;
     QStringList availableProfiles() const;
 signals:
-    
+    void profileChanged(const QString &profileName);
 public slots:
 
 private:

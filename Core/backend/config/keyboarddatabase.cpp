@@ -42,7 +42,6 @@ public:
             QFile databaseFile(database);
             if(!databaseFile.exists())
                 continue;
-            qDebug() << "Parsing file: " << databaseFile.fileName();
             QVariant config = parser.parse(&databaseFile);
             if(config.toMap().contains(deviceInfo->configID())) {
                 QMap<QString, QVariant> thisKeyboardDatabase = config.toMap().value(deviceInfo->configID()).toMap();
@@ -80,14 +79,12 @@ void KeyboardDatabase::deviceAdded(DeviceInfo *device)
     if(thisKeyboardDatabase.isEmpty())
         return;
     d->database.insert(device->configID(), DatabaseEntry::fromConfig(thisKeyboardDatabase, this));
-    qDebug() << "Database updated: " << d->database;
 }
 
 void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
 {
     Q_D(KeyboardDatabase);
     delete d->database.take(device->configID());
-    qDebug() << "Database updated: " << d->database;
 }
 
 const QMap<QString, QVariant> KeyboardDatabase::deviceConfiguration(DeviceInfo *deviceInfo)

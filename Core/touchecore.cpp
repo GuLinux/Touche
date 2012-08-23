@@ -74,6 +74,7 @@ void ToucheCore::start()
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
     d->findDevices = new FindDevices(d->keyboardDatabase, this);
 
+    connect(d->bindingsConfig, SIGNAL(profileChanged(QString)), this, SIGNAL(profileChanged(QString)));
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceAdded(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceRemoved(DeviceInfo*)));
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), this, SIGNAL(connected(DeviceInfo*)));

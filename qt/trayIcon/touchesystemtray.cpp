@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/deviceinfo.h"
 #include "touchecore.h"
 #include "traymanager.h"
+#include <QMessageBox>
 
 class ToucheSystemTrayPrivate {
 public:
@@ -42,12 +43,15 @@ public:
 ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager) :
     QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(systemTrayMenu, profilesMenu, separator, trayManager, toucheCore))
 {
+    Q_D(ToucheSystemTray);
     profilesMenu->setTitle(tr("Profiles"));
     connect(toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
     connect(toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
 
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     connect(qApp, SIGNAL(aboutToQuit()), toucheCore, SLOT(quit()));
+    connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(updateProfilesList()));
+
     updateTooltip();
     updateProfilesList();
 }
@@ -60,9 +64,13 @@ ToucheSystemTray::~ToucheSystemTray()
 void ToucheSystemTray::showConfigurationDialog()
 {
     Q_D(ToucheSystemTray);
+    if(d->toucheCore->currentProfile().isEmpty()) {
+        QMessageBox::warning(0, tr("Profile missing"), "Error! You have to add and select a profile first.");
+        return;
+    }
     QAction *action = dynamic_cast<QAction*>(sender());
     DeviceInfo *deviceInfo = d->actions.key(action);
-    KeysConfigurationDialog configDialog(deviceInfo);
+    KeysConfigurationDialog configDialog(deviceInfo, d->toucheCore->currentProfile());
     connect(d->toucheCore, SIGNAL(disconnected(DeviceInfo*)), &configDialog, SLOT(reject()));
     connect(d->toucheCore, SIGNAL(inputEvent(QString)), &configDialog, SLOT(keyEvent(QString)));
     d->toucheCore->suspendEventsTranslation();
@@ -123,6 +131,8 @@ void ToucheSystemTray::updateProfilesList()
     foreach(QString profile, d->toucheCore->availableProfiles()) {
         QAction *profileAction = d->profilesMenu->addAction(profile);
         profileAction->setObjectName(profile);
+        profileAction->setCheckable(true);
+        profileAction->setChecked(profile == d->toucheCore->currentProfile());
         connect(profileAction, SIGNAL(triggered()), this, SLOT(setProfile()));
     }
 }
