@@ -8,6 +8,7 @@ set(Touche_qt_includes ${Touche_common_includes}
 qt4_wrap_cpp(Touche_qt_mocs trayIcon/touchesystemtray.h)
 include_directories(${Touche_qt_includes}) 
 add_executable(${PROJECT_NAME} ${Touche_qt_SRCS} ${Touche_qt_mocs} )
+add_dependencies(${PROJECT_NAME} Touche_Core Touche_Configuration)
 
 target_link_libraries(${PROJECT_NAME} ${Touche_libs} )
 

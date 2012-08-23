@@ -53,7 +53,7 @@
   <customwidget>
    <class>QStringListEdit</class>
    <extends>QWidget</extends>
-   <header>qstringlistedit.h</header>
+   <header>bindingsGui/qstringlistedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

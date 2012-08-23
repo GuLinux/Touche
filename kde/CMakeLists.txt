@@ -15,6 +15,7 @@ include_directories(${Touche_kde_includes})
 add_executable(${PROJECT_NAME} ${Touche_kde_SRCS} ${Touche_kde_mocs} )
 
 target_link_libraries(${PROJECT_NAME} ${Touche_libs} ${KDE4_KDEUI_LIBS} )
+add_dependencies(${PROJECT_NAME} Touche_Core Touche_Configuration) 
 
 # TODO for /etc/udev it would be better to use variables, although this one is not going to change that easly...
 INSTALL(FILES files/99-hiddev-input.rules DESTINATION /etc/udev/rules.d)

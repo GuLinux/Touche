@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_RunCommand_cfg.h"
 #include "ui_ToKey_cfg.h"
 #include "bindingconfigurationwidget.h"
-#include "x11keysymbolscompleter.h"
+#include "bindingsGui/x11keysymbolscompleter.h"
 
 KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *settings, QWidget *parent) :
     QWidget(parent),
