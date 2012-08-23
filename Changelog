@@ -1,3 +1,12 @@
+2012-08-23 Marco Gulino <marco.gulino@gmail.com>
+  0.2: New major release
+    * Ported build system to CMake
+    * Added profiles, to have different bindings for the same keys
+    * Major code cleanup, allowing to add more engines (next one probably will be Wiimote)
+    * Cleaning up desktop file and appName (fixing some issues with encoding)
+    * Binding keypress and keyrelease events on "Translate to key" dialog
+    * Added "aliases" in keyboard database, so now different device version can be mapped to the same key (example: apple remote)
+
 2012-05-19  Marco Gulino <marco.gulino@gmail.com>
   Build and desktop fixes only.
     * Make build more reliable.

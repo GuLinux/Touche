@@ -10,9 +10,8 @@ function applyToFile() {
 	echo "Applying license header to $file"
 	LICENSE_START_AT="$( cat "$file" | grep -n -F "$HEADER_END" | cut -d: -f1 )"
 	if test "x$LICENSE_START_AT" == "x"; then LICENSE_START_AT="-2"; fi
-	echo "$HEADER_BEGIN" > "$tempFile"
-	cat "$( dirname $0)/LicenseHeader.txt" >> "$tempFile"
-	echo -e "$HEADER_END\n" >> "$tempFile"
+	cat "$( dirname $0)/LicenseHeader.txt" > "$tempFile"
+	echo -e "\n" >> "$tempFile"
 	cat "$file" | tail -n +$(($LICENSE_START_AT+2)) >> "$tempFile"
 	cat "$tempFile" > "$file"
 }

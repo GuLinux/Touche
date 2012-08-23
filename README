@@ -11,47 +11,31 @@ Touché is released under GPLv3 license (included in the COPYING file)
 -----------------------------------------
 
 * Install Instructions:
-*** Update: you don't really need to follow the instructions below.
-*** Now you can find the script "scripts/compile" that automatically compiles and installs the application
-*** Run "./scripts/compile --help" to see usage and options
+Unpack Touché sources archive:
+  tar xzf Touché-xx.tar.gz
+Create a build directory:
+  mkdir touche-build
+Now, configure sources with cmake:
+  cmake <TOUCHE_SOURCES_DIRECTORY>
+You can also add some options to the previous command:
+  * to install in /usr (default installation prefix for most distributions):
+    * -DCMAKE_INSTALL_PREFIX /usr
+  * to specify build type (Debug, Release):
+    * -DCMAKE_BUILD_TYPE=Debug or -DCMAKE_BUILD_TYPE=Release
+  * to compile the Qt-only version:
+    * -DTOUCHE_QT=1
 
-First you need to build the static library, and install it to a temporary location.
-Then you can choose between the Qt GUI (simpler) and the KDE GUI (much more beautiful, using KDE styles and color settings).
-
-# Core library: 
-mkdir Touché_Core.build
-cd Touché_Core.build
-qmake ../Touché_Core
-make install # it will only install the static library to /tmp, to allow compiling of the main application
-
-# Configuration GUI:
-mkdir Touché_Configuration.build
-cd Touché_Configuration.build
-qmake ../Touché_Configuration
-make install
-
-# Qt GUI: 
-mkdir ../Touché.build
-cd ../Touché.build
-qmake ../Touché
-make install # this will install both the binary and its required dependencies, like udev rule for permissions and keyboard database.
-
-# KDE GUI:
-mkdir ../Touché-kde.build
-cd ../ Touché-kde.build
-qmake ../Touché-kde
-make install
+After configuring sources with cmake, just run
+  make && sudo make install
 
 
 * Configuration:
-The application bindings are now fully configurable in a user interface accessible from tray icon.
+The application bindings are fully configurable in a user interface accessible from tray icon.
 Just right click the little "keyboard" icon in your system tray, then click your device name.
-There is also a sample configuration file in Touché/files/samples_config/.
-Just copy it in the this path:
-  $HOME/.config/GuLinux/Touché.conf
+You need to choose a profile first. You can specify multiple profiles, to have different bindings on the same key.
 
-Inside you can find some configuration examples. Just follow the pattern: the key names are in the keyboard database file ( /usr/share/Touché/keyboard_database.json )
-You can now also use a "local" keyboard database, which can be installed in /home/marco/.config/GuLinux/keyboard_database.json and overrides the system one, if present. It comes handy if you wanna try adding support for a new keyboard.
+You can now also use a "local" keyboard database, which can be installed in /home/marco/.config/GuLinux/keyboard_database.json and overrides the system one, if present.
+It comes handy if you wanna try adding support for a new keyboard.
 
 *** Important note: with the installation comes also a udev rule, which by default is installed in /etc/udev/rules.d/ and assigns the /dev/usb/hiddev* devices to the group "users".
 --- If this group is present in your distribution, your user must belong to this group to use Touché.
