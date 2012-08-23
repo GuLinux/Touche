@@ -32,7 +32,7 @@ class ToucheSystemTray : public QObject
 {
     Q_OBJECT
 public:
-    explicit ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QAction *separator, TrayManager *trayManager);
+    explicit ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager);
     ~ToucheSystemTray();
 signals:
     
@@ -42,6 +42,8 @@ public slots:
     void deviceDisconnected(DeviceInfo *deviceInfo);
     void showConfigurationDialog();
     void aboutToQuit();
+    void updateProfilesList();
+    void setProfile();
 
 private:
     ToucheSystemTrayPrivate * const d_ptr;

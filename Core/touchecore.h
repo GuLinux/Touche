@@ -31,6 +31,8 @@ public:
     explicit ToucheCore(const QStringList &supportedOptions, QObject *parent = 0);
     ~ToucheCore();
     static QMap<QString, QString> supportedOptions();
+    QStringList availableProfiles() const;
+    QString currentProfile() const;
 signals:
     void connected(DeviceInfo*);
     void disconnected(DeviceInfo*);
@@ -41,6 +43,7 @@ public slots:
     void quit();
     void suspendEventsTranslation();
     void resumeEventsTranslation();
+    void setProfile(const QString &profileName);
 
 private:
     ToucheCorePrivate * const d_ptr;

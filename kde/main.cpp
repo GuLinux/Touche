@@ -85,13 +85,14 @@ int main(int argc, char *argv[])
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
     KMenu *trayMenu = new KMenu(0);
+    KMenu *profilesMenu = new KMenu(0);
     trayMenu->addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
     tray->setContextMenu(trayMenu);
     tray->setCategory(KStatusNotifierItem::Hardware);
     tray->setTitle(qAppName());
     KDETrayManager trayManager(tray);
 
-    new ToucheSystemTray(&toucheCore, trayMenu, trayMenu->addSeparator(), &trayManager);
+    new ToucheSystemTray(&toucheCore, trayMenu, profilesMenu, trayMenu->addSeparator(), &trayManager);
 
     toucheCore.start();
     return a.exec();

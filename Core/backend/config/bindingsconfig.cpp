@@ -41,6 +41,7 @@ public:
 
     QMap<QString, BindingFactory> bindings;
     QSettings *settings;
+    QString profile;
     DoNothingBinding doNothingBinding;
 
     Binding* moveToThreadAndReparent(QObject *newParent, QObject *object) {
@@ -48,31 +49,33 @@ public:
         object->setParent(newParent);
         return dynamic_cast<Binding*>(object);
     }
+
+    void loadBindings() {
+        settings->endGroup();
+        settings->beginGroup(profile);
+        const QString params = QString("%1/%2/%3");
+
+        bindings[BINDING_RUN_COMMAND] = [this,params](QObject* p, const QString& eventName) {
+            QString commandName = settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "ApplicationName"), "true").toString();
+            QStringList arguments = settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "Arguments"), QStringList()).toStringList();
+            return moveToThreadAndReparent(p, new RunCommandBinding(commandName, arguments));
+        };
+        bindings[BINDING_TO_KEY] =[this,params](QObject* p, const QString& eventName) {
+            QString keySymbol = settings->value(params.arg(eventName, BINDING_TO_KEY, "keysymbol"), QString()).toString();
+            QString isKeypress = settings->value(params.arg(eventName,BINDING_TO_KEY, "eventtype"), "keypress").toString();
+            return moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress", true));
+        };
+    }
 };
 
 BindingsConfig::BindingsConfig(QObject *parent) :
     QObject(parent), d_ptr(new BindingsConfigPrivate(this))
 {
     Q_D(BindingsConfig);
-    d->settings->beginGroup("bindings");
-    const QString params = QString("%1/%2/%3");
-
-    d->bindings[BINDING_DO_NOTHING] = [d](QObject* p, const QString& e) {Q_UNUSED(e); Q_UNUSED(p); return &d->doNothingBinding; };
-    d->bindings[BINDING_RUN_COMMAND] = [d,params](QObject* p, const QString& eventName) {
-        QString commandName = d->settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "ApplicationName"), "true").toString();
-        QStringList arguments = d->settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "Arguments"), QStringList()).toStringList();
-        return d->moveToThreadAndReparent(p, new RunCommandBinding(commandName, arguments));
-    };
-    d->bindings[BINDING_TO_KEY] =[d,params](QObject* p, const QString& eventName) {
-        QString keySymbol = d->settings->value(params.arg(eventName, BINDING_TO_KEY, "keysymbol"), QString()).toString();
-        QString isKeypress = d->settings->value(params.arg(eventName,BINDING_TO_KEY, "eventtype"), "keypress").toString();
-        return d->moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress", true));
-    };
-
-    qDebug() << "Configured bindings: ";
-    foreach(const QString key, d->settings->childKeys()) {
-        qDebug() << key << " [" << d->settings->value(key).toString() << "]";
-    }
+    d->bindings[BINDING_DO_NOTHING] = [d](QObject* p, const QString& e) {
+            Q_UNUSED(e);
+            Q_UNUSED(p);
+            return &d->doNothingBinding; };
 
 }
 
@@ -90,3 +93,31 @@ Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
     return bindingFactory(parent, eventName);
 }
 
+
+
+void BindingsConfig::setCurrentProfile(const QString &profileName)
+{
+    Q_D(BindingsConfig);
+    qDebug() << "Using profile " << profileName;
+    d->profile = QString("bindings_%1").arg(profileName);
+    d->loadBindings();
+}
+
+
+QStringList BindingsConfig::availableProfiles() const
+{
+    Q_D(const BindingsConfig);
+    d->settings->endGroup();
+    QStringList allProfiles = d->settings->childGroups();
+    d->settings->beginGroup(d->profile);
+    foreach(QString group, allProfiles)
+        if(!group.startsWith("bindings_")) allProfiles.removeAll(group);
+    return allProfiles.replaceInStrings("bindings_", "");
+}
+
+
+QString BindingsConfig::currentProfile() const
+{
+    Q_D(const BindingsConfig);
+    return QString(d->profile).replace("bindings_", "");
+}

@@ -31,6 +31,9 @@ public:
     explicit BindingsConfig(QObject *parent = 0);
     ~BindingsConfig();
     Binding* bindingFor(const QString &eventName, QObject *parent);
+    void setCurrentProfile(const QString &profileName);
+    QString currentProfile()const ;
+    QStringList availableProfiles() const;
 signals:
     
 public slots:

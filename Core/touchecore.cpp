@@ -58,6 +58,8 @@ static __RegisterMetatypes__ __registerMetatypes;
 ToucheCore::ToucheCore(const QStringList &options, QObject *parent) :
     QObject(parent), d_ptr(new ToucheCorePrivate(options) )
 {
+    Q_D(ToucheCore);
+    d->bindingsConfig = new BindingsConfig(this);
 }
 
 ToucheCore::~ToucheCore()
@@ -68,7 +70,6 @@ ToucheCore::~ToucheCore()
 void ToucheCore::start()
 {
     Q_D(ToucheCore);
-    d->bindingsConfig = new BindingsConfig(this);
     d->keyboardDatabase = new KeyboardDatabase(DATABASE_FILES, this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
     d->findDevices = new FindDevices(d->keyboardDatabase, this);
@@ -113,4 +114,25 @@ QMap<QString,QString> ToucheCore::supportedOptions()
     QMap<QString, QString> m_supportedOptions;
     m_supportedOptions.insert("dump-events", "dumps raw events (json-formatted, so they can be easly added to keyboard database)");
     return m_supportedOptions;
+}
+
+
+QStringList ToucheCore::availableProfiles() const
+{
+    Q_D(const ToucheCore);
+    return d->bindingsConfig->availableProfiles();
+}
+
+
+QString ToucheCore::currentProfile() const
+{
+    Q_D(const ToucheCore);
+    return d->bindingsConfig->currentProfile();
+}
+
+
+void ToucheCore::setProfile(const QString &profileName)
+{
+    Q_D(ToucheCore);
+    d->bindingsConfig->setCurrentProfile(profileName);
 }

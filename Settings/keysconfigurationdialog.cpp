@@ -45,6 +45,7 @@ KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, QWidget
     connect(ui->keys_listview, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(cfgKeySelected(QModelIndex)));
 
     settings = new QSettings("GuLinux", qAppName(), this);
+    qDebug() << "avail groups: " << settings->childGroups();
     settings->beginGroup("bindings");
 }
 

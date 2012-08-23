@@ -28,9 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class ToucheSystemTrayPrivate {
 public:
-    ToucheSystemTrayPrivate(QMenu *systemTrayMenu, QAction *separator, TrayManager *trayManager, ToucheCore *toucheCore)
-        : systemTrayMenu(systemTrayMenu), separator(separator), trayManager(trayManager), aboutToQuit(false), toucheCore(toucheCore) {}
+    ToucheSystemTrayPrivate(QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager, ToucheCore *toucheCore)
+        : systemTrayMenu(systemTrayMenu), profilesMenu(profilesMenu), separator(separator), trayManager(trayManager), aboutToQuit(false), toucheCore(toucheCore) {}
     QMenu *systemTrayMenu;
+    QMenu *profilesMenu;
     QAction *separator;
     QMap<DeviceInfo*, QAction*> actions;
     TrayManager *trayManager;
@@ -38,15 +39,18 @@ public:
     ToucheCore *toucheCore;
 };
 
-ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QAction *separator, TrayManager *trayManager) :
-    QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(systemTrayMenu, separator, trayManager, toucheCore))
+ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager) :
+    QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(systemTrayMenu, profilesMenu, separator, trayManager, toucheCore))
 {
+    systemTrayMenu->addMenu(profilesMenu);
+    profilesMenu->setTitle(tr("Profiles"));
     connect(toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
     connect(toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
 
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     connect(qApp, SIGNAL(aboutToQuit()), toucheCore, SLOT(quit()));
     updateTooltip();
+    updateProfilesList();
 }
 
 ToucheSystemTray::~ToucheSystemTray()
@@ -111,3 +115,23 @@ void ToucheSystemTray::aboutToQuit()
 }
 
 
+
+
+void ToucheSystemTray::updateProfilesList()
+{
+    Q_D(ToucheSystemTray);
+    d->profilesMenu->clear();
+    foreach(QString profile, d->toucheCore->availableProfiles()) {
+        QAction *profileAction = d->profilesMenu->addAction(profile);
+        profileAction->setObjectName(profile);
+        connect(profileAction, SIGNAL(triggered()), this, SLOT(setProfile()));
+    }
+}
+
+
+void ToucheSystemTray::setProfile()
+{
+    Q_D(ToucheSystemTray);
+    QAction *profileAction = (QAction*) sender();
+    d->toucheCore->setProfile(profileAction->objectName());
+}
