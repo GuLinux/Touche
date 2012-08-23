@@ -22,14 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_keybindingconfiguration.h"
 #include <QSettings>
 #include "ui_RunCommand_cfg.h"
-#include "ui_ToKey_cfg.h"
 #include "bindingconfigurationwidget.h"
-#include "bindingsGui/x11keysymbolscompleter.h"
+#include "bindingsGui/ToKeyConfig.h"
+#include "bindingsGui/RunCommandConfig.h"
 
 KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *settings, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::KeyBindingConfiguration), m_cfgKey(cfgKey), settings(settings)
 {
+    widgetsFactories.insert("TranslateToKey", new ToKeyConfigFactory());
+    widgetsFactories.insert("RunCommand", new RunCommandConfigFactory());
+
     ui->setupUi(this);
     connect(ui->bindingTypeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bindingChanged(int)));
 
@@ -42,6 +45,8 @@ KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *sett
 
 KeyBindingConfiguration::~KeyBindingConfiguration()
 {
+    foreach(BindingConfigurationWidgetFactory *factory, widgetsFactories.values())
+        delete factory;
     delete ui;
 }
 
@@ -55,43 +60,11 @@ void KeyBindingConfiguration::bindingChanged(int index)
     }
 
     if(configBindingKey == "DoNothing") return;
-
+    qDebug() << "configBindingKey: " << configBindingKey;
     foreach(CfgKeyEvent* event, m_cfgKey->cfgKeyEvents()) {
-
-        BindingConfigurationWidget *widget =0;
-        QString bindingSettingsKey = QString("%1/%2/%3").arg(event->configKey(), configBindingKey);
-
-        if(configBindingKey=="TranslateToKey") {
-            Ui_ToKeyConfig *cfgUI = new Ui_ToKeyConfig();
-            BindUI bindUI = [cfgUI,this,bindingSettingsKey,event](BindingConfigurationWidget* widget){ cfgUI->setupUi(widget);
-                connect(cfgUI->cfg_eventtype_keypress, SIGNAL(toggled(bool)), widget, SLOT(radioButtonChanged(bool)));
-                connect(cfgUI->cfg_eventtype_keyrelease, SIGNAL(toggled(bool)), widget, SLOT(radioButtonChanged(bool)));
-                connect(cfgUI->cfg_keysymbol, SIGNAL(textChanged(QString)), widget, SLOT(stringChanged(QString)));
-                cfgUI->cfg_keysymbol->setCompleter(new X11KeySymbolsCompleter(widget));
-                foreach(const QString keySym, X11KeySymbolsCompleter::keySymbols()) {
-                    cfgUI->cfg_keysymbol->addItem(keySym, keySym);
-                }
-
-                QString eventtype = settings->value(bindingSettingsKey.arg("eventtype"), event->label()).toString();
-                cfgUI->cfg_keysymbol->lineEdit()->setText(settings->value(bindingSettingsKey.arg("keysymbol")).toString());
-                cfgUI->cfg_eventtype_keypress->setChecked(eventtype=="keypress");
-                cfgUI->cfg_eventtype_keyrelease->setChecked(eventtype=="keyrelease");
-            };
-            DeleteUI deleteUI = [cfgUI]() { delete cfgUI; };
-            widget=new BindingConfigurationWidget(settings, configBindingKey, event->configKey(), bindUI, deleteUI, this);
-        }
-
-        if(configBindingKey=="RunCommand") {
-            Ui_RunCommandConfig *cfgUI = new Ui_RunCommandConfig();
-            BindUI bindUI = [cfgUI,this,bindingSettingsKey](BindingConfigurationWidget* widget){ cfgUI->setupUi(widget);
-                connect(cfgUI->cfg_Arguments, SIGNAL(stringListChanged(QStringList)), widget, SLOT(stringListChanged(QStringList)));
-                connect(cfgUI->cfg_ApplicationName, SIGNAL(textChanged(QString)), widget, SLOT(stringChanged(QString)));
-                cfgUI->cfg_Arguments->setStringList(settings->value(bindingSettingsKey.arg("Arguments")).toStringList());
-                cfgUI->cfg_ApplicationName->setText(settings->value(bindingSettingsKey.arg("ApplicationName")).toString());
-            };
-            DeleteUI deleteUI = [cfgUI]() { delete cfgUI; };
-            widget=new BindingConfigurationWidget(settings, configBindingKey, event->configKey(), bindUI, deleteUI, this);
-        }
+        BindingConfigurationWidget *widget = widgetsFactories.value(configBindingKey)
+                ->build(settings, configBindingKey, event, this);
+        qDebug() << "Got widget: " << widget << ", " << widget->metaObject()->className();
         tabsWidgets.insert(event->label(), widget);
         ui->bindingEvents->addTab(widget, event->label());
     }

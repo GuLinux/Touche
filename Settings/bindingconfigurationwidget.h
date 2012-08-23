@@ -25,17 +25,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QVariant>
 class QSettings;
+class CfgKeyEvent;
 class BindingConfigurationWidget;
 
 typedef std::function<void(BindingConfigurationWidget*)> BindUI;
 typedef std::function<void()> DeleteUI;
 
+class BindingConfigurationWidgetFactory {
+public:
+    virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
+                CfgKeyEvent* event, QWidget *parent=0) = 0;
+    static QString bindingSettingsKey(CfgKeyEvent *event, const QString configBindingKey);
+};
+
 class BindingConfigurationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BindingConfigurationWidget(QSettings *settings, const QString &bindingType, const QString &configurationName, const BindUI &bindUI, const DeleteUI &deleteUI, QWidget *parent=0);
-    ~BindingConfigurationWidget();
+    explicit BindingConfigurationWidget(QSettings *settings, const QString &bindingType, const QString &configurationName, QWidget *parent=0);
+    virtual ~BindingConfigurationWidget();
 signals:
     
 public slots:
@@ -45,7 +53,6 @@ public slots:
     void saveConfiguration();
 private:
     QSettings *settings;
-    DeleteUI deleteUI;
     QString const configurationName;
     QString const configurationSubKey;
     QHash<QString, QVariant> configuration;

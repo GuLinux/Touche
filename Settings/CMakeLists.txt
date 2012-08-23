@@ -5,7 +5,10 @@ set(Touche_Configuration_SRCS keysconfigurationdialog.cpp
     keybindingconfiguration.cpp
     bindingconfigurationwidget.cpp
     bindingsGui/qstringlistedit.cpp
-    bindingsGui/x11keysymbolscompleter.cpp)
+    bindingsGui/x11keysymbolscompleter.cpp
+    bindingsGui/ToKeyConfig.cpp
+    bindingsGui/RunCommandConfig.cpp
+)
 
 
 
@@ -24,6 +27,8 @@ qt4_wrap_cpp(Touche_Configuration_mocs  bindingconfigurationwidget.h
   models/cfgdevice.h
   bindingsGui/qstringlistedit.h
   bindingsGui/x11keysymbolscompleter.h
+  bindingsGui/ToKeyConfig.h
+  bindingsGui/RunCommandConfig.h
 )
 
 set(Touche_Configuration_includes ${Touche_common_includes} )

@@ -20,17 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bindingconfigurationwidget.h"
 #include <QDebug>
 #include <QSettings>
+#include "models/cfgkeyevent.h"
 
-BindingConfigurationWidget::BindingConfigurationWidget(QSettings *settings, const QString &bindingType, const QString &configurationName, const BindUI &bindUI, const DeleteUI &deleteUI, QWidget *parent) :
-    QWidget(parent), settings(settings), deleteUI(deleteUI), configurationName(configurationName), configurationSubKey(QString(configurationName).append("/%1/%2").arg(bindingType))
+BindingConfigurationWidget::BindingConfigurationWidget(QSettings *settings, const QString &bindingType, const QString &configurationName, QWidget *parent) :
+    QWidget(parent), settings(settings), configurationName(configurationName), configurationSubKey(QString(configurationName).append("/%1/%2").arg(bindingType))
 {
     configuration.insert(configurationName, bindingType);
-    bindUI(this);
 }
 
 BindingConfigurationWidget::~BindingConfigurationWidget()
 {
-    deleteUI();
 }
 
 void BindingConfigurationWidget::stringListChanged(const QStringList &stringList)
@@ -80,4 +79,10 @@ void BindingConfigurationWidget::saveConfiguration()
             settings->setValue(key, value);
         }
     }
+}
+
+
+QString BindingConfigurationWidgetFactory::bindingSettingsKey(CfgKeyEvent *event, const QString configBindingKey)
+{
+    return QString("%1/%2/%3").arg(event->configKey(), configBindingKey);
 }

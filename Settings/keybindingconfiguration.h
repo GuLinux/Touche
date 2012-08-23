@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 class CfgKey;
 class BindingConfigurationWidget;
+class BindingConfigurationWidgetFactory;
 class QSettings;
 namespace Ui {
 class KeyBindingConfiguration;
@@ -44,6 +45,7 @@ private:
     CfgKey *m_cfgKey;
     QSettings *settings;
     QHash<QString, BindingConfigurationWidget*> tabsWidgets;
+    QHash<QString, BindingConfigurationWidgetFactory*> widgetsFactories;
 };
 
 #endif // KEYBINDINGCONFIGURATION_H

@@ -16,3 +16,31 @@ GNU General Public License for more details (included the COPYING file).
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
+
+#ifndef RUNCOMMANDCONFIG_H
+#define RUNCOMMANDCONFIG_H
+
+#include "bindingconfigurationwidget.h"
+
+class Ui_RunCommandConfig;
+class RunCommandConfigFactory : public BindingConfigurationWidgetFactory {
+public:
+    virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
+                CfgKeyEvent *event, QWidget *parent);
+};
+
+class RunCommandConfig : public BindingConfigurationWidget
+{
+    Q_OBJECT
+public:
+    explicit RunCommandConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, QWidget *parent=0);
+    virtual ~RunCommandConfig();
+signals:
+    
+public slots:
+private:
+    Ui_RunCommandConfig *ui;
+    
+};
+
+#endif // RUNCOMMANDCONFIG_H

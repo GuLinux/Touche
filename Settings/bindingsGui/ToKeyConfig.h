@@ -16,3 +16,31 @@ GNU General Public License for more details (included the COPYING file).
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
+
+
+#ifndef TOKEYCONFIG_H
+#define TOKEYCONFIG_H
+
+#include "bindingconfigurationwidget.h"
+class Ui_ToKeyConfig;
+class ToKeyConfigFactory : public BindingConfigurationWidgetFactory {
+public:
+    virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
+                CfgKeyEvent *event, QWidget *parent);
+};
+
+class ToKeyConfig : public BindingConfigurationWidget
+{
+    Q_OBJECT
+public:
+    explicit ToKeyConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, QWidget *parent=0);
+    virtual ~ToKeyConfig();
+signals:
+    
+public slots:
+private:
+    Ui_ToKeyConfig *ui;
+    
+};
+
+#endif // TOKEYCONFIG_H

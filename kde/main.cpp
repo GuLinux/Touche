@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     KUniqueApplication::addCmdLineOptions();
     KUniqueApplication a;
 #else
-#warning "Debug mode: disabling KUniaueApplication"
+#warning "Debug mode: disabling KUniqueApplication"
     KApplication a;
 #endif
 
