@@ -58,6 +58,8 @@ public slots:
     void updateProfilesList();
     void setProfile();
     void editProfiles();
+    void switchToNextProfile();
+    void profileChanged(const QString &profile);
 
 private:
     ToucheSystemTrayPrivate * const d_ptr;

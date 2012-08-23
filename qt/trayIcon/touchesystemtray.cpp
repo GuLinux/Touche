@@ -52,6 +52,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     connect(qApp, SIGNAL(aboutToQuit()), toucheCore, SLOT(quit()));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(updateProfilesList()));
+    connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
 
     updateTooltip();
     updateProfilesList();
@@ -129,9 +130,11 @@ void ToucheSystemTray::updateProfilesList()
 {
     Q_D(ToucheSystemTray);
     d->profilesMenu->clear();
-    QAction *editProfiles = d->profilesMenu->addAction(tr("Edit Profiles..."));
-    editProfiles->setCheckable(false);
-    connect(editProfiles, SIGNAL(triggered()), this, SLOT(editProfiles()));
+    d->profilesMenu->addAction(tr("Edit Profiles..."), this, SLOT(editProfiles()));
+    QAction *nextProfile = d->profilesMenu->addAction(tr("Next Profile"),
+        this, SLOT(switchToNextProfile()));
+    nextProfile->setShortcutContext(Qt::ApplicationShortcut);
+    d->profilesMenu->addSeparator();
     foreach(QString profile, d->toucheCore->availableProfiles()) {
         QAction *profileAction = d->profilesMenu->addAction(profile);
         profileAction->setObjectName(profile);
@@ -196,4 +199,30 @@ void EditProfilesDialog::accept()
     }
 
     QDialog::accept();
+}
+
+
+void ToucheSystemTray::switchToNextProfile()
+{
+    Q_D(ToucheSystemTray);
+    QStringList profiles = d->toucheCore->availableProfiles();
+    QList<QString>::const_iterator i;
+    QString newProfile;
+    for (i = profiles.constBegin(); i != profiles.constEnd(); ++i) {
+        if(*i == d->toucheCore->currentProfile()) {
+            i++;
+            if(i==profiles.constEnd())
+                newProfile = profiles.first();
+            else newProfile = *i;
+            break;
+        }
+    }
+    d->toucheCore->setProfile(newProfile);
+}
+
+
+void ToucheSystemTray::profileChanged(const QString &profile)
+{
+    Q_D(ToucheSystemTray);
+    d->trayManager->showMessage(tr("%1 Profile").arg(qAppName()), tr("Profile changed to %1").arg(profile), "input-keyboard");
 }
