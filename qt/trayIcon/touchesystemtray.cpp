@@ -158,6 +158,7 @@ EditProfilesDialog::EditProfilesDialog(ToucheCore *core)
     : QDialog(){
     QVBoxLayout *vlayout = new QVBoxLayout(this);
     settings = new QSettings("GuLinux", qAppName(), this);
+    setWindowTitle(QString("%1 profiles").arg(qAppName()));
     profilesList = new QStringListEdit();
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));

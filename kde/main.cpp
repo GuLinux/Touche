@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmdlineargs.h>
 #include <QtCore/QTimer>
 #include <QDialog>
+#include <KAboutApplicationDialog>
 #include "trayIcon/touchesystemtray.h"
 #include "trayIcon/traymanager.h"
 
@@ -56,7 +57,17 @@ private:
 
 int main(int argc, char *argv[])
 {
-    KAboutData about("touche", 0, ki18n("Touché"), "0.1");
+    KAboutData about("touche", 0, ki18n("Touché"), "0.2",
+                     ki18n("Special key recognizer for Linux Desktops"),
+                     KAboutData::License_GPL_V3,
+                     KLocalizedString(),
+                     KLocalizedString(),
+                     "http://rockman81.blogspot.it/p/touche.html",
+                     "marco.gulino@kde.org"
+                     );
+    about.addAuthor(ki18n("Marco Gulino"), ki18n("main developer"),
+                    "marco.gulino@gmail.com", "http://rockman81.blogspot.it/");
+    about.setProgramIconName("input-keyboard");
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineOptions options;
     foreach(QString option, ToucheCore::supportedOptions().keys()) {
@@ -74,6 +85,7 @@ int main(int argc, char *argv[])
     KApplication a;
 #endif
 
+    KAboutApplicationDialog aboutTouche(&about);
     a.setQuitOnLastWindowClosed(false);
     QStringList arguments = KCmdLineArgs::allArguments();
 
@@ -87,6 +99,7 @@ int main(int argc, char *argv[])
     KMenu *trayMenu = new KMenu(0);
     KMenu *profilesMenu = new KMenu(0);
     trayMenu->addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
+    trayMenu->addAction(ki18n("About Touché").toString(), &aboutTouche, SLOT(exec()));
     tray->setContextMenu(trayMenu);
     trayMenu->addMenu(profilesMenu);
     tray->setCategory(KStatusNotifierItem::Hardware);
