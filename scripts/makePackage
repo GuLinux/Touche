@@ -1,5 +1,5 @@
 #!/bin/bash
-if ! [ -r Touché_Core ]; then
+if ! [ -r Core ]; then
 	echo "Error! you must run this script from the top project directory"
 	exit 1
 fi
