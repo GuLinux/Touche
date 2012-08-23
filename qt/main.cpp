@@ -75,7 +75,9 @@ int main(int argc, char *argv[])
     QSystemTrayIcon tray(QIcon::fromTheme("input-keyboard"));
 
     QMenu trayMenu;
+    QMenu profilesMenu;
     QAction *separator = trayMenu.addSeparator();
+    trayMenu.addMenu(&profilesMenu);
     trayMenu.addAction(QIcon::fromTheme("application-exit"), "Quit", qApp, SLOT(quit()));
     tray.setContextMenu(&trayMenu);
 
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
     tray.show();
     //tray.setToolTip(qAppName());
 
-    new ToucheSystemTray(&toucheCore, &trayMenu, separator, &trayManager);
+    new ToucheSystemTray(&toucheCore, &trayMenu, &profilesMenu, separator, &trayManager);
     toucheCore.start();
     return a.exec();
 }

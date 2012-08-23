@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
     KMenu *profilesMenu = new KMenu(0);
     trayMenu->addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
     tray->setContextMenu(trayMenu);
+    trayMenu->addMenu(profilesMenu);
     tray->setCategory(KStatusNotifierItem::Hardware);
     tray->setTitle(qAppName());
     KDETrayManager trayManager(tray);

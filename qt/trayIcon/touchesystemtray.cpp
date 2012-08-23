@@ -42,7 +42,6 @@ public:
 ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager) :
     QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(systemTrayMenu, profilesMenu, separator, trayManager, toucheCore))
 {
-    systemTrayMenu->addMenu(profilesMenu);
     profilesMenu->setTitle(tr("Profiles"));
     connect(toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
     connect(toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
