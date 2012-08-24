@@ -26,8 +26,4 @@ set(Touche_libs ${QT_LIBRARIES} ${Touche_static_libraries} ${X11_LIBRARIES} ${QJ
 add_subdirectory(Core)
 add_subdirectory(Settings)
 
-if(TOUCHE_QT)
-  add_subdirectory(qt)
-else(TOUCHE_QT)
-  add_subdirectory(kde)
-endif(TOUCHE_QT)
+add_subdirectory(kde)

@@ -22,8 +22,6 @@ You can also add some options to the previous command:
     * -DCMAKE_INSTALL_PREFIX /usr
   * to specify build type (Debug, Release):
     * -DCMAKE_BUILD_TYPE=Debug or -DCMAKE_BUILD_TYPE=Release
-  * to compile the Qt-only version:
-    * -DTOUCHE_QT=1
 
 After configuring sources with cmake, just run
   make && sudo make install
