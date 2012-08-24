@@ -31,8 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTimer>
 #include <QDialog>
 #include <KAboutApplicationDialog>
-#include "trayIcon/touchesystemtray.h"
-#include "trayIcon/traymanager.h"
+#include "touchesystemtray.h"
+#include "traymanager.h"
 
 class KDETrayManager : public TrayManager {
 public:
