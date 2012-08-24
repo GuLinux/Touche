@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include "traymanager.h"
 #include <QMessageBox>
-#include "bindingsGui/qstringlistedit.h"
 
 class ToucheSystemTrayPrivate {
 public:
@@ -156,20 +155,21 @@ void ToucheSystemTray::setProfile()
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QSettings>
+#include <KEditListBox>
 
 EditProfilesDialog::EditProfilesDialog(ToucheCore *core)
     : QDialog(){
     QVBoxLayout *vlayout = new QVBoxLayout(this);
     settings = new QSettings("GuLinux", qAppName(), this);
     setWindowTitle(QString("%1 profiles").arg(qAppName()));
-    profilesList = new QStringListEdit();
+    profilesList = new KEditListBox();
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     vlayout->addWidget(new QLabel("You can add new profiles here.\nEach profile will have its own key bindings."));
     vlayout->addWidget(profilesList);
     vlayout->addWidget(buttonBox);
-    profilesList->setStringList(core->availableProfiles());
+    profilesList->insertStringList(core->availableProfiles());
 }
 
 void ToucheSystemTray::editProfiles()
@@ -185,13 +185,13 @@ void EditProfilesDialog::accept()
 {
     foreach(QString profile, settings->childGroups()) {
         if(!profile.startsWith("bindings_")) continue;
-        if(profilesList->stringList().contains(QString(profile).replace("bindings_", ""))) continue;
+        if(profilesList->items().contains(QString(profile).replace("bindings_", ""))) continue;
         settings->beginGroup(profile);
         settings->remove("");
         settings->endGroup();
     }
 
-    foreach(QString profile, profilesList->stringList()) {
+    foreach(QString profile, profilesList->items()) {
         if(settings->childGroups().contains(QString("bindings_%1").arg(profile))) continue;
         settings->beginGroup(QString("bindings_%1").arg(profile));
         settings->setValue("name", profile);

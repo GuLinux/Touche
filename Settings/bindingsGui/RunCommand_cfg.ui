@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>302</width>
-    <height>76</height>
+    <width>482</width>
+    <height>299</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QStringListEdit" name="cfg_Arguments" native="true"/>
+    <widget class="KEditListBox" name="cfg_Arguments_Widget"/>
    </item>
    <item>
     <spacer name="verticalSpacer">
@@ -51,9 +51,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QStringListEdit</class>
-   <extends>QWidget</extends>
-   <header>bindingsGui/qstringlistedit.h</header>
+   <class>KEditListBox</class>
+   <extends>QGroupBox</extends>
+   <header>keditlistbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

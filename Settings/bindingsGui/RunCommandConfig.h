@@ -23,10 +23,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bindingconfigurationwidget.h"
 
 class Ui_RunCommandConfig;
+class KEditListBox;
 class RunCommandConfigFactory : public BindingConfigurationWidgetFactory {
 public:
     virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
                 CfgKeyEvent *event, SiblingsList *, QWidget *parent);
+};
+
+class EditStringListWrapper : public QObject {
+    Q_OBJECT
+public:
+    explicit EditStringListWrapper(const QString &objectName, KEditListBox *parent);
+signals:
+    void stringListChanged(const QStringList &stringList);
+private slots:
+    void stringListChanged();
+private:
+    KEditListBox *parent;
 };
 
 class RunCommandConfig : public BindingConfigurationWidget
@@ -35,9 +48,6 @@ class RunCommandConfig : public BindingConfigurationWidget
 public:
     explicit RunCommandConfig(QSettings *settings, const QString &bindingType, CfgKeyEvent *event, QWidget *parent=0);
     virtual ~RunCommandConfig();
-signals:
-    
-public slots:
 private:
     Ui_RunCommandConfig *ui;
     

@@ -36,9 +36,12 @@ RunCommandConfig::RunCommandConfig(QSettings *settings, const QString &bindingTy
     const QString m_bindingSettingsKey = BindingConfigurationWidgetFactory::bindingSettingsKey(event, bindingType);
 
     ui->setupUi(this);
-    connect(ui->cfg_Arguments, SIGNAL(stringListChanged(QStringList)), this, SLOT(stringListChanged(QStringList)));
+    EditStringListWrapper *cfg_Arguments = new EditStringListWrapper("cfg_Arguments", ui->cfg_Arguments_Widget);
+
+    connect(cfg_Arguments, SIGNAL(stringListChanged(QStringList)), this, SLOT(stringListChanged(QStringList)));
     connect(ui->cfg_ApplicationName, SIGNAL(textChanged(QString)), this, SLOT(stringChanged(QString)));
-    ui->cfg_Arguments->setStringList(settings->value(m_bindingSettingsKey.arg("Arguments")).toStringList());
+    ui->cfg_Arguments_Widget->clear();
+    ui->cfg_Arguments_Widget->insertStringList(settings->value(m_bindingSettingsKey.arg("Arguments")).toStringList());
     ui->cfg_ApplicationName->setText(settings->value(m_bindingSettingsKey.arg("ApplicationName")).toString());
 
 }
@@ -47,4 +50,19 @@ RunCommandConfig::RunCommandConfig(QSettings *settings, const QString &bindingTy
 RunCommandConfig::~RunCommandConfig()
 {
     delete ui;
+}
+
+
+
+EditStringListWrapper::EditStringListWrapper(const QString &objectName, KEditListBox *parent)
+    : QObject(parent), parent(parent)
+{
+    setObjectName(objectName);
+    connect(parent, SIGNAL(changed()), this, SLOT(stringListChanged()));
+}
+
+
+void EditStringListWrapper::stringListChanged()
+{
+    emit stringListChanged(parent->items());
 }

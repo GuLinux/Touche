@@ -29,7 +29,7 @@ class TrayManager;
 class ToucheCore;
 class QAction;
 class QSettings;
-class QStringListEdit;
+class KEditListBox;
 class EditProfilesDialog : public QDialog {
     Q_OBJECT
 public:
@@ -37,7 +37,7 @@ public:
 public slots:
     void accept();
 private:
-    QStringListEdit *profilesList;
+    KEditListBox *profilesList;
     QSettings *settings;
 };
 
