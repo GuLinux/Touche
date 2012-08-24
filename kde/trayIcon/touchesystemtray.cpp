@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include "traymanager.h"
 #include <QMessageBox>
+#include <KLocale>
 
 class ToucheSystemTrayPrivate {
 public:
@@ -44,7 +45,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu
     QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(systemTrayMenu, profilesMenu, separator, trayManager, toucheCore))
 {
     Q_D(ToucheSystemTray);
-    profilesMenu->setTitle(tr("Profiles"));
+    profilesMenu->setTitle(i18n("Profiles"));
     connect(toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
     connect(toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
 
@@ -66,7 +67,7 @@ void ToucheSystemTray::showConfigurationDialog()
 {
     Q_D(ToucheSystemTray);
     if(d->toucheCore->currentProfile().isEmpty() || ! d->toucheCore->availableProfiles().contains(d->toucheCore->currentProfile() )) {
-        QMessageBox::warning(0, tr("Profile missing"), "Error! You have to add and select a profile first.");
+        QMessageBox::warning(0, i18n("Profile missing"), "Error! You have to add and select a profile first.");
         return;
     }
     QAction *action = dynamic_cast<QAction*>(sender());
@@ -82,7 +83,7 @@ void ToucheSystemTray::showConfigurationDialog()
 void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
-    QString messageTitle = tr("%1: Device Connected!", "device connected tray popup").arg(qAppName());
+    QString messageTitle = i18nc("device connected tray popup", "%1: Device Connected!").arg(qAppName());
     d->trayManager->showMessage(messageTitle, deviceInfo->name(), "input-keyboard");
     QAction *deviceAction = d->trayManager->createAction(deviceInfo->name(), d->systemTrayMenu);
     connect(deviceAction, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
@@ -97,7 +98,7 @@ void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
     qDebug() << "about to quit: " << d->aboutToQuit;
     if(d->aboutToQuit)
         return;
-    QString messageTitle = QString("<b>%1</b>: %2").arg(qAppName()).arg(tr("Device Disconnected!", "device disconnected tray popup"));
+    QString messageTitle = QString("<b>%1</b>: %2").arg(qAppName()).arg(i18nc("device disconnected tray popup", "Device Disconnected!"));
     d->trayManager->showMessage(messageTitle, deviceInfo->name(), "input-keyboard");
     QAction *action = d->actions.take(deviceInfo);
     d->systemTrayMenu->removeAction(action);
@@ -129,8 +130,8 @@ void ToucheSystemTray::updateProfilesList()
 {
     Q_D(ToucheSystemTray);
     d->profilesMenu->clear();
-    d->profilesMenu->addAction(tr("Edit Profiles..."), this, SLOT(editProfiles()));
-    QAction *nextProfile = d->profilesMenu->addAction(tr("Next Profile"),
+    d->profilesMenu->addAction(i18n("Edit Profiles..."), this, SLOT(editProfiles()));
+    QAction *nextProfile = d->profilesMenu->addAction(i18n("Next Profile"),
         this, SLOT(switchToNextProfile()));
     nextProfile->setShortcutContext(Qt::ApplicationShortcut);
     d->profilesMenu->addSeparator();
@@ -224,5 +225,5 @@ void ToucheSystemTray::switchToNextProfile()
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
     Q_D(ToucheSystemTray);
-    d->trayManager->showMessage(tr("%1 Profile").arg(qAppName()), tr("Profile changed to %1").arg(profile), "input-keyboard");
+    d->trayManager->showMessage(i18n("%1 Profile").arg(qAppName()), i18n("Profile changed to %1").arg(profile), "input-keyboard");
 }
