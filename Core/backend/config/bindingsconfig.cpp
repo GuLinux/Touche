@@ -23,10 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/tokeybinding.h"
 #include "domain/donothingbinding.h"
 #include <QMap>
-#include <functional>
 #include <QSettings>
 #include <QCoreApplication>
 #include <QDebug>
+#include <functional>
 
 #define BINDING_DO_NOTHING "DoNothing"
 #define BINDING_RUN_COMMAND "RunCommand"

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bindingconfigurationwidget.h"
 #include "bindingsGui/ToKeyConfig.h"
 #include "bindingsGui/RunCommandConfig.h"
+#include <KLocale>
 
 KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *settings, QWidget *parent) :
     QWidget(parent),
@@ -36,10 +37,10 @@ KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *sett
     ui->setupUi(this);
     connect(ui->bindingTypeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bindingChanged(int)));
 
-    ui->bindingTypelabel->setText(tr("Associated Event for Key %1:", "label for associated event; %1 is keyevent name").arg(cfgKey->keyName()) );
-    ui->bindingTypeComboBox->addItem(tr("DoNothing", "Do Nothing Action"), "DoNothing");
-    ui->bindingTypeComboBox->addItem(tr("TranslateToKey", "Translate to Key Action"), "TranslateToKey");
-    ui->bindingTypeComboBox->addItem(tr("RunCommand", "Run Command Action"), "RunCommand");
+    ui->bindingTypelabel->setText(i18nc("label for associated event; %1 is keyevent name", "Associated Event for Key %1:").arg(cfgKey->keyName()) );
+    ui->bindingTypeComboBox->addItem(i18nc("Do Nothing Action", "DoNothing"), "DoNothing");
+    ui->bindingTypeComboBox->addItem(i18nc("Translate to Key Action", "TranslateToKey"), "TranslateToKey");
+    ui->bindingTypeComboBox->addItem(i18nc("Run Command Action", "RunCommand"), "RunCommand");
     qDebug() << "ConfigKey: " << cfgKey->cfgKeyEvents().first()->configKey();
     ui->bindingTypeComboBox->setCurrentIndex(ui->bindingTypeComboBox->findData(settings->value(cfgKey->cfgKeyEvents().first()->configKey(), "DoNothing")));
 }

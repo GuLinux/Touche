@@ -41,6 +41,7 @@ private:
 
 class BindingConfigurationWidgetFactory {
 public:
+    virtual ~BindingConfigurationWidgetFactory() {}
     virtual BindingConfigurationWidget *build(QSettings *settings, const QString &bindingType,
                 CfgKeyEvent* event, SiblingsList *siblingsList, QWidget *parent=0) = 0;
     static QString bindingSettingsKey(CfgKeyEvent *event, const QString configBindingKey);

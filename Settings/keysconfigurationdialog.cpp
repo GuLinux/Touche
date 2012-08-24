@@ -26,14 +26,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "models/cfgdevice.h"
 #include "keybindingconfiguration.h"
 #include <QSettings>
+#include <KLocale>
 
 KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, const QString &profile, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::KeysConfigurationDialog), deviceInfo(deviceInfo)
 {
     ui->setupUi(this);
-    ui->device_name_label->setText(tr("Configuration for %1, current profile: %2",
-        "label for dialog conf; %1 is the device name, %2 profile name")
+    ui->device_name_label->setText(i18nc("label for dialog conf; %1 is the device name, %2 profile name",
+                                          "Configuration for %1, current profile: %2")
         .arg(deviceInfo->name())
         .arg(profile));
 
