@@ -30,7 +30,7 @@ class DeviceInfo;
 class QSettings;
 class KeyBindingConfiguration;
 namespace Ui {
-class KeysConfigurationDialog;
+    class KeysConfigurationDialog;
 }
 
 class KeysConfigurationDialog : public QDialog
