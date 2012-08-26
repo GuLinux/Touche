@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "runcommandbinding.h"
 #include <QProcess>
-#include <QDebug>
+#include <KDebug>
 
 class RunCommandBindingPrivate {
 public:
@@ -41,7 +41,7 @@ RunCommandBinding::~RunCommandBinding()
 void RunCommandBinding::execute()
 {
     Q_D(RunCommandBinding);
-    qDebug() << "executing \"RunCommandBinding\": command `" << d->command << "` with arguments [" << d->arguments.join(" ") << "]";
+    kDebug() << "executing \"RunCommandBinding\": command `" << d->command << "` with arguments [" << d->arguments.join(" ") << "]";
     QProcess::startDetached(d->command, d->arguments);
 }
 

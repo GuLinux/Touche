@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include <QDebug>
+#include <KDebug>
 #include "touchesystemtray.h"
 #include <QMenu>
 #include <QCoreApplication>
@@ -96,7 +96,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
-    qDebug() << "about to quit: " << d->aboutToQuit;
+    kDebug() << "about to quit: " << d->aboutToQuit;
     if(d->aboutToQuit)
         return;
     QString messageTitle = QString("<b>%1</b>: %2").arg(qAppName()).arg(i18nc("device disconnected tray popup", "Device Disconnected!"));

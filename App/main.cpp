@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
 #include <kaction.h>
-#include <QDebug>
+#include <KDebug>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <QtCore/QTimer>

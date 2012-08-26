@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define CFGKEY_H
 
 #include <QtCore/QObject>
-#include <QDebug>
+#include <KDebug>
 #include <QList>
 #include "cfgkeyevent.h"
 #include <QAbstractListModel>

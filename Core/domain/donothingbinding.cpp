@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "donothingbinding.h"
-#include <QDebug>
+#include <KDebug>
 
 DoNothingBinding::DoNothingBinding(QObject *parent) :
     QObject(parent)
@@ -31,5 +31,5 @@ DoNothingBinding::~DoNothingBinding()
 
 void DoNothingBinding::execute()
 {
-    qDebug() << "Executing \"DoNothingBinding\"";
+    kDebug() << "Executing \"DoNothingBinding\"";
 }

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMap>
 #include "backend/hiddev/hiddev.h"
 #include <QDir>
-#include <QDebug>
+#include <KDebug>
 #include "domain/deviceinfo.h"
 #include <QtCore/QTimer>
 #include <QThread>
@@ -62,7 +62,7 @@ public:
     void addDevice(const QString &devicePath) {
         Q_Q(FindDevices);
         if(devices.contains(devicePath)) return;
-        qDebug() << "Adding device: " << devicePath;
+        kDebug() << "Adding device: " << devicePath;
         QThread *deviceThread = new QThread(q);
         HidDev *device = new HidDev(devicePath, keyboardDatabase);
         deviceThread->start();
@@ -92,22 +92,22 @@ FindDevices::~FindDevices()
 
 void FindDevices::deviceRemoved(DeviceInfo *deviceInfo)
 {
-    qDebug() << "device removed: " << deviceInfo->name();
+    kDebug() << "device removed: " << deviceInfo->name();
     Q_D(FindDevices);
     DevicePair device = d->devices.take(deviceInfo->path());
     emit disconnected(deviceInfo);
     delete device.second;
     device.first->quit();
     device.first->wait();
-    qDebug() << "cleaning up on FindDevices";
+    kDebug() << "cleaning up on FindDevices";
     delete device.first;
-    qDebug() << "Devices list is now " << d->devices;
+    kDebug() << "Devices list is now " << d->devices;
 }
 
 void FindDevices::deviceChanged()
 {
     Q_D(FindDevices);
-    qDebug() << "Device list changed";
+    kDebug() << "Device list changed";
     d->scanDevices();
 }
 

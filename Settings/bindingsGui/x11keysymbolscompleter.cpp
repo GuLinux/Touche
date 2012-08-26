@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "x11keysymbolscompleter.h"
-#include <QDebug>
+#include <KDebug>
 
 class X11KeySymbolsCompleterPrivate {
 public:

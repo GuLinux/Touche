@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backend/config/keyboarddatabase.h"
 #include "backend/config/bindingsconfig.h"
 #include <QCoreApplication>
-#include <QDebug>
+#include <KDebug>
 #include <QtCore/QTimer>
 #include <QProcessEnvironment>
 
@@ -48,7 +48,7 @@ public:
 class __RegisterMetatypes__ {
 public:
     __RegisterMetatypes__() {
-        qDebug() << "Registering InputEventP";
+        kDebug() << "Registering InputEventP";
         qRegisterMetaType<InputEventP>();
     }
 };

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "updatekeysymbolmapping.h"
-#include <QDebug>
+#include <KDebug>
 #include <X11/XKBlib.h>
 #include <QX11Info>
 #include <QFile>

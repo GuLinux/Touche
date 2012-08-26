@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "bindingconfigurationwidget.h"
-#include <QDebug>
+#include <KDebug>
 #include <QSettings>
 #include "models/cfgkeyevent.h"
 

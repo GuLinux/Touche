@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QObject>
 #include <QList>
-#include <QDebug>
+#include <KDebug>
 #include "cfgkey.h"
 #include "domain/deviceinfo.h"
 class DeviceInfo;
