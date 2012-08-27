@@ -71,7 +71,16 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(updateProfilesList()));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
     d->systemTrayMenu->addTitle(i18n("Profiles"));
-    d->systemTrayMenu->addAction(i18n("Edit Profiles..."), this, SLOT(editProfiles()));
+    d->systemTrayMenu->addAction(i18n("Edit Profiles"), this, SLOT(editProfiles()));
+    KAction *switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
+    switchToNextProfile->setObjectName("SwitchToNextProfile");
+    switchToNextProfile->setGlobalShortcut(KShortcut(QKeySequence("Meta+P"))
+//                                           ,KAction::ActiveShortcut | KAction::DefaultShortcut
+//                                           ,KAction::NoAutoloading
+                                           );
+    connect(switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
+    d->systemTrayMenu->addAction(switchToNextProfile);
+    d->systemTrayMenu->addSeparator();
     d->afterProfiles = d->systemTrayMenu->addSeparator();
     d->systemTrayMenu->addTitle(i18n("Devices"));
     d->afterDevices = d->systemTrayMenu->addSeparator();
