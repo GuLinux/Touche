@@ -27,13 +27,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobal>
 class DeviceInfo;
 class ToucheCorePrivate;
-
+class QSettings;
 class Touche {
 public:
     static const inline char* appName() { return I18N_NOOP2("Application internal name", "Touche"); }
     static const inline char* displayName() { return I18N_NOOP2("Application display name", "Touché"); }
     static const inline char* iconName() { return "input-keyboard" ; }
-    static inline QString configFile() { return KStandardDirs::locateLocal("config", "ToucheBindings"); }
+    static QSettings *settings(QObject *parent = 0);
     static inline QStringList keyboardDatabases()
         { return KGlobal::dirs()->findAllResources("data", "Touche/keyboard_database.json"); }
 };

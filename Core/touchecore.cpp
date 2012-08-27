@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QtCore/QTimer>
 #include <QProcessEnvironment>
+#include <QSettings>
 
 
 class ToucheCorePrivate {
@@ -133,4 +134,10 @@ void ToucheCore::setProfile(const QString &profileName)
 {
     Q_D(ToucheCore);
     d->bindingsConfig->setCurrentProfile(profileName);
+}
+
+
+QSettings *Touche::settings(QObject *parent)
+{
+     return new QSettings(KStandardDirs::locateLocal("config", "ToucheBindings"), QSettings::NativeFormat, parent);
 }

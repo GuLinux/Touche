@@ -39,7 +39,7 @@ typedef std::function<Binding*(QObject*, const QString&)> BindingFactory;
 class BindingsConfigPrivate {
 public:
     BindingsConfigPrivate(BindingsConfig *parent)
-        : settings(new QSettings(Touche::configFile(), QSettings::NativeFormat, parent)) {}
+        : settings(Touche::settings(parent)) {}
 
     QMap<QString, BindingFactory> bindings;
     QSettings *settings;

@@ -31,10 +31,10 @@ EditProfilesDialog::EditProfilesDialog(ToucheCore *core, QWidget *parent) :
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *vlayout = new QVBoxLayout(mainWidget);
-    settings = new QSettings(Touche::configFile(), QSettings::NativeFormat, this);
+    settings = Touche::settings(this);
     setCaption(QString("%1 profiles").arg(i18n(Touche::displayName() )));
     profilesList = new KEditListBox();
-    vlayout->addWidget(new QLabel("You can add new profiles here.\nEach profile will have its own key bindings."));
+    vlayout->addWidget(new QLabel(i18n("You can add new profiles here.\nEach profile will have its own key bindings.")));
     vlayout->addWidget(profilesList);
     profilesList->setButtons(KEditListBox::Add | KEditListBox::Remove);
     setMainWidget(mainWidget);

@@ -49,7 +49,7 @@ KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, const Q
     connect(ui->keys_listview, SIGNAL(pressed(QModelIndex)), this, SLOT(cfgKeySelected(QModelIndex)));
     connect(ui->keys_listview, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(cfgKeySelected(QModelIndex)));
 
-    settings = new QSettings(Touche::configFile(), QSettings::NativeFormat, this);
+    settings = Touche::settings(this);
     qDebug() << "avail groups: " << settings->childGroups();
     settings->beginGroup(QString("bindings_%1").arg(profile));
 }
