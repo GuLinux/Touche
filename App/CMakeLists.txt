@@ -13,6 +13,6 @@ add_dependencies(${PROJECT_NAME} Touche_Core Touche_Configuration Touche_GUI)
 
 # TODO for /etc/udev it would be better to use variables, although this one is not going to change that easly...
 INSTALL(FILES files/99-hiddev-input.rules DESTINATION /etc/udev/rules.d)
-INSTALL(FILES files/keyboard_database.json DESTINATION share/${PROJECT_NAME})
+INSTALL(FILES files/keyboard_database.json DESTINATION share/apps/${PROJECT_NAME})
 INSTALL(FILES desktop/Touche.desktop DESTINATION share/applications)
 INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

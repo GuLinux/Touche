@@ -30,9 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTimer>
 #include <QProcessEnvironment>
 
-#define GLOBAL_DATABASE QString("/usr/share/%1/keyboard_database.json").arg(PROJECT_NAME)
-#define LOCAL_DATABASE QString("%1/.config/GuLinux/keyboard_database.json").arg(QProcessEnvironment::systemEnvironment().value("HOME"))
-#define DATABASE_FILES QStringList(LOCAL_DATABASE) << GLOBAL_DATABASE
 
 class ToucheCorePrivate {
 public:
@@ -70,7 +67,7 @@ ToucheCore::~ToucheCore()
 void ToucheCore::start()
 {
     Q_D(ToucheCore);
-    d->keyboardDatabase = new KeyboardDatabase(DATABASE_FILES, this);
+    d->keyboardDatabase = new KeyboardDatabase(Touche::keyboardDatabases(), this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
     d->findDevices = new FindDevices(d->keyboardDatabase, this);
 

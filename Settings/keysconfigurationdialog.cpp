@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keybindingconfiguration.h"
 #include <QSettings>
 #include <KLocale>
+#include "touchecore.h"
 
 KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, const QString &profile, QWidget *parent) :
     QDialog(parent),
@@ -48,7 +49,7 @@ KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, const Q
     connect(ui->keys_listview, SIGNAL(pressed(QModelIndex)), this, SLOT(cfgKeySelected(QModelIndex)));
     connect(ui->keys_listview, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(cfgKeySelected(QModelIndex)));
 
-    settings = new QSettings("GuLinux", qAppName(), this);
+    settings = new QSettings(Touche::configFile(), QSettings::NativeFormat, this);
     qDebug() << "avail groups: " << settings->childGroups();
     settings->beginGroup(QString("bindings_%1").arg(profile));
 }

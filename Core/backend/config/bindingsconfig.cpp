@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 #include <QCoreApplication>
 #include <QDebug>
+#include "touchecore.h"
 #include <functional>
 
 #define BINDING_DO_NOTHING "DoNothing"
@@ -37,7 +38,8 @@ typedef std::function<Binding*(QObject*, const QString&)> BindingFactory;
 
 class BindingsConfigPrivate {
 public:
-    BindingsConfigPrivate(BindingsConfig *parent) : settings(new QSettings("GuLinux", qAppName(), parent)) { }
+    BindingsConfigPrivate(BindingsConfig *parent)
+        : settings(new QSettings(Touche::configFile(), QSettings::NativeFormat, parent)) {}
 
     QMap<QString, BindingFactory> bindings;
     QSettings *settings;

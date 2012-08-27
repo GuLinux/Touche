@@ -31,7 +31,7 @@ EditProfilesDialog::EditProfilesDialog(ToucheCore *core, QWidget *parent) :
 {
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *vlayout = new QVBoxLayout(mainWidget);
-    settings = new QSettings("GuLinux", qAppName(), this);
+    settings = new QSettings(Touche::configFile(), QSettings::NativeFormat, this);
     setCaption(QString("%1 profiles").arg(i18n(Touche::displayName() )));
     profilesList = new KEditListBox();
     vlayout->addWidget(new QLabel("You can add new profiles here.\nEach profile will have its own key bindings."));

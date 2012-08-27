@@ -78,6 +78,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 //                                           ,KAction::ActiveShortcut | KAction::DefaultShortcut
 //                                           ,KAction::NoAutoloading
                                            );
+
     connect(switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
     d->systemTrayMenu->addAction(switchToNextProfile);
     d->systemTrayMenu->addSeparator();

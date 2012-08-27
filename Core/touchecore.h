@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include <QMap>
 #include <KLocale>
+#include <KStandardDirs>
+#include <KGlobal>
 class DeviceInfo;
 class ToucheCorePrivate;
 
@@ -31,6 +33,9 @@ public:
     static const inline char* appName() { return I18N_NOOP2("Application internal name", "Touche"); }
     static const inline char* displayName() { return I18N_NOOP2("Application display name", "Touché"); }
     static const inline char* iconName() { return "input-keyboard" ; }
+    static inline QString configFile() { return KStandardDirs::locateLocal("config", "ToucheBindings"); }
+    static inline QStringList keyboardDatabases()
+        { return KGlobal::dirs()->findAllResources("data", "Touche/keyboard_database.json"); }
 };
 
 class ToucheCore : public QObject
