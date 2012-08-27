@@ -103,8 +103,9 @@ void ToucheSystemTray::showConfigurationDialog()
 void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
-    QString messageTitle = i18nc("device connected tray popup", "%1: Device Connected!")
-            .arg(i18n(Touche::displayName() ));
+    QString messageTitle = QString("<b>%1</b>: %2")
+            .arg(i18n(Touche::displayName() ))
+            .arg(i18nc("device connected tray popup", "Device Connected!"));
     d->tray->showMessage(messageTitle, deviceInfo->name(), Touche::iconName() );
     KAction *deviceAction = new KAction(deviceInfo->name(), d->systemTrayMenu);
     connect(deviceAction, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
