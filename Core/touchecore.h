@@ -22,8 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QObject>
 #include <QMap>
+#include <KLocale>
 class DeviceInfo;
 class ToucheCorePrivate;
+
+class Touche {
+public:
+    static const inline char* appName() { return I18N_NOOP2("Application internal name", "Touche"); }
+    static const inline char* displayName() { return I18N_NOOP2("Application display name", "Touché"); }
+    static const inline char* iconName() { return "input-keyboard" ; }
+};
+
 class ToucheCore : public QObject
 {
     Q_OBJECT

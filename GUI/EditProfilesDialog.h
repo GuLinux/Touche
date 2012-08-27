@@ -17,45 +17,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TOUCHESYSTEMTRAY_H
-#define TOUCHESYSTEMTRAY_H
+#ifndef EDITPROFILESDIALOG_H
+#define EDITPROFILESDIALOG_H
 
-#include <QtCore/QObject>
 #include <KDialog>
-class QMenu;
-class DeviceInfo;
-class ToucheSystemTrayPrivate;
-class TrayManager;
+
 class ToucheCore;
-class QAction;
 class QSettings;
 class KEditListBox;
-class KAboutApplicationDialog;
-
-class ToucheSystemTray : public QObject
+class EditProfilesDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog);
-    ~ToucheSystemTray();
+    explicit EditProfilesDialog(ToucheCore *core, QWidget *parent = 0);
 signals:
     
 public slots:
-    void updateTooltip();
-    void deviceConnected(DeviceInfo *deviceInfo);
-    void deviceDisconnected(DeviceInfo *deviceInfo);
-    void showConfigurationDialog();
-    void aboutToQuit();
-    void updateProfilesList();
-    void setProfile();
-    void editProfiles();
-    void switchToNextProfile();
-    void profileChanged(const QString &profile);
-
-private:
-    ToucheSystemTrayPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ToucheSystemTray)
+    void accept();
     
+private:
+    QSettings *settings;
+    KEditListBox *profilesList;
 };
 
-#endif // TOUCHESYSTEMTRAY_H
+#endif // EDITPROFILESDIALOG_H

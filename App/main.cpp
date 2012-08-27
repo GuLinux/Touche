@@ -34,30 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchesystemtray.h"
 #include "traymanager.h"
 
-class KDETrayManager : public TrayManager {
-public:
-    KDETrayManager(KStatusNotifierItem *tray) : tray(tray) {}
-    virtual QAction *createAction(const QString &text, QObject *parent=0) {
-        return new KAction(text, parent);
-    }
-
-    virtual void showMessage(const QString &title, const QString &text, const QString &iconTheme = QString()) {
-        tray->showMessage(title, text, iconTheme);
-    }
-
-    void updateTooltip(const QString &tooltip) {
-        tray->setToolTip(QIcon::fromTheme("input-keyboard"), qAppName(), QString());
-        tray->setToolTipSubTitle(tooltip);
-    }
-
-private:
-    KStatusNotifierItem *tray;
-};
-
-
 int main(int argc, char *argv[])
 {
-    KAboutData about("touche", 0, ki18n("Touché"), "0.2",
+    KAboutData about(Touche::appName() , 0, ki18n(Touche::displayName()), "0.2",
                      ki18n("Special key recognizer for Linux Desktops"),
                      KAboutData::License_GPL_V3,
                      KLocalizedString(),
@@ -67,7 +46,7 @@ int main(int argc, char *argv[])
                      );
     about.addAuthor(ki18n("Marco Gulino"), ki18n("main developer"),
                     "marco.gulino@gmail.com", "http://rockman81.blogspot.it/");
-    about.setProgramIconName("input-keyboard");
+    about.setProgramIconName(Touche::iconName() );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineOptions options;
     foreach(QString option, ToucheCore::supportedOptions().keys()) {
@@ -91,22 +70,8 @@ int main(int argc, char *argv[])
 
     ToucheCore toucheCore(arguments);
 
-    KStatusNotifierItem *tray = new KStatusNotifierItem(&toucheCore);
-    tray->setIconByName("input-keyboard");
 
-    // not a great approach, but having it autodelete on exit seems to make the app crash.
-    // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
-    KMenu *trayMenu = new KMenu(0);
-    KMenu *profilesMenu = new KMenu(0);
-    trayMenu->addTitle(QIcon::fromTheme("input-keyboard"), qAppName());
-    trayMenu->addAction(ki18n("About Touché").toString(), &aboutTouche, SLOT(exec()));
-    tray->setContextMenu(trayMenu);
-    trayMenu->addMenu(profilesMenu);
-    tray->setCategory(KStatusNotifierItem::Hardware);
-    tray->setTitle(qAppName());
-    KDETrayManager trayManager(tray);
-
-    new ToucheSystemTray(&toucheCore, trayMenu, profilesMenu, trayMenu->addSeparator(), &trayManager);
+    new ToucheSystemTray(&toucheCore, &aboutTouche);
 
     toucheCore.start();
     return a.exec();

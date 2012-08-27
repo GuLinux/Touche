@@ -27,27 +27,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "traymanager.h"
 #include <QMessageBox>
 #include <KLocale>
+#include <KStatusNotifierItem>
+#include "EditProfilesDialog.h"
+#include <KAction>
+#include <KMenu>
+#include <KAboutApplicationDialog>
 
 class ToucheSystemTrayPrivate {
 public:
-    ToucheSystemTrayPrivate(QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager, ToucheCore *toucheCore)
-        : systemTrayMenu(systemTrayMenu), profilesMenu(profilesMenu), separator(separator), trayManager(trayManager), aboutToQuit(false), toucheCore(toucheCore) {}
-    QMenu *systemTrayMenu;
-    QMenu *profilesMenu;
-    QAction *separator;
-    QMap<DeviceInfo*, QAction*> actions;
-    TrayManager *trayManager;
+    ToucheSystemTrayPrivate(ToucheCore *toucheCore)
+        : aboutToQuit(false), toucheCore(toucheCore) {}
+    KMenu *systemTrayMenu;
+    KMenu *profilesMenu;
+    KAction *separator;
+    QMap<DeviceInfo*, KAction*> actions;
     bool aboutToQuit;
     ToucheCore *toucheCore;
+    KStatusNotifierItem *tray;
 };
 
-ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, QMenu *systemTrayMenu, QMenu *profilesMenu, QAction *separator, TrayManager *trayManager) :
-    QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(systemTrayMenu, profilesMenu, separator, trayManager, toucheCore))
+ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog) :
+    QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(toucheCore))
 {
     Q_D(ToucheSystemTray);
-    profilesMenu->setTitle(i18n("Profiles"));
-    connect(toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
-    connect(toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
+    d->tray = new KStatusNotifierItem(toucheCore);
+    d->tray->setIconByName(Touche::iconName());
+
+    // not a great approach, but having it autodelete on exit seems to make the app crash.
+    // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
+    d->systemTrayMenu = new KMenu(0);
+    d->profilesMenu = new KMenu(0);
+    d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName()));
+    d->systemTrayMenu->addAction(ki18n("About Touché").toString(), aboutDialog, SLOT(exec()));
+    d->tray->setContextMenu(d->systemTrayMenu);
+    d->systemTrayMenu->addMenu(d->profilesMenu);
+    d->tray->setCategory(KStatusNotifierItem::Hardware);
+    d->tray->setTitle(i18n(Touche::displayName() ));
+
+    d->profilesMenu->setTitle(i18n("Profiles"));
+    connect(d->toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
+    connect(d->toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
 
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     connect(qApp, SIGNAL(aboutToQuit()), toucheCore, SLOT(quit()));
@@ -70,7 +89,7 @@ void ToucheSystemTray::showConfigurationDialog()
         QMessageBox::warning(0, i18n("Profile missing"), "Error! You have to add and select a profile first.");
         return;
     }
-    QAction *action = dynamic_cast<QAction*>(sender());
+    KAction *action = dynamic_cast<KAction*>(sender());
     DeviceInfo *deviceInfo = d->actions.key(action);
     KeysConfigurationDialog *configDialog = new KeysConfigurationDialog(deviceInfo, d->toucheCore->currentProfile());
     connect(d->toucheCore, SIGNAL(disconnected(DeviceInfo*)), configDialog, SLOT(reject()));
@@ -84,9 +103,10 @@ void ToucheSystemTray::showConfigurationDialog()
 void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
-    QString messageTitle = i18nc("device connected tray popup", "%1: Device Connected!").arg(qAppName());
-    d->trayManager->showMessage(messageTitle, deviceInfo->name(), "input-keyboard");
-    QAction *deviceAction = d->trayManager->createAction(deviceInfo->name(), d->systemTrayMenu);
+    QString messageTitle = i18nc("device connected tray popup", "%1: Device Connected!")
+            .arg(i18n(Touche::displayName() ));
+    d->tray->showMessage(messageTitle, deviceInfo->name(), Touche::iconName() );
+    KAction *deviceAction = new KAction(deviceInfo->name(), d->systemTrayMenu);
     connect(deviceAction, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
     d->systemTrayMenu->insertAction(d->separator, deviceAction);
     d->actions.insert(deviceInfo, deviceAction);
@@ -99,8 +119,10 @@ void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
     qDebug() << "about to quit: " << d->aboutToQuit;
     if(d->aboutToQuit)
         return;
-    QString messageTitle = QString("<b>%1</b>: %2").arg(qAppName()).arg(i18nc("device disconnected tray popup", "Device Disconnected!"));
-    d->trayManager->showMessage(messageTitle, deviceInfo->name(), "input-keyboard");
+    QString messageTitle = QString("<b>%1</b>: %2")
+            .arg(i18n(Touche::displayName() ))
+            .arg(i18nc("device disconnected tray popup", "Device Disconnected!"));
+    d->tray->showMessage(messageTitle, deviceInfo->name(), Touche::iconName() );
     QAction *action = d->actions.take(deviceInfo);
     d->systemTrayMenu->removeAction(action);
     delete action;
@@ -115,7 +137,10 @@ void ToucheSystemTray::updateTooltip()
     foreach(DeviceInfo* deviceInfo, d->actions.keys()) {
         devices << deviceInfo->name();
     }
-    d->trayManager->updateTooltip(devices.join("\n"));
+
+    d->tray->setToolTip(QIcon::fromTheme(Touche::iconName() ), i18n(Touche::displayName() ), QString());
+    d->tray->setToolTipSubTitle(devices.join("\n"));
+
 }
 
 void ToucheSystemTray::aboutToQuit()
@@ -153,26 +178,6 @@ void ToucheSystemTray::setProfile()
     d->toucheCore->setProfile(profileAction->objectName());
 }
 
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
-#include <QLabel>
-#include <QSettings>
-#include <KEditListBox>
-
-EditProfilesDialog::EditProfilesDialog(ToucheCore *core)
-    : QDialog(){
-    QVBoxLayout *vlayout = new QVBoxLayout(this);
-    settings = new QSettings("GuLinux", qAppName(), this);
-    setWindowTitle(QString("%1 profiles").arg(qAppName()));
-    profilesList = new KEditListBox();
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    vlayout->addWidget(new QLabel("You can add new profiles here.\nEach profile will have its own key bindings."));
-    vlayout->addWidget(profilesList);
-    vlayout->addWidget(buttonBox);
-    profilesList->insertStringList(core->availableProfiles());
-}
 
 void ToucheSystemTray::editProfiles()
 {
@@ -180,27 +185,6 @@ void ToucheSystemTray::editProfiles()
     EditProfilesDialog editProfilesDialog(d->toucheCore);
     editProfilesDialog.exec();
     updateProfilesList();
-}
-
-
-void EditProfilesDialog::accept()
-{
-    foreach(QString profile, settings->childGroups()) {
-        if(!profile.startsWith("bindings_")) continue;
-        if(profilesList->items().contains(QString(profile).replace("bindings_", ""))) continue;
-        settings->beginGroup(profile);
-        settings->remove("");
-        settings->endGroup();
-    }
-
-    foreach(QString profile, profilesList->items()) {
-        if(settings->childGroups().contains(QString("bindings_%1").arg(profile))) continue;
-        settings->beginGroup(QString("bindings_%1").arg(profile));
-        settings->setValue("name", profile);
-        settings->endGroup();
-    }
-
-    QDialog::accept();
 }
 
 
@@ -226,5 +210,7 @@ void ToucheSystemTray::switchToNextProfile()
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
     Q_D(ToucheSystemTray);
-    d->trayManager->showMessage(i18n("%1 Profile").arg(qAppName()), i18n("Profile changed to %1").arg(profile), "input-keyboard");
+    d->tray->showMessage(i18n("%1 Profile").arg(i18n(Touche::displayName() )),
+                         i18n("Profile changed to %1").arg(profile),
+                         Touche::iconName() );
 }
