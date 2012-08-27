@@ -1,6 +1,7 @@
 set(Touche_GUI_SRCS 
   touchesystemtray.cpp
-  EditProfilesDialog.cpp
+  EditProfiles.cpp
+  SettingsDialog.cpp
 )
 
 
@@ -10,7 +11,8 @@ set(Touche_GUI_SRCS
 #QT4_WRAP_UI(Touche_GUI_FORMS_HEADERS ${Touche_GUI_FORMS})
 qt4_wrap_cpp(Touche_GUI_mocs
   touchesystemtray.h
-  EditProfilesDialog.h
+  EditProfiles.h
+  SettingsDialog.h
 )
 
 include_directories( ${Touche_common_includes} ) 

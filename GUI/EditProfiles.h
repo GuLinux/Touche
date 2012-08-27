@@ -20,16 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef EDITPROFILESDIALOG_H
 #define EDITPROFILESDIALOG_H
 
-#include <KDialog>
+#include <QWidget>
 
 class ToucheCore;
 class QSettings;
 class KEditListBox;
-class EditProfilesDialog : public KDialog
+class EditProfiles : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditProfilesDialog(ToucheCore *core, QWidget *parent = 0);
+    explicit EditProfiles(ToucheCore *core, QWidget *parent = 0);
 signals:
     
 public slots:

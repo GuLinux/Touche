@@ -28,10 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMessageBox>
 #include <KLocale>
 #include <KStatusNotifierItem>
-#include "EditProfilesDialog.h"
 #include <KAction>
 #include <KMenu>
 #include <KAboutApplicationDialog>
+#include "SettingsDialog.h"
+#include <KStandardAction>
 
 class ToucheSystemTrayPrivate {
 public:
@@ -53,11 +54,13 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->tray = new KStatusNotifierItem(toucheCore);
     d->tray->setIconByName(Touche::iconName());
 
+
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
     d->systemTrayMenu = new KMenu(0);
     d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName()));
-    d->systemTrayMenu->addAction(ki18n("About Touché").toString(), aboutDialog, SLOT(exec()));
+    d->systemTrayMenu->addAction(KStandardAction::preferences(this, SLOT(editProfiles()), this) );
+    d->systemTrayMenu->addAction(KStandardAction::aboutApp(aboutDialog, SLOT(exec()), this));
     d->tray->setContextMenu(d->systemTrayMenu);
     d->tray->setCategory(KStatusNotifierItem::Hardware);
     d->tray->setTitle(i18n(Touche::displayName() ));
@@ -71,7 +74,6 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(updateProfilesList()));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
     d->systemTrayMenu->addTitle(i18n("Profiles"));
-    d->systemTrayMenu->addAction(i18n("Edit Profiles"), this, SLOT(editProfiles()));
     KAction *switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
     switchToNextProfile->setObjectName("SwitchToNextProfile");
     switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P")
@@ -98,7 +100,7 @@ void ToucheSystemTray::showConfigurationDialog()
 {
     Q_D(ToucheSystemTray);
     if(d->toucheCore->currentProfile().isEmpty() || ! d->toucheCore->availableProfiles().contains(d->toucheCore->currentProfile() )) {
-        QMessageBox::warning(0, i18n("Profile missing"), "Error! You have to add and select a profile first.");
+        QMessageBox::warning(0, i18n("Profile missing"), i18n("Error! You have to add and select a profile first."));
         return;
     }
     KAction *action = dynamic_cast<KAction*>(sender());
@@ -168,12 +170,6 @@ void ToucheSystemTray::aboutToQuit()
 void ToucheSystemTray::updateProfilesList()
 {
     Q_D(ToucheSystemTray);
-//    d->profilesMenu->clear();
-//    d->profilesMenu->addAction(i18n("Edit Profiles..."), this, SLOT(editProfiles()));
-//    QAction *nextProfile = d->profilesMenu->addAction(i18n("Next Profile"),
-//        this, SLOT(switchToNextProfile()));
-//    nextProfile->setShortcutContext(Qt::ApplicationShortcut);
-//    d->profilesMenu->addSeparator();
     foreach(QAction *action, d->systemTrayMenu->actions()) {
         if(action->objectName().startsWith("profile_"))
             d->systemTrayMenu->removeAction(action);
@@ -202,8 +198,8 @@ void ToucheSystemTray::setProfile()
 void ToucheSystemTray::editProfiles()
 {
     Q_D(ToucheSystemTray);
-    EditProfilesDialog editProfilesDialog(d->toucheCore);
-    editProfilesDialog.exec();
+    SettingsDialog settings(d->toucheCore);
+    settings.exec();
     updateProfilesList();
 }
 

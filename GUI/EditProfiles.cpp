@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "EditProfilesDialog.h"
+#include "EditProfiles.h"
 #include "touchecore.h"
 #include <QSettings>
 #include <QVBoxLayout>
@@ -26,22 +26,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QDebug>
 
-EditProfilesDialog::EditProfilesDialog(ToucheCore *core, QWidget *parent) :
-    KDialog(parent)
+EditProfiles::EditProfiles(ToucheCore *core, QWidget *parent) :
+    QWidget(parent)
 {
-    QWidget *mainWidget = new QWidget(this);
-    QVBoxLayout *vlayout = new QVBoxLayout(mainWidget);
+    QVBoxLayout *vlayout = new QVBoxLayout(this);
     settings = Touche::settings(this);
-    setCaption(QString("%1 profiles").arg(i18n(Touche::displayName() )));
+//    setCaption(QString("%1 profiles").arg(i18n(Touche::displayName() )));
     profilesList = new KEditListBox();
     vlayout->addWidget(new QLabel(i18n("You can add new profiles here.\nEach profile will have its own key bindings.")));
     vlayout->addWidget(profilesList);
     profilesList->setButtons(KEditListBox::Add | KEditListBox::Remove);
-    setMainWidget(mainWidget);
     profilesList->insertStringList(core->availableProfiles());
 }
 
-void EditProfilesDialog::accept()
+void EditProfiles::accept()
 {
     qDebug() << "Saving profiles list...";
     foreach(QString profile, settings->childGroups()) {
@@ -58,6 +56,4 @@ void EditProfilesDialog::accept()
         settings->setValue("name", profile);
         settings->endGroup();
     }
-
-    QDialog::accept();
 }
