@@ -38,12 +38,12 @@ public:
     ToucheSystemTrayPrivate(ToucheCore *toucheCore)
         : aboutToQuit(false), toucheCore(toucheCore) {}
     KMenu *systemTrayMenu;
-    KMenu *profilesMenu;
-    KAction *separator;
     QMap<DeviceInfo*, KAction*> actions;
     bool aboutToQuit;
     ToucheCore *toucheCore;
     KStatusNotifierItem *tray;
+    QAction *afterProfiles;
+    QAction *afterDevices;
 };
 
 ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog) :
@@ -56,15 +56,13 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
     d->systemTrayMenu = new KMenu(0);
-    d->profilesMenu = new KMenu(0);
     d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName()));
     d->systemTrayMenu->addAction(ki18n("About Touché").toString(), aboutDialog, SLOT(exec()));
     d->tray->setContextMenu(d->systemTrayMenu);
-    d->systemTrayMenu->addMenu(d->profilesMenu);
     d->tray->setCategory(KStatusNotifierItem::Hardware);
     d->tray->setTitle(i18n(Touche::displayName() ));
 
-    d->profilesMenu->setTitle(i18n("Profiles"));
+
     connect(d->toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
     connect(d->toucheCore, SIGNAL(disconnected(DeviceInfo*)), SLOT(deviceDisconnected(DeviceInfo*)));
 
@@ -72,7 +70,11 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     connect(qApp, SIGNAL(aboutToQuit()), toucheCore, SLOT(quit()));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(updateProfilesList()));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
-
+    d->systemTrayMenu->addTitle(i18n("Profiles"));
+    d->systemTrayMenu->addAction(i18n("Edit Profiles..."), this, SLOT(editProfiles()));
+    d->afterProfiles = d->systemTrayMenu->addSeparator();
+    d->systemTrayMenu->addTitle(i18n("Devices"));
+    d->afterDevices = d->systemTrayMenu->addSeparator();
     updateTooltip();
     updateProfilesList();
 }
@@ -109,7 +111,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
     d->tray->showMessage(messageTitle, deviceInfo->name(), Touche::iconName() );
     KAction *deviceAction = new KAction(deviceInfo->name(), d->systemTrayMenu);
     connect(deviceAction, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
-    d->systemTrayMenu->insertAction(d->separator, deviceAction);
+    d->systemTrayMenu->insertAction(d->afterDevices, deviceAction);
     d->actions.insert(deviceInfo, deviceAction);
     updateTooltip();
 }
@@ -156,15 +158,22 @@ void ToucheSystemTray::aboutToQuit()
 void ToucheSystemTray::updateProfilesList()
 {
     Q_D(ToucheSystemTray);
-    d->profilesMenu->clear();
-    d->profilesMenu->addAction(i18n("Edit Profiles..."), this, SLOT(editProfiles()));
-    QAction *nextProfile = d->profilesMenu->addAction(i18n("Next Profile"),
-        this, SLOT(switchToNextProfile()));
-    nextProfile->setShortcutContext(Qt::ApplicationShortcut);
-    d->profilesMenu->addSeparator();
+//    d->profilesMenu->clear();
+//    d->profilesMenu->addAction(i18n("Edit Profiles..."), this, SLOT(editProfiles()));
+//    QAction *nextProfile = d->profilesMenu->addAction(i18n("Next Profile"),
+//        this, SLOT(switchToNextProfile()));
+//    nextProfile->setShortcutContext(Qt::ApplicationShortcut);
+//    d->profilesMenu->addSeparator();
+    foreach(QAction *action, d->systemTrayMenu->actions()) {
+        if(action->objectName().startsWith("profile_"))
+            d->systemTrayMenu->removeAction(action);
+    }
+
     foreach(QString profile, d->toucheCore->availableProfiles()) {
-        QAction *profileAction = d->profilesMenu->addAction(profile);
-        profileAction->setObjectName(profile);
+        QAction *profileAction = new KAction(profile, this);
+        d->systemTrayMenu->insertAction(d->afterProfiles, profileAction);
+        profileAction->setObjectName(QString("profile_%1").arg(profile));
+        profileAction->setProperty("profile", profile);
         profileAction->setCheckable(true);
         profileAction->setChecked(profile == d->toucheCore->currentProfile());
         connect(profileAction, SIGNAL(triggered()), this, SLOT(setProfile()));
@@ -176,7 +185,7 @@ void ToucheSystemTray::setProfile()
 {
     Q_D(ToucheSystemTray);
     QAction *profileAction = (QAction*) sender();
-    d->toucheCore->setProfile(profileAction->objectName());
+    d->toucheCore->setProfile(profileAction->property("profile").toString());
 }
 
 
