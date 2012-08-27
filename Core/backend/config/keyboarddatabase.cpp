@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qjson/parser.h>
 #include <QFile>
 #include <QVariantMap>
-#include <QDebug>
+#include <KDebug>
 #include "domain/deviceinfo.h"
 #include "domain/inputevent.h"
 #include "databaseentry.h"
@@ -58,7 +58,7 @@ KeyboardDatabase::KeyboardDatabase(QStringList databaseFiles, QObject *parent) :
 {
     Q_D(KeyboardDatabase);
     d->emptyDatabaseEntry.setProperty("deviceName", "Device not configured");
-    qDebug() << "Using keyboard database paths: " << databaseFiles;
+    kDebug() << "Using keyboard database paths: " << databaseFiles;
 }
 
 KeyboardDatabase::~KeyboardDatabase()

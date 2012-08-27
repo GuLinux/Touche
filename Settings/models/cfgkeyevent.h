@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define CFGKEYEVENT_H
 
 #include <QtCore/QObject>
-#include <QDebug>
+#include <KDebug>
 #include <QAbstractListModel>
 class CfgKeyEvent;
 class CfgKey;

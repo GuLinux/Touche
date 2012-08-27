@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMutexLocker>
 #include <QElapsedTimer>
 
-#include <QDebug>
+#include <KDebug>
 #include "backend/config/databaseentry.h"
 #include "domain/deviceinfo.h"
 #include "backend/config/keyboarddatabase.h"
@@ -85,7 +85,7 @@ public:
         FD_SET(fd, &(fdset));
         int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
         if(selectRD==-1) {
-            qDebug() << "Error on select: " << strerror(errno);
+            kDebug() << "Error on select: " << strerror(errno);
             stop();
             return;
         }
@@ -102,7 +102,7 @@ public:
         int rd = read(fd, ev, sizeof(ev));
         if(rd==-1) {
             stop();
-            qDebug() << "Error on read: " << strerror(errno);
+            kDebug() << "Error on read: " << strerror(errno);
             return;
         }
         HidInputEvent *keyEvent = new HidInputEvent(q);
@@ -142,13 +142,13 @@ void HidDev::start()
     while(d->fd==-1) {
         d->fd = open(d->deviceInfo.path().toLatin1(), O_RDONLY);
         if(d->fd==-1 && d->errors_timer.elapsed() > OPEN_TIMEOUT) {
-            qDebug() << "Error on open: " << strerror(errno) << " for more than " << OPEN_TIMEOUT << " milliseconds; giving up.";
+            kDebug() << "Error on open: " << strerror(errno) << " for more than " << OPEN_TIMEOUT << " milliseconds; giving up.";
             // TODO: emit signal for gui notification
             return;
         }
         qApp->processEvents();
     }
-    qDebug() << "Hid dev opened: " << d->fd;
+    kDebug() << "Hid dev opened: " << d->fd;
 
 
     int version;
@@ -158,7 +158,7 @@ void HidDev::start()
     err << QString("hiddev driver version is %1.%2.%3\n").arg(version >> 16).arg((version >> 8) & 0xff).arg(version & 0xff);
 
     ioctl(d->fd, HIDIOCGDEVINFO, &dinfo);
-    qDebug() << "Product: " << QString("%1").arg((quint16) dinfo.product, 4, 16, QChar('0'));
+    kDebug() << "Product: " << QString("%1").arg((quint16) dinfo.product, 4, 16, QChar('0'));
     d->deviceInfo.vendor(dinfo.vendor)->productID(dinfo.product)->version(dinfo.version)
             ->bus(dinfo.busnum)->deviceNumber(dinfo.devnum)->interfaceNumber(dinfo.ifnum);
     err << QString("HID: vendor 0x%1 product 0x%2 version 0x%3\n")
@@ -179,20 +179,20 @@ void HidDev::start()
     d->deviceInfo.name(keyboardDatabaseEntry.value("name").toString());
     d->deviceInfo.keyboardDatabaseEntry(keyboardDatabaseEntry);
 
-    qDebug() << "Read timeout set to " << d->read_timeout_milliseconds << " milliseconds";
+    kDebug() << "Read timeout set to " << d->read_timeout_milliseconds << " milliseconds";
     emit connected(&d->deviceInfo);
     while(d->fd!=-1 && !d->aboutToQuit) {
         qApp->processEvents();
         d->read_events();
     }
-    qDebug() << "Device loop stopped";
+    kDebug() << "Device loop stopped";
     emit removed(&d->deviceInfo);
 }
 
 void HidDev::stop()
 {
     Q_D(HidDev);
-    qDebug() << "qapp said it's time to go...";
+    kDebug() << "qapp said it's time to go...";
     QMutexLocker locker(&d->mutex);
     Q_UNUSED(locker);
     d->stop();

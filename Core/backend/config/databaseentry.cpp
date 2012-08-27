@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/configevent.h"
 #include "domain/nomoreeventsinputevent.h"
 #include <QList>
-#include <QDebug>
+#include <KDebug>
 
 class DatabaseEntryPrivate {
 public:

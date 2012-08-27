@@ -41,7 +41,7 @@ KeyBindingConfiguration::KeyBindingConfiguration(CfgKey *cfgKey, QSettings *sett
     ui->bindingTypeComboBox->addItem(i18nc("Do Nothing Action", "DoNothing"), "DoNothing");
     ui->bindingTypeComboBox->addItem(i18nc("Translate to Key Action", "TranslateToKey"), "TranslateToKey");
     ui->bindingTypeComboBox->addItem(i18nc("Run Command Action", "RunCommand"), "RunCommand");
-    qDebug() << "ConfigKey: " << cfgKey->cfgKeyEvents().first()->configKey();
+    kDebug() << "ConfigKey: " << cfgKey->cfgKeyEvents().first()->configKey();
     ui->bindingTypeComboBox->setCurrentIndex(ui->bindingTypeComboBox->findData(settings->value(cfgKey->cfgKeyEvents().first()->configKey(), "DoNothing")));
 }
 
@@ -62,7 +62,7 @@ void KeyBindingConfiguration::bindingChanged(int index)
     }
 
     if(configBindingKey == "DoNothing") return;
-    qDebug() << "configBindingKey: " << configBindingKey;
+    kDebug() << "configBindingKey: " << configBindingKey;
     SiblingsList *siblingsList = new SiblingsList(this);
     foreach(CfgKeyEvent* event, m_cfgKey->cfgKeyEvents()) {
         BindingConfigurationWidget *widget = widgetsFactories.value(configBindingKey)

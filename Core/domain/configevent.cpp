@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMap>
 #include <QVariant>
 #include <QStringList>
-#include <QDebug>
+#include <KDebug>
 #include "backend/config/bindingsconfig.h"
 #include "domain/binding.h"
 
@@ -51,7 +51,7 @@ Binding *ConfigEvent::matches(InputEvent *other, const QStringList &tags, Bindin
             QString eventName = QString("%1/%2")
                     .arg(property("keyName").toString() )
                     .arg(tag);
-            qDebug() << "Got match: " << eventName;
+            kDebug() << "Got match: " << eventName;
             return bindingsConfig->bindingFor(eventName, other->nearestQObject());
         }
     }

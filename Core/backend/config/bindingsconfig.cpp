@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMap>
 #include <QSettings>
 #include <QCoreApplication>
-#include <QDebug>
 #include "touchecore.h"
+#include <KDebug>
 #include <functional>
 
 #define BINDING_DO_NOTHING "DoNothing"

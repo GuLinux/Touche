@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "hid_inputevent.h"
 #include <QMultiMap>
-#include <QDebug>
+#include <KDebug>
 #include <QStringList>
 #include <QPair>
 
@@ -38,7 +38,7 @@ public:
             if(!this->registers.values(hid).contains(value))
                 return false;
         }
-        qDebug() << "Match for version " << versionName;
+        kDebug() << "Match for version " << versionName;
         return true;
     }
 
