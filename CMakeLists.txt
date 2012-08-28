@@ -26,7 +26,7 @@ include_directories( ${KDE4_INCLUDES} )
 
 set(Touche_libs ${Touche_static_libraries} ${X11_LIBRARIES} ${QJSON_LIBRARIES} ${X11_XTest_LIB} ${KDE4_KDEUI_LIBS})
 
-set (KDE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+set(KDE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
 
