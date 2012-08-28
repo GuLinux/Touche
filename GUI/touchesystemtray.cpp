@@ -36,6 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KShortcutsDialog>
 #include <KActionCollection>
 
+#define actionCollection KActionCollection::allCollections().first()
+
+
 class ToucheSystemTrayPrivate {
 public:
     ToucheSystemTrayPrivate(ToucheCore *toucheCore)
@@ -62,8 +65,8 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu = new KMenu(0);
     d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName()));
     d->systemTrayMenu->addAction(KStandardAction::preferences(this, SLOT(editProfiles()), this) );
-    d->systemTrayMenu->addAction(KStandardAction::aboutApp(aboutDialog, SLOT(exec()), this));
     d->systemTrayMenu->addAction(KStandardAction::keyBindings(this, SLOT(configureShortcuts()), this));
+    d->systemTrayMenu->addAction(KStandardAction::aboutApp(aboutDialog, SLOT(exec()), this));
     d->tray->setContextMenu(d->systemTrayMenu);
     d->tray->setCategory(KStatusNotifierItem::Hardware);
     d->tray->setTitle(i18n(Touche::displayName() ));
@@ -84,7 +87,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 //                                           ,KAction::NoAutoloading
                                            );
 
-    KActionCollection::allCollections().first()->addAction(switchToNextProfile->objectName(), switchToNextProfile);
+    actionCollection->addAction(switchToNextProfile->objectName(), switchToNextProfile);
 
     connect(switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
     d->systemTrayMenu->addAction(switchToNextProfile);
@@ -239,6 +242,5 @@ void ToucheSystemTray::profileChanged(const QString &profile)
 
 void ToucheSystemTray::configureShortcuts()
 {
-    kDebug() << "action collections size: " << KActionCollection::allCollections().size();
-    KShortcutsDialog::configure(KActionCollection::allCollections().first());
+    KShortcutsDialog::configure(actionCollection);
 }
