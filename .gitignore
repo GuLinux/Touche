@@ -6,3 +6,4 @@ releases_archive
 *.pro.user*
 static-libraries.bin
 *.user
+.*-swp

@@ -4,6 +4,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(QJSON REQUIRED)
 find_package(X11 REQUIRED)
 find_package( KDE4 REQUIRED )
+find_package( CWiid )
+
 include(KDE4Defaults)
 
 
@@ -26,7 +28,14 @@ set(Touche_libs ${Touche_static_libraries} ${X11_LIBRARIES} ${QJSON_LIBRARIES} $
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
+
 add_subdirectory(Core)
 add_subdirectory(Settings)
 add_subdirectory(GUI)
 add_subdirectory(App)
+
+if(NOT CWIID_FOUND)
+    message("Optional dependencies:")
+    message("  CWiid - for Wiimote support")
+endif(NOT CWIID_FOUND)
+
