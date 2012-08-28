@@ -6,6 +6,9 @@ set(WiimoteLib_SRCS
   wiimotemanager.cpp
   wiimote_messages.cpp
 )
+#set(CMAKE_CXX_FLAGS "${KDE_CXX_FLAGS} -noansi ")
+
+string(REPLACE "-ansi" "" CMAKE_CXX_FLAGS ${KDE_CXX_FLAGS})
 
 qt4_wrap_cpp(WiimoteLib_mocs
   cwiidconnectionworker.h
