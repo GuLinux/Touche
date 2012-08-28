@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KAboutApplicationDialog>
 #include "SettingsDialog.h"
 #include <KStandardAction>
+#include <KShortcutsDialog>
+#include <KActionCollection>
 
 class ToucheSystemTrayPrivate {
 public:
@@ -61,6 +63,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName()));
     d->systemTrayMenu->addAction(KStandardAction::preferences(this, SLOT(editProfiles()), this) );
     d->systemTrayMenu->addAction(KStandardAction::aboutApp(aboutDialog, SLOT(exec()), this));
+    d->systemTrayMenu->addAction(KStandardAction::keyBindings(this, SLOT(configureShortcuts()), this));
     d->tray->setContextMenu(d->systemTrayMenu);
     d->tray->setCategory(KStatusNotifierItem::Hardware);
     d->tray->setTitle(i18n(Touche::displayName() ));
@@ -80,6 +83,8 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 //                                           ,KAction::ActiveShortcut | KAction::DefaultShortcut
 //                                           ,KAction::NoAutoloading
                                            );
+
+    KActionCollection::allCollections().first()->addAction(switchToNextProfile->objectName(), switchToNextProfile);
 
     connect(switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
     d->systemTrayMenu->addAction(switchToNextProfile);
@@ -229,4 +234,11 @@ void ToucheSystemTray::profileChanged(const QString &profile)
     d->tray->showMessage(i18n("%1 Profile").arg(i18n(Touche::displayName() )),
                          i18n("Profile changed to %1").arg(profile),
                          Touche::iconName() );
+}
+
+
+void ToucheSystemTray::configureShortcuts()
+{
+    kDebug() << "action collections size: " << KActionCollection::allCollections().size();
+    KShortcutsDialog::configure(KActionCollection::allCollections().first());
 }
