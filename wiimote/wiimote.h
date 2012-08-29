@@ -6,6 +6,7 @@
 #include <QVector3D>
 #include "wiimote_messages.h"
 #include "angles.h"
+#include <QStringList>
 
 
 #define CALIBRATION_STEPS 15
@@ -27,6 +28,7 @@ signals:
     void calibrationStep(int remainingSeconds);
     void calibrated();
     void needsCalibration();
+    void buttonsDown(const QStringList &buttons);
 
 public slots:
     void motionPlusEvent(WiimoteMessage message);
@@ -37,6 +39,7 @@ public slots:
     void reset(double yaw, double pitch, double roll);
     void reset(WiimoteVector3 angles);
     void setCalibrationSteps(int seconds);
+    void buttons(int buttonsMask);
 
 private:
     WiimoteVector3  m_calibration_gyro;

@@ -10,9 +10,10 @@ WiimoteManager::WiimoteManager(QObject *parent) :
     thread = new QThread(this);
     worker->moveToThread(thread);
     connect(worker, SIGNAL(wiimoteMessage(WiimoteMessage)), wiimote, SLOT(motionPlusEvent(WiimoteMessage)));
-    connect(worker, SIGNAL(connected()), this, SIGNAL(connected()));
-    connect(worker, SIGNAL(disconnected()), this, SIGNAL(disconnected()));
+    connect(worker, SIGNAL(connected(QString)), this, SIGNAL(connected(QString)));
+    connect(worker, SIGNAL(disconnected(QString)), this, SIGNAL(disconnected(QString)));
     connect(worker, SIGNAL(deviceMessage(QString,int)), this, SIGNAL(deviceMessage(QString,int)));
+    connect(worker, SIGNAL(buttons(int)), wiimote, SLOT(buttons(int)));
 
     connect(wiimote, SIGNAL(angleChanged(WiimoteVector3)), this, SIGNAL(angleChanged(WiimoteVector3)));
     connect(wiimote, SIGNAL(deltaChanged(WiimoteVector3)), this, SIGNAL(deltaChanged(WiimoteVector3)));
@@ -21,6 +22,7 @@ WiimoteManager::WiimoteManager(QObject *parent) :
     connect(wiimote, SIGNAL(calibrationStep(int)), this, SIGNAL(calibrationStep(int)));
     connect(wiimote, SIGNAL(calibrated()), this, SIGNAL(calibrated()));
     connect(wiimote, SIGNAL(needsCalibration()), this, SIGNAL(needsCalibration()));
+    connect(wiimote, SIGNAL(buttonsDown(QStringList)), this, SIGNAL(buttonsDown(QStringList)));
 }
 
 WiimoteManager::~WiimoteManager()

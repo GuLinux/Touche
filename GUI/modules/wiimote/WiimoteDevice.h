@@ -20,22 +20,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WIIMOTEDEVICE_H
 #define WIIMOTEDEVICE_H
 #include "domain/Device.h"
+#include <QStringList>
+#include "domain/inputevent.h"
+
 class WiimoteManager;
+class DeviceInfo;
+class KeyboardDatabase;
+
+class WiimoteInputEvent : public QObject, public InputEvent {
+    Q_OBJECT
+public:
+    WiimoteInputEvent(const QString &key, const QString &event, QObject *parent =0);
+    virtual bool matches(const QVariantMap &payload);
+    inline virtual QObject *nearestQObject() { return this; }
+    inline virtual operator QString() { return key; }
+private:
+    const QString key;
+    const QString event;
+};
+
 class WiimoteDevice : public Device
 {
     Q_OBJECT
 public:
-    explicit WiimoteDevice(WiimoteManager *wiimoteManager, QObject *parent = 0);
-//    explicit HiddevDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
+    explicit WiimoteDevice(WiimoteManager *wiimoteManager, KeyboardDatabase *keyboardDatabase, QObject *parent = 0);
     virtual ~WiimoteDevice();
 
 public slots:
     virtual void deviceRemoved(DeviceInfo *deviceInfo);
     virtual void deviceChanged();
     virtual void stop();
+private slots:
+    void wiimoteConnected(const QString &address);
+    void wiimoteDisconnected(const QString &address);
+    void buttonsDown(const QStringList &buttons);
 private:
     WiimoteManager *wiimoteManager;
-    
+    DeviceInfo *deviceInfo;
+    QStringList m_buttons;
+    KeyboardDatabase *keyboardDatabase;
 };
 
 #endif // WIIMOTEDEVICE_H

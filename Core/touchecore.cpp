@@ -143,3 +143,10 @@ QSettings *Touche::settings(QObject *parent)
 {
      return new QSettings(KStandardDirs::locateLocal("config", "ToucheBindings"), QSettings::NativeFormat, parent);
 }
+
+
+KeyboardDatabase *ToucheCore::keyboardDatabase()
+{
+    Q_D(ToucheCore);
+    return d->keyboardDatabase;
+}

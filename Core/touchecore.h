@@ -49,6 +49,7 @@ public:
     static QMap<QString, QString> supportedOptions();
     QStringList availableProfiles() const;
     QString currentProfile() const;
+    KeyboardDatabase *keyboardDatabase();
 signals:
     void connected(DeviceInfo*);
     void disconnected(DeviceInfo*);

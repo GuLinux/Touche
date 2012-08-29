@@ -19,10 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "WiimoteDevice.h"
 #include "wiimotemanager.h"
+#include "domain/deviceinfo.h"
+#include <KDebug>
+#include <QTimer>
+#include "backend/config/keyboarddatabase.h"
 
-WiimoteDevice::WiimoteDevice(WiimoteManager *wiimoteManager, QObject *parent) :
-    Device(parent), wiimoteManager(wiimoteManager)
+WiimoteDevice::WiimoteDevice(WiimoteManager *wiimoteManager, KeyboardDatabase *keyboardDatabase, QObject *parent) :
+    Device(parent), wiimoteManager(wiimoteManager), deviceInfo(0), keyboardDatabase(keyboardDatabase)
 {
+    connect(wiimoteManager, SIGNAL(connected(QString)), this, SLOT(wiimoteConnected(QString)));
+    connect(wiimoteManager, SIGNAL(disconnected(QString)), this, SLOT(wiimoteDisconnected(QString)));
+    connect(wiimoteManager, SIGNAL(buttonsDown(QStringList)), this, SLOT(buttonsDown(QStringList)));
 }
 
 
@@ -33,6 +40,7 @@ WiimoteDevice::~WiimoteDevice()
 
 void WiimoteDevice::deviceRemoved(DeviceInfo *deviceInfo)
 {
+    Q_UNUSED(deviceInfo)
 }
 
 
@@ -43,4 +51,61 @@ void WiimoteDevice::deviceChanged()
 
 void WiimoteDevice::stop()
 {
+}
+
+
+void WiimoteDevice::wiimoteDisconnected(const QString &address)
+{
+    Q_UNUSED(address)
+    emit disconnected(deviceInfo);
+    delete deviceInfo;
+}
+
+
+void WiimoteDevice::wiimoteConnected(const QString &address)
+{
+    deviceInfo = new DeviceInfo(this);
+    deviceInfo->name("Wiimote");
+    deviceInfo->path(address);
+    // TODO: garbage! must find a more generic alternative
+    deviceInfo->vendor(0xFFA);
+    deviceInfo->productID(0xFFB);
+    deviceInfo->keyboardDatabaseEntry(keyboardDatabase->deviceConfiguration(deviceInfo));
+    emit connected(deviceInfo);
+}
+
+
+void WiimoteDevice::buttonsDown(const QStringList &buttons)
+{
+    foreach(const QString button, m_buttons) {
+        if(!buttons.contains(button)) {
+            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keypress", this);
+            emit inputEvent(keyEvent, deviceInfo);
+            QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+            m_buttons.removeAll(button);
+        }
+    }
+
+    foreach(const QString button, buttons) {
+        if(!m_buttons.contains(button)) {
+            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keyrelease", this);
+            emit inputEvent(keyEvent, deviceInfo);
+            QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+            m_buttons << button;
+        }
+    }
+}
+
+
+WiimoteInputEvent::WiimoteInputEvent(const QString &key, const QString &event, QObject *parent)
+    : QObject(parent), key(key), event(event)
+{
+}
+
+
+bool WiimoteInputEvent::matches(const QVariantMap &payload)
+{
+    kDebug() << "Payload: " << payload;
+    kDebug() << "myself: " << key << "_" << event;
+    return QString("%1_%2").arg(key).arg(event) == payload.value("keyname").toString();
 }

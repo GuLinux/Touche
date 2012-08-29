@@ -5,6 +5,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <math.h>
+#include <cwiid.h>
 
 Wiimote::Wiimote(QObject *parent) :
     QObject(parent), m_calibration_gyro(true),
@@ -129,3 +130,20 @@ void Wiimote::motionPlusEvent(WiimoteMessage message)
 
 
 
+
+void Wiimote::buttons(int buttonsMask)
+{
+    QStringList buttons;
+    if(buttonsMask & CWIID_BTN_1) buttons << "WiimoteButton_1";
+    if(buttonsMask & CWIID_BTN_2) buttons << "WiimoteButton_2";
+    if(buttonsMask & CWIID_BTN_A) buttons << "WiimoteButton_A";
+    if(buttonsMask & CWIID_BTN_B) buttons << "WiimoteButton_B";
+    if(buttonsMask & CWIID_BTN_DOWN) buttons << "WiimoteButton_Down";
+    if(buttonsMask & CWIID_BTN_HOME) buttons << "WiimoteButton_Home";
+    if(buttonsMask & CWIID_BTN_LEFT) buttons << "WiimoteButton_Left";
+    if(buttonsMask & CWIID_BTN_MINUS) buttons << "WiimoteButton_Minus";
+    if(buttonsMask & CWIID_BTN_PLUS) buttons << "WiimoteButton_Plus";
+    if(buttonsMask & CWIID_BTN_UP) buttons << "WiimoteButton_Up";
+    if(buttonsMask & CWIID_BTN_RIGHT) buttons << "WiimoteButton_Right";
+    emit buttonsDown(buttons);
+}

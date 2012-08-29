@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include "domain/DevicesList.h"
 #include "modules/wiimote/WiimoteDevice.h"
+#include "touchecore.h"
 
 #define HAVE_CWIID
 #ifndef HAVE_CWIID
@@ -77,10 +78,10 @@ WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesL
     d->disconnectAction = parentMenu->addAction(QIcon::fromTheme("network-disconnect"), i18n("Disconnect"), this, SLOT(disconnectWiimote()));
     d->disconnectAction->setVisible(false);
     d->wiimoteManager = new WiimoteManager(this);
-    connect(d->wiimoteManager, SIGNAL(connected()), this, SLOT(connected()));
-    connect(d->wiimoteManager, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(d->wiimoteManager, SIGNAL(connected(QString)), this, SLOT(connected()));
+    connect(d->wiimoteManager, SIGNAL(disconnected(QString)), this, SLOT(disconnected()));
 
-    devicesList->add(new WiimoteDevice(d->wiimoteManager, this));
+    devicesList->add(new WiimoteDevice(d->wiimoteManager, toucheCore->keyboardDatabase(), this));
 }
 
 

@@ -15,8 +15,8 @@ public:
     int calibrationTotalSteps() const;
 
 signals:
-    void connected();
-    void disconnected();
+    void connected(const QString &address);
+    void disconnected(const QString &address);
     void deviceMessage(const QString &message, int timeout);
     void angleChanged(WiimoteVector3 angles);
     void deltaChanged(WiimoteVector3 angles);
@@ -25,6 +25,8 @@ signals:
     void calibrationStep(int remainingSeconds);
     void calibrated();
     void needsCalibration();
+    void buttonsDown(const QStringList &buttons);
+
 public slots:
     void setCalibrationSteps(int seconds);
     void connectWiimote();

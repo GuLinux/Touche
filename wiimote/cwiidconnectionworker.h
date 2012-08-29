@@ -12,11 +12,13 @@ public:
     explicit CWiidConnectionWorker(QObject *parent = 0);
     ~CWiidConnectionWorker();
     void emitMessage(WiimoteMessage message);
+    void emitButtons(quint16 buttonsMask);
 signals:
-    void connected();
-    void disconnected();
+    void connected(const QString address);
+    void disconnected(const QString address);
     void wiimoteMessage(WiimoteMessage message);
     void deviceMessage(const QString &message, int timeout);
+    void buttons(int buttonsMask);
 public slots:
     void wiimoteConnect();
     void wiimoteDisconnect();
@@ -27,6 +29,7 @@ private:
     WiimoteVector3 accelCalibZero;
     WiimoteVector3 accelCalibOne;
     QMutex *mutex;
+    QString bluetoothAddress;
 };
 
 #endif // CWIIDCONNECTIONWORKER_H

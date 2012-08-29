@@ -11,6 +11,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 
+
 QMap<cwiid_wiimote_t *, CWiidConnectionWorker*> workers;
 QMap<cwiid_wiimote_t *, timespec> lastMessageTime;
 
@@ -93,6 +94,8 @@ void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg me
             qDebug() << "Got status message: " <<
                         curMessage.status_mesg.battery
                      << ", " << curMessage.status_mesg.ext_type;
+        } else if(curMessage.type == CWIID_MESG_BTN) {
+            worker->emitButtons(curMessage.btn_mesg.buttons);
         }
     }
     worker->emitMessage(wiimoteMessage);
@@ -103,20 +106,32 @@ void CWiidConnectionWorker::wiimoteDisconnect()
 {
     QMutexLocker locker(mutex); Q_UNUSED(locker)
     if(cwiid_close(wiimote) == 0) {
-        emit disconnected();
+        emit disconnected(bluetoothAddress);
         workers.remove(wiimote);
         qDebug() << "Disconnected";
     }
 }
 
+QString addressToString(bdaddr_t address) {
+    return QString("%1:%2:%3:%4:%5:%6")
+            .arg(address.b[5], 2, 16, QChar('0'))
+            .arg(address.b[4], 2, 16, QChar('0'))
+            .arg(address.b[3], 2, 16, QChar('0'))
+            .arg(address.b[2], 2, 16, QChar('0'))
+            .arg(address.b[1], 2, 16, QChar('0'))
+            .arg(address.b[0], 2, 16, QChar('0'));
+}
+
 void CWiidConnectionWorker::wiimoteConnect()
 {
     QMutexLocker locker(mutex); Q_UNUSED(locker)
+    bluetoothAddress = QString();
     bdaddr_t address = (bdaddr_t) {{0, 0, 0, 0, 0, 0}};
     qDebug() << "Trying to connect wiimote...";
     emit deviceMessage("Connecting to wiimote...", 0);
     wiimote =  cwiid_open(&address, CWIID_FLAG_MESG_IFC);
     if(wiimote) {
+        bluetoothAddress = addressToString(address);
         emit deviceMessage("Connected.", 5000);
         qDebug() << "Connected!";
         int ok = cwiid_get_acc_cal(wiimote, CWIID_EXT_NONE, &accelerometerCalibration);
@@ -127,7 +142,8 @@ void CWiidConnectionWorker::wiimoteConnect()
             qDebug() << "Got calibration: \nzero=" << accelCalibZero.toString() << "\none =" << accelCalibOne.toString();
         }
 
-        if(cwiid_set_rpt_mode(wiimote, CWIID_RPT_MOTIONPLUS | CWIID_RPT_ACC | CWIID_RPT_STATUS )) qDebug() << "Error setting report for motionplus";
+//        if(cwiid_set_rpt_mode(wiimote, CWIID_RPT_MOTIONPLUS | CWIID_RPT_ACC | CWIID_RPT_STATUS )) qDebug() << "Error setting report ";
+        if(cwiid_set_rpt_mode(wiimote, CWIID_RPT_BTN | CWIID_RPT_STATUS )) qDebug() << "Error setting report ";
 //        if(cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC)) qDebug() << "Error enabling messages";
 //        if(cwiid_enable(wiimote, CWIID_FLAG_CONTINUOUS)) qDebug() << "Error enabling continuous";
         cwiid_set_mesg_callback(wiimote, &cwiidCallback);
@@ -136,12 +152,18 @@ void CWiidConnectionWorker::wiimoteConnect()
         workers.insert(wiimote, this);
 
         if(cwiid_command(wiimote, CWIID_CMD_LED, CWIID_LED1_ON)) qDebug() << "Error setting led1 on";
-        emit connected();
+        emit connected(bluetoothAddress);
     } else {
         emit deviceMessage("Error connecting", 5000);
-        emit disconnected();
+        emit disconnected(QString());
     }
 }
 
 
 
+
+
+void CWiidConnectionWorker::emitButtons(quint16 buttonsMask)
+{
+    emit buttons(buttonsMask);
+}
