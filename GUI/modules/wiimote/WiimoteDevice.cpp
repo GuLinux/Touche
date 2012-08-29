@@ -79,7 +79,7 @@ void WiimoteDevice::buttonsDown(const QStringList &buttons)
 {
     foreach(const QString button, m_buttons) {
         if(!buttons.contains(button)) {
-            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keypress", this);
+            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keyrelease", this);
             emit inputEvent(keyEvent, deviceInfo);
             QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
             m_buttons.removeAll(button);
@@ -88,7 +88,7 @@ void WiimoteDevice::buttonsDown(const QStringList &buttons)
 
     foreach(const QString button, buttons) {
         if(!m_buttons.contains(button)) {
-            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keyrelease", this);
+            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keypress", this);
             emit inputEvent(keyEvent, deviceInfo);
             QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
             m_buttons << button;
