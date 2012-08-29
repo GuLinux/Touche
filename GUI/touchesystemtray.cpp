@@ -82,10 +82,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu->addTitle(i18n("Profiles"));
     KAction *switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
     switchToNextProfile->setObjectName("SwitchToNextProfile");
-    switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P")
-//                                           ,KAction::ActiveShortcut | KAction::DefaultShortcut
-//                                           ,KAction::NoAutoloading
-                                           );
+    switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P"));
 
     actionCollection->addAction(switchToNextProfile->objectName(), switchToNextProfile);
 

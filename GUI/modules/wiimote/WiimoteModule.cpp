@@ -20,10 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WiimoteModule.h"
 #include <KLocale>
 #include <KMenu>
-#include <QAction>
+#include <KAction>
 #include "domain/DevicesList.h"
 #include "modules/wiimote/WiimoteDevice.h"
 #include "touchecore.h"
+#include <KActionCollection>
 
 #define HAVE_CWIID
 #ifndef HAVE_CWIID
@@ -57,7 +58,7 @@ public:
 
     KMenu *parentMenu;
     QAction *titleAction;
-    QAction *connectAction;
+    KAction *connectAction;
     QAction *disconnectAction;
     bool isConnected;
     WiimoteManager *wiimoteManager;
@@ -68,14 +69,27 @@ WiimoteModule::~WiimoteModule()
 {
     delete d_ptr;
 }
+#define actionCollection KActionCollection::allCollections().first()
 
 WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent) :
     QObject(parent), d_ptr(new WiimoteModulePrivate(toucheCore, parentMenu))
 {
     Q_D(WiimoteModule);
     d->titleAction = parentMenu->addTitle(QIcon::fromTheme("wiimote"), i18n("Wiimote"));
-    d->connectAction = parentMenu->addAction(QIcon::fromTheme("network-connect"), i18n("Connect"), this, SLOT(connectWiimote()));
-    d->disconnectAction = parentMenu->addAction(QIcon::fromTheme("network-disconnect"), i18n("Disconnect"), this, SLOT(disconnectWiimote()));
+
+    d->connectAction = new KAction(KIcon("network-connect", KIconLoader::global()), i18n("Connect Wiimote"), this);
+    d->connectAction->setObjectName("Wiimote_Connect");
+    d->connectAction->setGlobalShortcut(KShortcut("Meta+W"));
+    parentMenu->addAction(d->connectAction);
+    actionCollection->addAction(d->connectAction->objectName(), d->connectAction);
+    connect(d->connectAction, SIGNAL(triggered()), this, SLOT(connectWiimote()));
+
+    d->disconnectAction = new KAction(KIcon("network-disconnect", KIconLoader::global()), i18n("Disconnect Wiimote"), this);
+    d->disconnectAction->setObjectName("Wiimote_Disconnect");
+    parentMenu->addAction(d->disconnectAction);
+    actionCollection->addAction(d->disconnectAction->objectName(), d->disconnectAction);
+    connect(d->disconnectAction, SIGNAL(triggered()), this, SLOT(disconnectWiimote()));
+
     d->disconnectAction->setVisible(false);
     d->wiimoteManager = new WiimoteManager(this);
     connect(d->wiimoteManager, SIGNAL(connected(QString)), this, SLOT(connected()));
