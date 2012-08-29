@@ -3,6 +3,7 @@ set(Touche_GUI_SRCS
   EditProfiles.cpp
   SettingsDialog.cpp
   ModulesPage.cpp
+  modules/wiimote/WiimoteModule.cpp
 )
 
 # set(Touche_GUI_FORMS )
@@ -13,6 +14,7 @@ qt4_wrap_cpp(Touche_GUI_mocs
   EditProfiles.h
   SettingsDialog.h
   ModulesPage.h
+  modules/wiimote/WiimoteModule.h
 )
 
 include_directories( ${Touche_common_includes} ) 

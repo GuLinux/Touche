@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "finddevices.h"
+#include "HiddevDevices.h"
 #include <QFileSystemWatcher>
 #include <QMap>
 #include "backend/hiddev/hiddev.h"
@@ -35,14 +35,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEV_PATH "/dev"
 
 typedef QPair<QThread*, HidDev*> DevicePair;
-class FindDevicesPrivate {
+class HiddevDevicesPrivate {
 public:
-    FindDevicesPrivate(KeyboardDatabase* keyboardDatabase, FindDevices *q) : keyboardDatabase(keyboardDatabase), q_ptr(q) {}
+    HiddevDevicesPrivate(KeyboardDatabase* keyboardDatabase, HiddevDevices *q) : keyboardDatabase(keyboardDatabase), q_ptr(q) {}
     QFileSystemWatcher fileSystemWatcher;
     KeyboardDatabase* keyboardDatabase;
     QMap<QString, DevicePair > devices;
-    FindDevices * const q_ptr;
-    Q_DECLARE_PUBLIC(FindDevices)
+    HiddevDevices * const q_ptr;
+    Q_DECLARE_PUBLIC(HiddevDevices)
 
     void scanDevices() {
         QDir hiddev(HIDDEV_PATH);
@@ -60,7 +60,7 @@ public:
     }
 
     void addDevice(const QString &devicePath) {
-        Q_Q(FindDevices);
+        Q_Q(HiddevDevices);
         if(devices.contains(devicePath)) return;
         kDebug() << "Adding device: " << devicePath;
         QThread *deviceThread = new QThread(q);
@@ -77,43 +77,43 @@ public:
     }
 };
 
-FindDevices::FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent) :
-    QObject(parent), d_ptr(new FindDevicesPrivate(keyboardDatabase, this))
+HiddevDevices::HiddevDevices(KeyboardDatabase* keyboardDatabase, QObject *parent) :
+    QObject(parent), d_ptr(new HiddevDevicesPrivate(keyboardDatabase, this))
 {
-    Q_D(FindDevices);
+    Q_D(HiddevDevices);
     connect(&d->fileSystemWatcher, SIGNAL(directoryChanged(QString)), SLOT(deviceChanged()));
     QTimer::singleShot(300, this, SLOT(deviceChanged()));
 }
 
-FindDevices::~FindDevices()
+HiddevDevices::~HiddevDevices()
 {
     delete d_ptr;
 }
 
-void FindDevices::deviceRemoved(DeviceInfo *deviceInfo)
+void HiddevDevices::deviceRemoved(DeviceInfo *deviceInfo)
 {
     kDebug() << "device removed: " << deviceInfo->name();
-    Q_D(FindDevices);
+    Q_D(HiddevDevices);
     DevicePair device = d->devices.take(deviceInfo->path());
     emit disconnected(deviceInfo);
     delete device.second;
     device.first->quit();
     device.first->wait();
-    kDebug() << "cleaning up on FindDevices";
+    kDebug() << "cleaning up on HiddevDevices";
     delete device.first;
     kDebug() << "Devices list is now " << d->devices;
 }
 
-void FindDevices::deviceChanged()
+void HiddevDevices::deviceChanged()
 {
-    Q_D(FindDevices);
+    Q_D(HiddevDevices);
     kDebug() << "Device list changed";
     d->scanDevices();
 }
 
-void FindDevices::stop()
+void HiddevDevices::stop()
 {
-    Q_D(FindDevices);
+    Q_D(HiddevDevices);
     foreach( DevicePair devicePair, d->devices.values()) {
         devicePair.second->stop();
     }

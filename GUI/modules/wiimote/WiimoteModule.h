@@ -17,34 +17,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef FINDDEVICES_H
-#define FINDDEVICES_H
+#ifndef WIIMOTEMODULE_H
+#define WIIMOTEMODULE_H
 
-#include <QtCore/QObject>
-#include "domain/inputevent.h"
-
-class FindDevicesPrivate;
-class DeviceInfo;
-class KeyboardDatabase;
-class FindDevices : public QObject
+#include <QObject>
+class KMenu;
+class QAction;
+class WiimoteManager;
+class WiimoteModulePrivate;
+class ToucheCore;
+class WiimoteModule : public QObject
 {
     Q_OBJECT
 public:
-    explicit FindDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
-    ~FindDevices();
+    explicit WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, QObject *parent = 0);
+    ~WiimoteModule();
 signals:
-    void inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo);
-    void noMoreEvents(DeviceInfo *deviceInfo);
-    void connected(DeviceInfo *deviceInfo);
-    void disconnected(DeviceInfo *deviceInfo);
-
+    
 public slots:
-    void deviceRemoved(DeviceInfo *deviceInfo);
-    void deviceChanged();
-    void stop();
+    void setEnabled(bool enabled);
+
+private slots:
+    void connectWiimote();
+    void disconnectWiimote();
+    void connected();
+    void disconnected();
+
 private:
-    FindDevicesPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(FindDevices)
+    WiimoteModulePrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(WiimoteModule)
 };
 
-#endif // FINDDEVICES_H
+#endif // WIIMOTEMODULE_H

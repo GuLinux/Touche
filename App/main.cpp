@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDialog>
 #include <KAboutApplicationDialog>
 #include "touchesystemtray.h"
-#include "traymanager.h"
 
 int main(int argc, char *argv[])
 {

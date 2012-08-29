@@ -19,10 +19,9 @@ set(Touche_common_includes ${QT_INCLUDES}
   ${CMAKE_SOURCE_DIR}/Core ${CMAKE_BINARY_DIR}/Touche_Core
   ${CMAKE_SOURCE_DIR}/BindingsConfigurationDialog ${CMAKE_BINARY_DIR}/BindingsConfigurationDialog
   ${CMAKE_SOURCE_DIR}/GUI ${CMAKE_BINARY_DIR}/GUI
-  ${CMAKE_SOURCE_DIR}/Wiimote ${CMAKE_BINARY_DIR}/Wiimote
+  ${CMAKE_SOURCE_DIR}/wiimote ${CMAKE_BINARY_DIR}/wiimote
 )
 
-set(Touche_libs ${Touche_static_libraries} ${X11_LIBRARIES} ${QJSON_LIBRARIES} ${X11_XTest_LIB} ${KDE4_KDEUI_LIBS})
 add_definitions(-DPROJECT_NAME="${PROJECT_NAME}")
 if(CWIID_FOUND)
     add_definitions(-DHAVE_CWIID=1)
@@ -30,11 +29,11 @@ if(CWIID_FOUND)
     set(Touche_static_libraries ${Touche_static_libraries} ${CMAKE_BINARY_DIR}/lib/libWiimoteBridge.a )
 endif(CWIID_FOUND)
 
+set(Touche_libs ${Touche_libs} ${Touche_static_libraries} ${X11_LIBRARIES} ${QJSON_LIBRARIES} ${X11_XTest_LIB} ${KDE4_KDEUI_LIBS})
 include_directories( ${KDE4_INCLUDES} )
 
 
 set(KDE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
 
 

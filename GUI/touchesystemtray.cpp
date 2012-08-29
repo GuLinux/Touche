@@ -17,25 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include <KDebug>
 #include "touchesystemtray.h"
+#include "touchecore.h"
+#include "domain/deviceinfo.h"
+#include "keysconfigurationdialog.h"
+#include "SettingsDialog.h"
+#include <KDebug>
 #include <QMenu>
 #include <QCoreApplication>
-#include "keysconfigurationdialog.h"
-#include "domain/deviceinfo.h"
-#include "touchecore.h"
-#include "traymanager.h"
 #include <QMessageBox>
 #include <KLocale>
 #include <KStatusNotifierItem>
 #include <KAction>
 #include <KMenu>
 #include <KAboutApplicationDialog>
-#include "SettingsDialog.h"
 #include <KStandardAction>
 #include <KShortcutsDialog>
 #include <KActionCollection>
-
+#include <QSettings>
+#include "modules/wiimote/WiimoteModule.h"
 #define actionCollection KActionCollection::allCollections().first()
 
 
@@ -50,6 +50,7 @@ public:
     KStatusNotifierItem *tray;
     QAction *afterProfiles;
     QAction *afterDevices;
+    WiimoteModule *wiimoteModule;
 };
 
 ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog) :
@@ -58,7 +59,6 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     Q_D(ToucheSystemTray);
     d->tray = new KStatusNotifierItem(toucheCore);
     d->tray->setIconByName(Touche::iconName());
-
 
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
@@ -94,9 +94,14 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu->addSeparator();
     d->afterProfiles = d->systemTrayMenu->addSeparator();
     d->systemTrayMenu->addTitle(i18n("Devices"));
+
     d->afterDevices = d->systemTrayMenu->addSeparator();
+
+    d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu, this);
+
     updateTooltip();
     updateProfilesList();
+    updateModulesList();
 }
 
 ToucheSystemTray::~ToucheSystemTray()
@@ -173,7 +178,16 @@ void ToucheSystemTray::aboutToQuit()
 }
 
 
+void ToucheSystemTray::updateModulesList()
+{
+    Q_D(ToucheSystemTray);
+    QSettings *toucheSettings = Touche::settings(this);
 
+    bool wiimoteEnabled = toucheSettings->value("wiimote_enabled", false).toBool();
+    d->wiimoteModule->setEnabled(wiimoteEnabled);
+
+    delete toucheSettings;
+}
 
 void ToucheSystemTray::updateProfilesList()
 {
@@ -209,6 +223,7 @@ void ToucheSystemTray::editProfiles()
     SettingsDialog settings(d->toucheCore);
     settings.exec();
     updateProfilesList();
+    updateModulesList();
 }
 
 
@@ -244,3 +259,4 @@ void ToucheSystemTray::configureShortcuts()
 {
     KShortcutsDialog::configure(actionCollection);
 }
+

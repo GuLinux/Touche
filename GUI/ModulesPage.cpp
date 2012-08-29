@@ -34,13 +34,13 @@ ModulesPage::ModulesPage(QSettings *settings, QWidget *parent) :
     model = new QStandardItemModel(this);
     ui->setupUi(this);
     ui->modulesList->setModel(model);
-//#ifdef HAVE_CWIID
+#ifdef HAVE_CWIID
     QStandardItem *wiimoteItem = new QStandardItem(QIcon::fromTheme("wiimote"), "Wiimote");
     wiimoteItem->setCheckable(true);
     wiimoteItem->setCheckState(settings->value("wiimote_enabled").toBool() ? Qt::Checked : Qt::Unchecked);
     wiimoteItem->setData("wiimote_enabled", ConfigNameRole);
     model->appendRow(wiimoteItem);
-//#endif //HAVE_CWIID
+#endif //HAVE_CWIID
 }
 
 ModulesPage::~ModulesPage()

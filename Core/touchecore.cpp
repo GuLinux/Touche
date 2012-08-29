@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/inputevent.h"
 #include "domain/dumpkeys.h"
 #include "domain/translatekeyevents.h"
-#include "backend/hiddev/finddevices.h"
+#include "backend/hiddev/HiddevDevices.h"
 #include "domain/deviceinfo.h"
 #include "backend/config/keyboarddatabase.h"
 #include "backend/config/bindingsconfig.h"
@@ -37,7 +37,7 @@ public:
     ToucheCorePrivate(const QStringList &options) : options(options) { }
     DumpKeys *dumpKeys;
     BindingsConfig *bindingsConfig;
-    FindDevices *findDevices;
+    HiddevDevices *findDevices;
     KeyboardDatabase *keyboardDatabase;
     TranslateKeyEvents *translateEvents;
     QStringList const options;
@@ -70,7 +70,7 @@ void ToucheCore::start()
     Q_D(ToucheCore);
     d->keyboardDatabase = new KeyboardDatabase(Touche::keyboardDatabases(), this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
-    d->findDevices = new FindDevices(d->keyboardDatabase, this);
+    d->findDevices = new HiddevDevices(d->keyboardDatabase, this);
 
     connect(d->bindingsConfig, SIGNAL(profileChanged(QString)), this, SIGNAL(profileChanged(QString)));
     connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceAdded(DeviceInfo*)));

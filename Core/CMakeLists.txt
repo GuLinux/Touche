@@ -2,7 +2,7 @@ set(Touche_Core_SRCS
     backend/config/keyboarddatabase.cpp
     backend/config/databaseentry.cpp
     backend/config/bindingsconfig.cpp
-    backend/hiddev/finddevices.cpp
+    backend/hiddev/HiddevDevices.cpp
     backend/hiddev/hiddev.cpp
     backend/hiddev/hid_inputevent.cpp
     backend/updatekeysymbolmapping.cpp
@@ -18,7 +18,7 @@ set(Touche_Core_SRCS
 )
 
 qt4_wrap_cpp(Touche_Core_mocs
-  backend/hiddev/finddevices.h
+  backend/hiddev/HiddevDevices.h
   backend/hiddev/hid_inputevent.h
   backend/hiddev/hiddev.h
   backend/config/databaseentry.h

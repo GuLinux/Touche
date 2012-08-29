@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TOUCHESYSTEMTRAY_H
 
 #include <QtCore/QObject>
-#include <KDialog>
 class QMenu;
 class DeviceInfo;
 class ToucheSystemTrayPrivate;
@@ -52,6 +51,7 @@ public slots:
     void switchToNextProfile();
     void profileChanged(const QString &profile);
     void configureShortcuts();
+    void updateModulesList();
 
 private:
     ToucheSystemTrayPrivate * const d_ptr;

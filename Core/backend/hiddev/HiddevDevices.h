@@ -17,16 +17,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef TRAYMANAGER_H
-#define TRAYMANAGER_H
-#include <QString>
+#ifndef HiddevDevices_H
+#define HiddevDevices_H
+
 #include <QtCore/QObject>
-class TrayManager {
+#include "domain/inputevent.h"
+
+class HiddevDevicesPrivate;
+class DeviceInfo;
+class KeyboardDatabase;
+class HiddevDevices : public QObject
+{
+    Q_OBJECT
 public:
-    virtual ~TrayManager() {}
-    virtual QAction *createAction(const QString &text, QObject *parent=0) =0;
-    virtual void showMessage(const QString &title, const QString &text, const QString &iconTheme = QString()) =0;
-    virtual void updateTooltip(const QString &tooltip) = 0;
+    explicit HiddevDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
+    ~HiddevDevices();
+signals:
+    void inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo);
+    void noMoreEvents(DeviceInfo *deviceInfo);
+    void connected(DeviceInfo *deviceInfo);
+    void disconnected(DeviceInfo *deviceInfo);
+
+public slots:
+    void deviceRemoved(DeviceInfo *deviceInfo);
+    void deviceChanged();
+    void stop();
+private:
+    HiddevDevicesPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(HiddevDevices)
 };
 
-#endif // TRAYMANAGER_H
+#endif // HiddevDevices_H
