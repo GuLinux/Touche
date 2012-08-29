@@ -55,11 +55,13 @@ public:
 
 static __RegisterMetatypes__ __registerMetatypes;
 
-ToucheCore::ToucheCore(const QStringList &options, QObject *parent) :
+ToucheCore::ToucheCore(Device *device, KeyboardDatabase *keyboardDatabase, const QStringList &options, QObject *parent) :
     QObject(parent), d_ptr(new ToucheCorePrivate(options) )
 {
     Q_D(ToucheCore);
     d->bindingsConfig = new BindingsConfig(this);
+    d->keyboardDatabase = keyboardDatabase;
+    d->device = device;
 }
 
 ToucheCore::~ToucheCore()
@@ -70,9 +72,7 @@ ToucheCore::~ToucheCore()
 void ToucheCore::start()
 {
     Q_D(ToucheCore);
-    d->keyboardDatabase = new KeyboardDatabase(Touche::keyboardDatabases(), this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
-    d->device = (new DevicesList(this))->add(new HiddevDevices(d->keyboardDatabase, this));
 
     connect(d->bindingsConfig, SIGNAL(profileChanged(QString)), this, SIGNAL(profileChanged(QString)));
     connect(d->device, SIGNAL(connected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceAdded(DeviceInfo*)));

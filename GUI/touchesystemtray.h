@@ -30,12 +30,13 @@ class QAction;
 class QSettings;
 class KEditListBox;
 class KAboutApplicationDialog;
+class DevicesList;
 
 class ToucheSystemTray : public QObject
 {
     Q_OBJECT
 public:
-    explicit ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog);
+    explicit ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog, DevicesList *devicesList);
     ~ToucheSystemTray();
 signals:
     

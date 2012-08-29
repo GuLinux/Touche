@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDialog>
 #include <KAboutApplicationDialog>
 #include "touchesystemtray.h"
+#include "domain/DevicesList.h"
+#include "backend/hiddev/HiddevDevices.h"
+#include "backend/config/keyboarddatabase.h"
 
 int main(int argc, char *argv[])
 {
@@ -66,11 +69,11 @@ int main(int argc, char *argv[])
     KAboutApplicationDialog aboutTouche(&about);
     a.setQuitOnLastWindowClosed(false);
     QStringList arguments = KCmdLineArgs::allArguments();
-
-    ToucheCore toucheCore(arguments);
-
-
-    new ToucheSystemTray(&toucheCore, &aboutTouche);
+    KeyboardDatabase database(Touche::keyboardDatabases());
+    DevicesList devicesList;
+    devicesList.add(new HiddevDevices(&database));
+    ToucheCore toucheCore(&devicesList, &database, arguments);
+    new ToucheSystemTray(&toucheCore, &aboutTouche, &devicesList);
 
     toucheCore.start();
     return a.exec();

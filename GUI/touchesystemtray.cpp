@@ -53,7 +53,7 @@ public:
     WiimoteModule *wiimoteModule;
 };
 
-ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog) :
+ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog, DevicesList *devicesList) :
     QObject(toucheCore), d_ptr(new ToucheSystemTrayPrivate(toucheCore))
 {
     Q_D(ToucheSystemTray);
@@ -97,7 +97,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 
     d->afterDevices = d->systemTrayMenu->addSeparator();
 
-    d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu, this);
+    d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu, devicesList, this);
 
     updateTooltip();
     updateProfilesList();

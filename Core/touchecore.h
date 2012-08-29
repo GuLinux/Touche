@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class DeviceInfo;
 class ToucheCorePrivate;
 class QSettings;
+class Device;
+class KeyboardDatabase;
 class Touche {
 public:
     static const inline char* appName() { return I18N_NOOP2("Application internal name", "Touche"); }
@@ -42,7 +44,7 @@ class ToucheCore : public QObject
 {
     Q_OBJECT
 public:
-    explicit ToucheCore(const QStringList &supportedOptions, QObject *parent = 0);
+    explicit ToucheCore(Device *device, KeyboardDatabase *keyboardDatabase, const QStringList &supportedOptions, QObject *parent = 0);
     ~ToucheCore();
     static QMap<QString, QString> supportedOptions();
     QStringList availableProfiles() const;

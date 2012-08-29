@@ -21,12 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocale>
 #include <KMenu>
 #include <QAction>
+#include "domain/DevicesList.h"
+#include "modules/wiimote/WiimoteDevice.h"
+
 #define HAVE_CWIID
 #ifndef HAVE_CWIID
 
-WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, QObject *parent) : QObject(parent) {
+WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent) : QObject(parent) {
     Q_UNUSED(parentMenu)
     Q_UNUSED(toucheCore)
+    Q_UNUSED(devicesList)
 }
 void WiimoteModule::setEnabled(bool enabled) { Q_UNUSED(enabled) }
 void WiimoteModule::disconnected() {}
@@ -64,7 +68,7 @@ WiimoteModule::~WiimoteModule()
     delete d_ptr;
 }
 
-WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, QObject *parent) :
+WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent) :
     QObject(parent), d_ptr(new WiimoteModulePrivate(toucheCore, parentMenu))
 {
     Q_D(WiimoteModule);
@@ -75,6 +79,8 @@ WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, QObject 
     d->wiimoteManager = new WiimoteManager(this);
     connect(d->wiimoteManager, SIGNAL(connected()), this, SLOT(connected()));
     connect(d->wiimoteManager, SIGNAL(disconnected()), this, SLOT(disconnected()));
+
+    devicesList->add(new WiimoteDevice(d->wiimoteManager, this));
 }
 
 

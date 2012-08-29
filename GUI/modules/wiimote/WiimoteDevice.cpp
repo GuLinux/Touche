@@ -17,36 +17,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef WIIMOTEMODULE_H
-#define WIIMOTEMODULE_H
+#include "WiimoteDevice.h"
+#include "wiimotemanager.h"
 
-#include <QObject>
-class KMenu;
-class QAction;
-class WiimoteManager;
-class WiimoteModulePrivate;
-class ToucheCore;
-class DevicesList;
-class WiimoteModule : public QObject
+WiimoteDevice::WiimoteDevice(WiimoteManager *wiimoteManager, QObject *parent) :
+    Device(parent), wiimoteManager(wiimoteManager)
 {
-    Q_OBJECT
-public:
-    explicit WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent = 0);
-    ~WiimoteModule();
-signals:
-    
-public slots:
-    void setEnabled(bool enabled);
+}
 
-private slots:
-    void connectWiimote();
-    void disconnectWiimote();
-    void connected();
-    void disconnected();
 
-private:
-    WiimoteModulePrivate *const d_ptr;
-    Q_DECLARE_PRIVATE(WiimoteModule)
-};
+WiimoteDevice::~WiimoteDevice()
+{
+}
 
-#endif // WIIMOTEMODULE_H
+
+void WiimoteDevice::deviceRemoved(DeviceInfo *deviceInfo)
+{
+}
+
+
+void WiimoteDevice::deviceChanged()
+{
+}
+
+
+void WiimoteDevice::stop()
+{
+}

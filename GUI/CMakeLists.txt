@@ -4,6 +4,7 @@ set(Touche_GUI_SRCS
   SettingsDialog.cpp
   ModulesPage.cpp
   modules/wiimote/WiimoteModule.cpp
+  modules/wiimote/WiimoteDevice.cpp
 )
 
 # set(Touche_GUI_FORMS )
@@ -15,6 +16,7 @@ qt4_wrap_cpp(Touche_GUI_mocs
   SettingsDialog.h
   ModulesPage.h
   modules/wiimote/WiimoteModule.h
+  modules/wiimote/WiimoteDevice.h
 )
 
 include_directories( ${Touche_common_includes} ) 
