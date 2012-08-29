@@ -28,8 +28,9 @@ SettingsDialog::SettingsDialog(ToucheCore *core, QWidget *parent) :
     KPageDialog(parent)
 {
     setCaption(i18n("Touché Settings"));
-    editProfiles = new EditProfiles(core, this);
-    modulesPage = new ModulesPage(this);
+    QSettings *settings = Touche::settings(this);
+    editProfiles = new EditProfiles(core, settings, this);
+    modulesPage = new ModulesPage(settings, this);
 
     KPageWidgetItem *editProfilesWidgetItem = new KPageWidgetItem(editProfiles ,i18n("Profiles"));
     editProfilesWidgetItem->setIcon(KIcon("tab-duplicate", KIconLoader::global()));
@@ -44,5 +45,6 @@ SettingsDialog::SettingsDialog(ToucheCore *core, QWidget *parent) :
 void SettingsDialog::accept()
 {
     editProfiles->accept();
+    modulesPage->accept();
     KPageDialog::accept();
 }

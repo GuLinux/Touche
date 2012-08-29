@@ -29,7 +29,7 @@ class EditProfiles : public QWidget
 {
     Q_OBJECT
 public:
-    explicit EditProfiles(ToucheCore *core, QWidget *parent = 0);
+    explicit EditProfiles(ToucheCore *core, QSettings *settings, QWidget *parent = 0);
 signals:
     
 public slots:

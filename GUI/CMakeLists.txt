@@ -17,7 +17,6 @@ qt4_wrap_cpp(Touche_GUI_mocs
 
 include_directories( ${Touche_common_includes} ) 
 add_library(Touche_GUI STATIC ${Touche_GUI_SRCS}  ${Touche_GUI_mocs} ${Touche_GUI_FORMS_HEADERS} )
-
 add_dependencies(Touche_GUI Touche_Core Touche_Configuration) 
 
 

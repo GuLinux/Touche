@@ -21,21 +21,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_ModulesPage.h"
 #include <QStandardItemModel>
 #include <KDebug>
+#include <QStandardItem>
+#include <QSettings>
 
-ModulesPage::ModulesPage(QWidget *parent) :
+#define ConfigNameRole Qt::UserRole+1
+
+ModulesPage::ModulesPage(QSettings *settings, QWidget *parent) :
     QWidget(parent),
+    settings(settings),
     ui(new Ui::ModulesPage)
 {
-    QStandardItemModel *model = new QStandardItemModel(this);
+    model = new QStandardItemModel(this);
     ui->setupUi(this);
     ui->modulesList->setModel(model);
-#ifdef HAVE_CWIID
-    kDebug() << "CWiid found: " << HAVE_CWIID << ";";
-    model->appendRow(new QStandardItem("Wiimote"));
-#endif //HAVE_CWIID
+//#ifdef HAVE_CWIID
+    QStandardItem *wiimoteItem = new QStandardItem(QIcon::fromTheme("wiimote"), "Wiimote");
+    wiimoteItem->setCheckable(true);
+    wiimoteItem->setCheckState(settings->value("wiimote_enabled").toBool() ? Qt::Checked : Qt::Unchecked);
+    wiimoteItem->setData("wiimote_enabled", ConfigNameRole);
+    model->appendRow(wiimoteItem);
+//#endif //HAVE_CWIID
 }
 
 ModulesPage::~ModulesPage()
 {
     delete ui;
+}
+
+
+void ModulesPage::accept()
+{
+    for(int row=0; row<model->rowCount(); row++) {
+        QStandardItem *item = model->item(row);
+        settings->setValue(item->data(ConfigNameRole).toString(), item->checkState() == Qt::Checked);
+    }
+}
+
+
+void ModulesPage::modelDataChanged()
+{
+    kDebug() << "modules model data changed";
 }

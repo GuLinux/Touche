@@ -26,11 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QDebug>
 
-EditProfiles::EditProfiles(ToucheCore *core, QWidget *parent) :
-    QWidget(parent)
+EditProfiles::EditProfiles(ToucheCore *core, QSettings *settings, QWidget *parent) :
+    QWidget(parent), settings(settings)
 {
     QVBoxLayout *vlayout = new QVBoxLayout(this);
-    settings = Touche::settings(this);
 //    setCaption(QString("%1 profiles").arg(i18n(Touche::displayName() )));
     profilesList = new KEditListBox();
     vlayout->addWidget(new QLabel(i18n("You can add new profiles here.\nEach profile will have its own key bindings.")));

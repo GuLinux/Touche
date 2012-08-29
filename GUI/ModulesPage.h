@@ -26,16 +26,23 @@ namespace Ui {
 class ModulesPage;
 }
 
+class QSettings;
+class QStandardItemModel;
+
 class ModulesPage : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit ModulesPage(QWidget *parent = 0);
+    explicit ModulesPage(QSettings *settings, QWidget *parent = 0);
     ~ModulesPage();
-    
+public slots:
+    void accept();
+    void modelDataChanged();
 private:
+    QSettings *settings;
     Ui::ModulesPage *ui;
+    QStandardItemModel *model;
 };
 
 #endif // MODULESPAGE_H
