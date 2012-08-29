@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QTimer>
 #include <QProcessEnvironment>
 #include <QSettings>
+#include "domain/Device.h"
+#include "domain/DevicesList.h"
 
 
 class ToucheCorePrivate {
@@ -37,7 +39,7 @@ public:
     ToucheCorePrivate(const QStringList &options) : options(options) { }
     DumpKeys *dumpKeys;
     BindingsConfig *bindingsConfig;
-    HiddevDevices *findDevices;
+    Device *device;
     KeyboardDatabase *keyboardDatabase;
     TranslateKeyEvents *translateEvents;
     QStringList const options;
@@ -70,21 +72,21 @@ void ToucheCore::start()
     Q_D(ToucheCore);
     d->keyboardDatabase = new KeyboardDatabase(Touche::keyboardDatabases(), this);
     d->translateEvents = new TranslateKeyEvents(d->keyboardDatabase, d->bindingsConfig, this);
-    d->findDevices = new HiddevDevices(d->keyboardDatabase, this);
+    d->device = (new DevicesList(this))->add(new HiddevDevices(d->keyboardDatabase, this));
 
     connect(d->bindingsConfig, SIGNAL(profileChanged(QString)), this, SIGNAL(profileChanged(QString)));
-    connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceAdded(DeviceInfo*)));
-    connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceRemoved(DeviceInfo*)));
-    connect(d->findDevices, SIGNAL(connected(DeviceInfo*)), this, SIGNAL(connected(DeviceInfo*)));
-    connect(d->findDevices, SIGNAL(disconnected(DeviceInfo*)), this, SIGNAL(disconnected(DeviceInfo*)));
+    connect(d->device, SIGNAL(connected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceAdded(DeviceInfo*)));
+    connect(d->device, SIGNAL(disconnected(DeviceInfo*)), d->keyboardDatabase, SLOT(deviceRemoved(DeviceInfo*)));
+    connect(d->device, SIGNAL(connected(DeviceInfo*)), this, SIGNAL(connected(DeviceInfo*)));
+    connect(d->device, SIGNAL(disconnected(DeviceInfo*)), this, SIGNAL(disconnected(DeviceInfo*)));
     connect(d->translateEvents, SIGNAL(keyEvent(QString)), this, SIGNAL(inputEvent(QString)));
-    connect(d->findDevices, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), d->translateEvents, SLOT(inputEvent(InputEventP, DeviceInfo*)));
-    connect(d->findDevices, SIGNAL(noMoreEvents(DeviceInfo*)), d->translateEvents, SLOT(noMoreEvents(DeviceInfo*)));
+    connect(d->device, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), d->translateEvents, SLOT(inputEvent(InputEventP, DeviceInfo*)));
+    connect(d->device, SIGNAL(noMoreEvents(DeviceInfo*)), d->translateEvents, SLOT(noMoreEvents(DeviceInfo*)));
     resumeEventsTranslation();
 
     if(d->options.contains("--dump-events")) {
         d->dumpKeys = new DumpKeys(this);
-        connect(d->findDevices, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), d->dumpKeys, SLOT(inputEvent(InputEventP)));
+        connect(d->device, SIGNAL(inputEvent(InputEventP,DeviceInfo*)), d->dumpKeys, SLOT(inputEvent(InputEventP)));
     }
 }
 
@@ -105,7 +107,7 @@ void ToucheCore::resumeEventsTranslation()
 void ToucheCore::quit()
 {
     Q_D(ToucheCore);
-    d->findDevices->stop();
+    d->device->stop();
 }
 
 QMap<QString,QString> ToucheCore::supportedOptions()

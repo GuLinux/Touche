@@ -78,7 +78,7 @@ public:
 };
 
 HiddevDevices::HiddevDevices(KeyboardDatabase* keyboardDatabase, QObject *parent) :
-    QObject(parent), d_ptr(new HiddevDevicesPrivate(keyboardDatabase, this))
+    Device(parent), d_ptr(new HiddevDevicesPrivate(keyboardDatabase, this))
 {
     Q_D(HiddevDevices);
     connect(&d->fileSystemWatcher, SIGNAL(directoryChanged(QString)), SLOT(deviceChanged()));

@@ -14,6 +14,8 @@ set(Touche_Core_SRCS
     domain/configevent.cpp
     domain/donothingbinding.cpp
     domain/nomoreeventsinputevent.cpp
+    domain/Device.cpp
+    domain/DevicesList.cpp
     touchecore.cpp
 )
 
@@ -33,6 +35,8 @@ qt4_wrap_cpp(Touche_Core_mocs
   domain/configevent.h
   domain/translatekeyevents.h
   domain/tokeybinding.h
+  domain/Device.h
+  domain/DevicesList.h
   touchecore.h
 )
 

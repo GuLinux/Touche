@@ -17,28 +17,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#ifndef HiddevDevices_H
-#define HiddevDevices_H
+#include "Device.h"
 
-#include <QtCore/QObject>
-#include "domain/Device.h"
-
-class HiddevDevicesPrivate;
-class KeyboardDatabase;
-class HiddevDevices : public Device
+Device::Device(QObject *parent) :
+    QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit HiddevDevices(KeyboardDatabase* keyboardDatabase, QObject *parent = 0);
-    virtual ~HiddevDevices();
+}
 
-public slots:
-    virtual void deviceRemoved(DeviceInfo *deviceInfo);
-    virtual void deviceChanged();
-    virtual void stop();
-private:
-    HiddevDevicesPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(HiddevDevices)
-};
 
-#endif // HiddevDevices_H
+Device::~Device()
+{
+}
+
+
+void Device::deviceRemoved(DeviceInfo *deviceInfo)
+{
+    Q_UNUSED(deviceInfo)
+}
+
+
+void Device::deviceChanged()
+{
+}
+
+
+void Device::stop()
+{
+}
