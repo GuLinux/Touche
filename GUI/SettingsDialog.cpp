@@ -20,14 +20,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "SettingsDialog.h"
 #include "EditProfiles.h"
 #include "touchecore.h"
+#include "ModulesPage.h"
+#include <KPageWidgetItem>
+#include <KIconLoader>
 
 SettingsDialog::SettingsDialog(ToucheCore *core, QWidget *parent) :
     KPageDialog(parent)
 {
     setCaption(i18n("Touché Settings"));
     editProfiles = new EditProfiles(core, this);
-    addPage(editProfiles, i18n("Profiles"));
-    addPage(new QWidget(this), i18n("Modules"));
+    modulesPage = new ModulesPage(this);
+
+    KPageWidgetItem *editProfilesWidgetItem = new KPageWidgetItem(editProfiles ,i18n("Profiles"));
+    editProfilesWidgetItem->setIcon(KIcon("tab-duplicate", KIconLoader::global()));
+    KPageWidgetItem *modulesPageWidgetItem = new KPageWidgetItem(modulesPage ,i18n("Modules"));
+    modulesPageWidgetItem->setIcon(KIcon("preferences-plugin", KIconLoader::global()));
+
+    addPage(editProfilesWidgetItem);
+    addPage(modulesPageWidgetItem);
 }
 
 

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class ToucheCore;
 class EditProfiles;
+class ModulesPage;
 class SettingsDialog : public KPageDialog
 {
     Q_OBJECT
@@ -37,6 +38,7 @@ public slots:
     
 private:
     EditProfiles *editProfiles;
+    ModulesPage *modulesPage;
 };
 
 #endif // SETTINGSDIALOG_H

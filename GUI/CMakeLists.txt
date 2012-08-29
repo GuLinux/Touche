@@ -5,8 +5,6 @@ set(Touche_GUI_SRCS
   ModulesPage.cpp
 )
 
-
-
 # set(Touche_GUI_FORMS )
 
 QT4_WRAP_UI(Touche_GUI_FORMS_HEADERS ModulesPage.ui)

@@ -19,12 +19,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ModulesPage.h"
 #include "ui_ModulesPage.h"
+#include <QStandardItemModel>
+#include <KDebug>
 
 ModulesPage::ModulesPage(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ModulesPage)
 {
+    QStandardItemModel *model = new QStandardItemModel(this);
     ui->setupUi(this);
+    ui->modulesList->setModel(model);
+#ifdef HAVE_CWIID
+    kDebug() << "CWiid found: " << HAVE_CWIID << ";";
+    model->appendRow(new QStandardItem("Wiimote"));
+#endif //HAVE_CWIID
 }
 
 ModulesPage::~ModulesPage()
