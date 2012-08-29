@@ -17,22 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
-#include "SettingsDialog.h"
-#include "EditProfiles.h"
-#include "touchecore.h"
+#include "ModulesPage.h"
+#include "ui_ModulesPage.h"
 
-SettingsDialog::SettingsDialog(ToucheCore *core, QWidget *parent) :
-    KPageDialog(parent)
+ModulesPage::ModulesPage(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::ModulesPage)
 {
-    setCaption(i18n("Touché Settings"));
-    editProfiles = new EditProfiles(core, this);
-    addPage(editProfiles, i18n("Profiles"));
-    addPage(new QWidget(this), i18n("Modules"));
+    ui->setupUi(this);
 }
 
-
-void SettingsDialog::accept()
+ModulesPage::~ModulesPage()
 {
-    editProfiles->accept();
-    KPageDialog::accept();
+    delete ui;
 }

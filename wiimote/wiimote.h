@@ -44,8 +44,8 @@ private:
     QVector<WiimoteMessage> m_calibration_messages;
     bool m_is_calibrating;
     int m_calibrationStep;
-    int m_calibrationTotalSteps;
     QTimer *m_calibrationTimer;
+    int m_calibrationTotalSteps;
     QMutex *mutex;
 };
 
