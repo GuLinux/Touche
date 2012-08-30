@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <QSettings>
 #include "modules/wiimote/WiimoteModule.h"
-#define actionCollection KActionCollection::allCollections().first()
 
 
 class ToucheSystemTrayPrivate {
@@ -83,8 +82,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     KAction *switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
     switchToNextProfile->setObjectName("SwitchToNextProfile");
     switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P"));
-
-    actionCollection->addAction(switchToNextProfile->objectName(), switchToNextProfile);
+    d->tray->actionCollection()->addAction(switchToNextProfile->objectName(), switchToNextProfile);
 
     connect(switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
     d->systemTrayMenu->addAction(switchToNextProfile);
@@ -94,7 +92,8 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 
     d->afterDevices = d->systemTrayMenu->addSeparator();
 
-    d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu, devicesList, this);
+    d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu,
+                                         devicesList, d->tray->actionCollection(), this);
 
     updateTooltip();
     updateProfilesList();
@@ -254,6 +253,7 @@ void ToucheSystemTray::profileChanged(const QString &profile)
 
 void ToucheSystemTray::configureShortcuts()
 {
-    KShortcutsDialog::configure(actionCollection);
+    Q_D(ToucheSystemTray);
+    KShortcutsDialog::configure(d->tray->actionCollection());
 }
 

@@ -69,9 +69,8 @@ WiimoteModule::~WiimoteModule()
 {
     delete d_ptr;
 }
-#define actionCollection KActionCollection::allCollections().first()
 
-WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent) :
+WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, KActionCollection *actionCollection, QObject *parent) :
     QObject(parent), d_ptr(new WiimoteModulePrivate(toucheCore, parentMenu))
 {
     Q_D(WiimoteModule);

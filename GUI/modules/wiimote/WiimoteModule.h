@@ -27,11 +27,12 @@ class WiimoteManager;
 class WiimoteModulePrivate;
 class ToucheCore;
 class DevicesList;
+class KActionCollection;
 class WiimoteModule : public QObject
 {
     Q_OBJECT
 public:
-    explicit WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent = 0);
+    explicit WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, KActionCollection *actionCollection, QObject *parent = 0);
     ~WiimoteModule();
 signals:
     
