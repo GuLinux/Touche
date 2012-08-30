@@ -34,6 +34,7 @@ class EditStringListWrapper : public QObject {
     Q_OBJECT
 public:
     explicit EditStringListWrapper(const QString &objectName, KEditListBox *parent);
+    void insertStringList(const QStringList &stringList);
 signals:
     void stringListChanged(const QStringList &stringList);
 private slots:

@@ -27,7 +27,6 @@ CfgDevice::CfgDevice(DeviceInfo *deviceInfo, QObject *parent) :
     QObject(parent), m_deviceInfo(deviceInfo)
 {
     kDebug() << "CfgDevice for " << deviceInfo->name() << ", " << deviceInfo->configID();
-    kDebug() << "KeyboardDatabaseEntry is " << deviceInfo->keyboardDatabaseEntry();
     QMap<QString, QVariant> keysMap = deviceInfo->keyboardDatabaseEntry().value("keys").toMap();
     QStringList keys = keysMap.keys();
     foreach(const QString keyName, keys) {

@@ -41,7 +41,6 @@ void BindingConfigurationWidget::stringListChanged(const QStringList &stringList
 
 void BindingConfigurationWidget::stringChanged(const QString &string)
 {
-
     QString configItemName = senderConfigName();
     if(configItemName.isEmpty()) return;
     configuration.insert(configurationSubKey.arg(configItemName), string);

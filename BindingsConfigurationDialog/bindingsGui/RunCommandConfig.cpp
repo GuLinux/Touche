@@ -41,9 +41,9 @@ RunCommandConfig::RunCommandConfig(QSettings *settings, const QString &bindingTy
     connect(cfg_Arguments, SIGNAL(stringListChanged(QStringList)), this, SLOT(stringListChanged(QStringList)));
     connect(ui->cfg_ApplicationName, SIGNAL(textChanged(QString)), this, SLOT(stringChanged(QString)));
     ui->cfg_Arguments_Widget->clear();
-    ui->cfg_Arguments_Widget->insertStringList(settings->value(m_bindingSettingsKey.arg("Arguments")).toStringList());
+    cfg_Arguments->insertStringList(settings->value(m_bindingSettingsKey.arg("Arguments")).toStringList());
     ui->cfg_ApplicationName->setText(settings->value(m_bindingSettingsKey.arg("ApplicationName")).toString());
-
+    ui->cfg_Arguments_Widget->setCheckAtEntering(true);
 }
 
 
@@ -58,11 +58,19 @@ EditStringListWrapper::EditStringListWrapper(const QString &objectName, KEditLis
     : QObject(parent), parent(parent)
 {
     setObjectName(objectName);
-    connect(parent, SIGNAL(changed()), this, SLOT(stringListChanged()));
+    connect(parent, SIGNAL(added(QString)), this, SLOT(stringListChanged()));
+    connect(parent, SIGNAL(removed(QString)), this, SLOT(stringListChanged()));
 }
 
 
 void EditStringListWrapper::stringListChanged()
 {
+    emit stringListChanged(parent->items());
+}
+
+
+void EditStringListWrapper::insertStringList(const QStringList &stringList)
+{
+    parent->insertStringList(stringList);
     emit stringListChanged(parent->items());
 }
