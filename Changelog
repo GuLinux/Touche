@@ -1,3 +1,16 @@
+2012-08-31 Marco Gulino <marco.gulino@gmail.com>
+  0.3: KDE Only version
+    * Port to KDE
+    * Added Wiimote support
+    * Fixed various bugs related to profiles
+    * Fallback Profile: if an action is not defined in current profile, and it is defined in "Default" profile, this one will be executed.
+    * Added global shortcuts for actions, mainly "Next Profile", "Connect Wiimote"
+    * Splitted keyboard_database.json in multiple files, much better to maintain.
+    * Moved config file and keyboard databases into default KDE locations
+    * Moved "Profiles" settings to a generic configuration dialog
+    * Added a "Modules" section for enabling modules different than hiddev (currently wiimote)
+    * Refactoring to allow building generic input modules (like wiimote)
+
 2012-08-23 Marco Gulino <marco.gulino@gmail.com>
   0.2: New major release
     * Ported build system to CMake
