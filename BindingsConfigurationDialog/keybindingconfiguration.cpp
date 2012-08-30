@@ -76,8 +76,8 @@ void KeyBindingConfiguration::bindingChanged(int index)
 void KeyBindingConfiguration::saveConfig()
 {
     settings->remove(m_cfgKey->label());
-    settings->setValue(m_cfgKey->label(), QStringList(tabsWidgets.keys()));
     if(tabsWidgets.size()==0) return;
+    settings->setValue(m_cfgKey->label(), QStringList(tabsWidgets.keys()));
     foreach(BindingConfigurationWidget *widget, tabsWidgets.values()) {
         widget->saveConfiguration();
     }
