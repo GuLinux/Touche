@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BINDING_TO_KEY "TranslateToKey"
 #define BINDING_NOT_FOUND "****NotFound****"
 
-typedef std::function<Binding*(QObject*, const QString&)> BindingFactory;
+typedef std::function<Binding*(QObject*, const QString&, const QString&)> BindingFactory;
 
 
 class BindingsConfigPrivate {
@@ -60,14 +60,18 @@ public:
         settings->beginGroup(profile);
         const QString params = QString("%1/%2/%3");
 
-        bindings[BINDING_RUN_COMMAND] = [this,params](QObject* p, const QString& eventName) {
+        bindings[BINDING_RUN_COMMAND] = [this,params](QObject* p, const QString& eventName, const QString& group) {
+            settings->beginGroup(group);
             QString commandName = settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "ApplicationName"), "true").toString();
             QStringList arguments = settings->value(params.arg(eventName, BINDING_RUN_COMMAND, "Arguments"), QStringList()).toStringList();
+            settings->endGroup();
             return moveToThreadAndReparent(p, new RunCommandBinding(commandName, arguments));
         };
-        bindings[BINDING_TO_KEY] =[this,params](QObject* p, const QString& eventName) {
+        bindings[BINDING_TO_KEY] =[this,params](QObject* p, const QString& eventName, const QString& group) {
+            settings->beginGroup(group);
             QString keySymbol = settings->value(params.arg(eventName, BINDING_TO_KEY, "keysymbol"), QString()).toString();
             QString isKeypress = settings->value(params.arg(eventName,BINDING_TO_KEY, "eventtype"), "keypress").toString();
+            settings->endGroup();
             return moveToThreadAndReparent(p, new ToKeyBinding(keySymbol, isKeypress == "keypress", true));
         };
     }
@@ -77,8 +81,9 @@ BindingsConfig::BindingsConfig(QObject *parent) :
     QObject(parent), d_ptr(new BindingsConfigPrivate(this))
 {
     Q_D(BindingsConfig);
-    d->bindings[BINDING_DO_NOTHING] = [d](QObject* p, const QString& e) {
+    d->bindings[BINDING_DO_NOTHING] = [d](QObject* p, const QString& e, const QString& g) {
             Q_UNUSED(e);
+            Q_UNUSED(g);
             Q_UNUSED(p);
             return &d->doNothingBinding; };
 
@@ -102,16 +107,20 @@ BindingsConfig::~BindingsConfig()
 Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 {
     Q_D(BindingsConfig);
+    d->settings->beginGroup(d->profile);
     QString bindingSetting = d->settings->value(eventName, BINDING_NOT_FOUND).toString();
+    QString foundInGroup = d->settings->group();
+    kDebug() << "Profile: " << d->settings->group() << ", found binding (1st try): " << bindingSetting;
+    d->settings->endGroup();
     if(bindingSetting == BINDING_NOT_FOUND) {
-        d->settings->endGroup();
-        d->settings->beginGroup("Default");
+        d->settings->beginGroup("bindings_Default");
         bindingSetting = d->settings->value(eventName, BINDING_DO_NOTHING).toString();
+        foundInGroup = d->settings->group();
+        kDebug() << "Profile: " << d->settings->group() << ", found binding (2st try): " << bindingSetting;
         d->settings->endGroup();
-        d->settings->beginGroup(d->profile);
     }
     BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value(BINDING_DO_NOTHING));
-    return bindingFactory(parent, eventName);
+    return bindingFactory(parent, eventName, foundInGroup);
 }
 
 
