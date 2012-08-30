@@ -1,0 +1,32 @@
+[Global]
+IconName=input-keyboard
+Comment=Touché Keyboard Recognizer
+Name=Touché
+
+[Context/main]
+Name=Touché Notifications
+
+[Event/profileChanged]
+Name=Profile Changed
+Comment=Active profile was changed
+Contexts=main
+Action=Sound|Popup
+
+[Event/deviceConnected]
+Name=Device Connected
+Comment=An input device was connected
+Contexts=main
+Action=Sound|Popup
+
+[Event/deviceDisconnected]
+Name=Device Disconnected
+Comment=An input device was disconnected
+Contexts=main
+Action=Sound|Popup
+
+[Event/deviceMessage]
+Name=Device Message
+Comment=A device reports an information message
+Contexts=main
+Action=Sound|Popup
+

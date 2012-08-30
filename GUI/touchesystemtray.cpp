@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <QSettings>
 #include "modules/wiimote/WiimoteModule.h"
+#include <KNotification>
 
 
 class ToucheSystemTrayPrivate {
@@ -96,7 +97,6 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 
     d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu,
                                          devicesList, d->tray->actionCollection(), this);
-    connect(d->wiimoteModule, SIGNAL(guiMessage(QString,QString,int)), this, SLOT(showMessage(QString,QString,int)));
 
     updateTooltip();
     updateProfilesList();
@@ -132,7 +132,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
     QString messageTitle = QString("<b>%1</b>: %2")
             .arg(i18n(Touche::displayName() ))
             .arg(i18nc("device connected tray popup", "Device Connected!"));
-    showMessage(messageTitle, deviceInfo->name() );
+    KNotification::event("deviceConnected", messageTitle, deviceInfo->name());
     KAction *deviceAction = new KAction(deviceInfo->name(), d->systemTrayMenu);
     connect(deviceAction, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
     d->systemTrayMenu->insertAction(d->afterDevices, deviceAction);
@@ -147,7 +147,7 @@ void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
     QString messageTitle = QString("<b>%1</b>: %2")
             .arg(i18n(Touche::displayName() ))
             .arg(i18nc("device disconnected tray popup", "Device Disconnected!"));
-    showMessage(messageTitle, deviceInfo->name());
+    KNotification::event("deviceConnected", messageTitle, deviceInfo->name());
     QAction *action = d->actions.take(deviceInfo);
     d->systemTrayMenu->removeAction(action);
     delete action;
@@ -252,9 +252,11 @@ void ToucheSystemTray::switchToNextProfile()
 
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
-    showMessage(i18n("%1 Profile").arg(i18n(Touche::displayName() )),
-                         i18n("Profile changed to %1").arg(profile)
-    );
+    Q_D(ToucheSystemTray);
+    KNotification *notification = KNotification::event("profileChanged", i18n("%1 Profile").arg(i18n(Touche::displayName() )),
+                         i18n("Profile changed to %1").arg(profile));
+    connect(d->toucheCore, SIGNAL(profileChanged(QString)), notification, SLOT(close()));
+
 }
 
 
@@ -262,13 +264,5 @@ void ToucheSystemTray::configureShortcuts()
 {
     Q_D(ToucheSystemTray);
     KShortcutsDialog::configure(d->tray->actionCollection());
-}
-
-
-
-void ToucheSystemTray::showMessage(const QString &title, const QString &message, int timeout)
-{
-    Q_D(ToucheSystemTray);
-    d->tray->showMessage(title, message, Touche::iconName(), timeout);
 }
 

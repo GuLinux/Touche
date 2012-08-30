@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "modules/wiimote/WiimoteDevice.h"
 #include "touchecore.h"
 #include <KActionCollection>
+#include <KNotification>
 #include <QDBusInterface>
 #include <KDebug>
 
@@ -38,6 +39,7 @@ void WiimoteModule::disconnected(const QString &) {}
 void WiimoteModule::connected(const QString &) {}
 void WiimoteModule::connectWiimote() {}
 void WiimoteModule::disconnectWiimote() {}
+
 #else
 #include "wiimotemanager.h"
 
@@ -126,7 +128,7 @@ void WiimoteModule::disconnected(const QString &address)
     if(address == QString()) {
         QString title = i18n("%1: Wiimote Connection Failed").arg(i18n(Touche::displayName()));
         QString message = i18n("%1 could not find any Wiimote.\nPlease remember to press 1+2 to pair your Wiimote.").arg(i18n(Touche::displayName()));
-        emit guiMessage(title, message, 10000);
+        KNotification::event("deviceMessage", title, message);
     }
     kDebug() << "Wiimote disconnected: " << address;
 }
@@ -148,7 +150,9 @@ void WiimoteModule::connectWiimote()
     d->enableActions(false);
     QString title = i18n("%1: Connecting Wiimote").arg(i18n(Touche::displayName() ));
     QString message = i18n("Wiimote connection in progress.\nPress 1+2 on your Wiimote.");
-    emit guiMessage(title, message, 10000);
+    KNotification *notification = KNotification::event("deviceMessage", title, message, QPixmap(), 0L, KNotification::Persistent);
+    connect(d->wiimoteManager, SIGNAL(disconnected(QString)), notification, SLOT(close()));
+
     d->wiimoteManager->connectWiimote();
 }
 
@@ -161,3 +165,5 @@ void WiimoteModule::disconnectWiimote()
 }
 
 #endif // HAVE_CWIID
+
+

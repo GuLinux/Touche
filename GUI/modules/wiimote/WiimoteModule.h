@@ -35,7 +35,6 @@ public:
     explicit WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, KActionCollection *actionCollection, QObject *parent = 0);
     ~WiimoteModule();
 signals:
-    void guiMessage(const QString &title, const QString &message, int timeout);
 public slots:
     void setEnabled(bool enabled);
 
