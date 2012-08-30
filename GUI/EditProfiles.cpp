@@ -55,4 +55,5 @@ void EditProfiles::accept()
         settings->setValue("name", profile);
         settings->endGroup();
     }
+    settings->sync();
 }

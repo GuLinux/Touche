@@ -37,7 +37,7 @@ ModulesPage::ModulesPage(QSettings *settings, QWidget *parent) :
 #ifdef HAVE_CWIID
     QStandardItem *wiimoteItem = new QStandardItem(QIcon::fromTheme("wiimote"), "Wiimote");
     wiimoteItem->setCheckable(true);
-    wiimoteItem->setCheckState(settings->value("wiimote_enabled").toBool() ? Qt::Checked : Qt::Unchecked);
+    wiimoteItem->setCheckState(settings->value("wiimote_enabled", false).toBool() ? Qt::Checked : Qt::Unchecked);
     wiimoteItem->setData("wiimote_enabled", ConfigNameRole);
     model->appendRow(wiimoteItem);
 #endif //HAVE_CWIID
@@ -54,6 +54,7 @@ void ModulesPage::accept()
     for(int row=0; row<model->rowCount(); row++) {
         QStandardItem *item = model->item(row);
         settings->setValue(item->data(ConfigNameRole).toString(), item->checkState() == Qt::Checked);
+        settings->sync();
     }
 }
 

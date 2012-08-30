@@ -177,7 +177,7 @@ void ToucheSystemTray::updateModulesList()
 {
     Q_D(ToucheSystemTray);
     QSettings *toucheSettings = Touche::settings(this);
-
+    toucheSettings->sync();
     bool wiimoteEnabled = toucheSettings->value("wiimote_enabled", false).toBool();
     d->wiimoteModule->setEnabled(wiimoteEnabled);
 

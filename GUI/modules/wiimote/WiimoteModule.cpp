@@ -62,7 +62,7 @@ public:
     QAction *titleAction;
     KAction *connectAction;
     QAction *disconnectAction;
-    bool isConnected;
+    bool isConnected = false;
     WiimoteManager *wiimoteManager;
     ToucheCore *toucheCore;
 };
