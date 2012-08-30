@@ -57,6 +57,7 @@ KeyboardDatabase::KeyboardDatabase(QStringList databaseFiles, QObject *parent) :
     QObject(parent), d_ptr(new KeyboardDatabasePrivate(databaseFiles, this))
 {
     Q_D(KeyboardDatabase);
+    qDebug() << "KeyboardDatabasePaths:  "<< databaseFiles;
     d->emptyDatabaseEntry.setProperty("deviceName", "Device not configured");
     kDebug() << "Using keyboard database paths: " << databaseFiles;
 }

@@ -1,0 +1,52 @@
+{
+    "0x5ac:0x8242": {
+    "name": "Apple IR receiver for Remote Control",
+    "vendor": "0x5ac",
+    "product": "0x8240",
+    "read_timeout_milliseconds": 200,
+    "keys": {
+      "Play_Pause": {
+        "keypress": { "hiddev_registers": {
+          "r95": [ { "hid":786432, "value": 95 }, { "hid":786432, "value": 4 } ],
+          "r199": [ { "hid":786432, "value":199 }, { "hid":786432, "value": 5 } ]
+        } },
+        "keyrelease": { "rule": "no_more_events" }
+      },
+      "Plus": {
+        "keypress": { "hiddev_registers": {
+          "r95": [ { "hid":786432, "value": 95 }, { "hid":786432, "value":11 } ],
+          "r199": [ { "hid":786432, "value":199 }, { "hid":786432, "value":10 } ]
+        } },
+        "keyrelease": { "rule": "no_more_events" }
+      },
+      "Minus": {
+        "keypress": { "hiddev_registers": {
+          "r95": [ { "hid":786432, "value": 95 }, { "hid":786432, "value":13 } ],
+          "r199": [ { "hid":786432, "value":199 }, { "hid":786432, "value":12 } ]
+        } },
+        "keyrelease": { "rule": "no_more_events" }
+      },
+      "Prev": {
+        "keypress": { "hiddev_registers": {
+          "r95": [ { "hid":786432, "value": 95 }, { "hid":786432, "value": 8 } ],
+          "r199": [ { "hid":786432, "value":199 }, { "hid":786432, "value": 9 } ]
+        } },
+        "keyrelease": { "rule": "no_more_events" }
+      },
+      "Next": {
+        "keypress": { "hiddev_registers": {
+          "r95": [ { "hid":786432, "value": 95 }, { "hid":786432, "value": 7 } ],
+          "r199": [ { "hid":786432, "value":199 }, { "hid":786432, "value": 6 } ]
+        } },
+        "keyrelease": { "rule": "no_more_events" }
+      },
+      "Menu": {
+        "keypress": { "hiddev_registers": {
+          "r95": [ { "hid":786432, "value": 95 }, { "hid":786432, "value": 2 } ],
+          "r199": [ { "hid":786432, "value":199 }, { "hid":786432, "value": 3 } ]
+        } },
+        "keyrelease": { "rule": "no_more_events" }
+      }
+    }
+  }
+}

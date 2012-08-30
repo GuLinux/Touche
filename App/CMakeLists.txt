@@ -13,7 +13,8 @@ add_dependencies(${PROJECT_NAME} Touche_Core Touche_Configuration Touche_GUI)
 
 # TODO for /etc/udev it would be better to use variables, although this one is not going to change that easly...
 INSTALL(FILES files/99-hiddev-input.rules DESTINATION /etc/udev/rules.d)
-INSTALL(FILES files/keyboard_database.json DESTINATION share/apps/${PROJECT_NAME})
+FILE(GLOB keyboardDatabases "files/KeyboardDatabases/*.json")
+INSTALL(FILES ${keyboardDatabases} DESTINATION share/apps/${PROJECT_NAME}/KeyboardDatabases/ )
 INSTALL(FILES desktop/Touche.desktop DESTINATION share/applications)
 INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 KDE4_INSTALL_ICONS( ${ICON_INSTALL_DIR} )

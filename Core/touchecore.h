@@ -37,7 +37,7 @@ public:
     static const inline char* iconName() { return "input-keyboard" ; }
     static QSettings *settings(QObject *parent = 0);
     static inline QStringList keyboardDatabases()
-        { return KGlobal::dirs()->findAllResources("data", "Touche/keyboard_database.json"); }
+        { return KGlobal::dirs()->findAllResources("data", "Touche/KeyboardDatabases/*.json"); }
 };
 
 class ToucheCore : public QObject
