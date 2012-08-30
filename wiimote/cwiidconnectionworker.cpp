@@ -53,7 +53,7 @@ void CWiidConnectionWorker::emitMessage(WiimoteMessage message)
 #define curMessage mesg[message]
 #define curMesgGyroAngleRate curMessage.motionplus_mesg.angle_rate
 #define curMesgAccel curMessage.acc_mesg.acc
-#define curMesgGyroLowSpeed(x) (curMessage.motionplus_mesg.low_speed[x] == 1)
+//#define curMesgGyroLowSpeed(x) (curMessage.motionplus_mesg.low_speed[x] == 1)
 
 void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg mesg[], timespec *timestamp)
 {
@@ -75,12 +75,12 @@ void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg me
                               curMesgGyroAngleRate[CWIID_Y],
                               curMesgGyroAngleRate[CWIID_Z] );
 //            gyro /= lowSpeedDivider;
-            WiimoteVector3 multiplyForHighSpeed(
-                        curMesgGyroLowSpeed(CWIID_X) ? 1 : highSpeedMultiplier,
-                        curMesgGyroLowSpeed(CWIID_Y) ? 1 : highSpeedMultiplier,
-                        curMesgGyroLowSpeed(CWIID_Z) ? 1 : highSpeedMultiplier
-                        );
-            gyro *= multiplyForHighSpeed;
+//            WiimoteVector3 multiplyForHighSpeed(
+//                        curMesgGyroLowSpeed(CWIID_X) ? 1 : highSpeedMultiplier,
+//                        curMesgGyroLowSpeed(CWIID_Y) ? 1 : highSpeedMultiplier,
+//                        curMesgGyroLowSpeed(CWIID_Z) ? 1 : highSpeedMultiplier
+//                        );
+//            gyro *= multiplyForHighSpeed;
             wiimoteMessage.setGyro(gyro);
         }
         else if(curMessage.type == CWIID_MESG_ACC) {
