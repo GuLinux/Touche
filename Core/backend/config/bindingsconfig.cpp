@@ -52,8 +52,13 @@ public:
         return dynamic_cast<Binding*>(object);
     }
 
+    void setDefaultProfile(const QString &firstProfile) {
+
+    }
+
     void loadBindings() {
-        settings->endGroup();
+        if(settings->group() != QString() )
+            settings->endGroup();
         settings->setValue("last_profile", profile);
         settings->beginGroup(profile);
         const QString params = QString("%1/%2/%3");
@@ -80,10 +85,16 @@ BindingsConfig::BindingsConfig(QObject *parent) :
             Q_UNUSED(p);
             return &d->doNothingBinding; };
 
+    QString firstProfile = "Default";
     foreach(QString profile, availableProfiles()) {
-    if(QString("bindings_%1").arg(profile) == d->settings->value("last_profile"))
-        setCurrentProfile(profile);
+        if(firstProfile == "Default" ) firstProfile = profile;
+        if(QString("bindings_%1").arg(profile) == d->settings->value("last_profile"))
+            setCurrentProfile(profile);
     }
+    if(d->profile == QString() ) {
+        setCurrentProfile(firstProfile);
+    }
+    kDebug() << "Current profile: " << d->profile;
 }
 
 BindingsConfig::~BindingsConfig()
@@ -105,6 +116,9 @@ void BindingsConfig::setCurrentProfile(const QString &profileName)
 {
     Q_D(BindingsConfig);
     d->profile = QString("bindings_%1").arg(profileName);
+    d->settings->beginGroup(d->profile);
+    d->settings->setValue("name", profileName);
+    d->settings->endGroup();
     d->loadBindings();
     emit profileChanged(profileName);
 }
@@ -113,7 +127,8 @@ void BindingsConfig::setCurrentProfile(const QString &profileName)
 QStringList BindingsConfig::availableProfiles() const
 {
     Q_D(const BindingsConfig);
-    d->settings->endGroup();
+    if(d->settings->group() != QString() )
+        d->settings->endGroup();
     QStringList allProfiles = d->settings->childGroups();
     d->settings->beginGroup(d->profile);
     foreach(QString group, allProfiles)
