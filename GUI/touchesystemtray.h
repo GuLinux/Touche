@@ -53,6 +53,7 @@ public slots:
     void profileChanged(const QString &profile);
     void configureShortcuts();
     void updateModulesList();
+    void showMessage(const QString &title, const QString &message, int timeout = 10000);
 
 private:
     ToucheSystemTrayPrivate * const d_ptr;

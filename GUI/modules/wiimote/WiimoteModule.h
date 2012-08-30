@@ -35,15 +35,15 @@ public:
     explicit WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, KActionCollection *actionCollection, QObject *parent = 0);
     ~WiimoteModule();
 signals:
-    
+    void guiMessage(const QString &title, const QString &message, int timeout);
 public slots:
     void setEnabled(bool enabled);
 
 private slots:
     void connectWiimote();
     void disconnectWiimote();
-    void connected();
-    void disconnected();
+    void connected(const QString &address);
+    void disconnected(const QString &address);
 
 private:
     WiimoteModulePrivate *const d_ptr;

@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include <KActionCollection>
 #include <QDBusInterface>
+#include <KDebug>
 
 #define HAVE_CWIID
 #ifndef HAVE_CWIID
@@ -92,8 +93,8 @@ WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesL
 
     d->disconnectAction->setVisible(false);
     d->wiimoteManager = new WiimoteManager(this);
-    connect(d->wiimoteManager, SIGNAL(connected(QString)), this, SLOT(connected()));
-    connect(d->wiimoteManager, SIGNAL(disconnected(QString)), this, SLOT(disconnected()));
+    connect(d->wiimoteManager, SIGNAL(connected(QString)), this, SLOT(connected(QString)));
+    connect(d->wiimoteManager, SIGNAL(disconnected(QString)), this, SLOT(disconnected(QString)));
 
     devicesList->add(new WiimoteDevice(d->wiimoteManager, toucheCore->keyboardDatabase(), this));
     QDBusInterface *upower = new QDBusInterface("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", QDBusConnection::systemBus());
@@ -119,21 +120,28 @@ void WiimoteModule::setEnabled(bool enabled)
 
 
 
-void WiimoteModule::disconnected()
+void WiimoteModule::disconnected(const QString &address)
 {
     Q_D(WiimoteModule);
     d->enableActions(true);
     d->toggleActionsVisibility(false);
     d->isConnected = false;
+    if(address == QString()) {
+        QString title = i18n("%1: Wiimote Connection Failed").arg(i18n(Touche::displayName()));
+        QString message = i18n("%1 could not find any Wiimote.\nPlease remember to press 1+2 to pair your Wiimote.").arg(i18n(Touche::displayName()));
+        emit guiMessage(title, message, 10000);
+    }
+    kDebug() << "Wiimote disconnected: " << address;
 }
 
 
-void WiimoteModule::connected()
+void WiimoteModule::connected(const QString &address)
 {
     Q_D(WiimoteModule);
     d->enableActions(true);
     d->toggleActionsVisibility(true);
     d->isConnected = true;
+    kDebug() << "Wiimote connected: " << address;
 }
 
 
@@ -141,6 +149,9 @@ void WiimoteModule::connectWiimote()
 {
     Q_D(WiimoteModule);
     d->enableActions(false);
+    QString title = i18n("%1: Connecting Wiimote").arg(i18n(Touche::displayName() ));
+    QString message = i18n("Wiimote connection in progress.\nPress 1+2 on your Wiimote.");
+    emit guiMessage(title, message, 10000);
     d->wiimoteManager->connectWiimote();
 }
 

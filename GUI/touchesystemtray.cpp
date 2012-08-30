@@ -94,6 +94,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
 
     d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu,
                                          devicesList, d->tray->actionCollection(), this);
+    connect(d->wiimoteModule, SIGNAL(guiMessage(QString,QString,int)), this, SLOT(showMessage(QString,QString,int)));
 
     updateTooltip();
     updateProfilesList();
@@ -129,7 +130,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
     QString messageTitle = QString("<b>%1</b>: %2")
             .arg(i18n(Touche::displayName() ))
             .arg(i18nc("device connected tray popup", "Device Connected!"));
-    d->tray->showMessage(messageTitle, deviceInfo->name(), Touche::iconName() );
+    showMessage(messageTitle, deviceInfo->name() );
     KAction *deviceAction = new KAction(deviceInfo->name(), d->systemTrayMenu);
     connect(deviceAction, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
     d->systemTrayMenu->insertAction(d->afterDevices, deviceAction);
@@ -144,7 +145,7 @@ void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
     QString messageTitle = QString("<b>%1</b>: %2")
             .arg(i18n(Touche::displayName() ))
             .arg(i18nc("device disconnected tray popup", "Device Disconnected!"));
-    d->tray->showMessage(messageTitle, deviceInfo->name(), Touche::iconName() );
+    showMessage(messageTitle, deviceInfo->name());
     QAction *action = d->actions.take(deviceInfo);
     d->systemTrayMenu->removeAction(action);
     delete action;
@@ -243,9 +244,9 @@ void ToucheSystemTray::switchToNextProfile()
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
     Q_D(ToucheSystemTray);
-    d->tray->showMessage(i18n("%1 Profile").arg(i18n(Touche::displayName() )),
-                         i18n("Profile changed to %1").arg(profile),
-                         Touche::iconName() );
+    showMessage(i18n("%1 Profile").arg(i18n(Touche::displayName() )),
+                         i18n("Profile changed to %1").arg(profile)
+    );
 }
 
 
@@ -253,5 +254,13 @@ void ToucheSystemTray::configureShortcuts()
 {
     Q_D(ToucheSystemTray);
     KShortcutsDialog::configure(d->tray->actionCollection());
+}
+
+
+
+void ToucheSystemTray::showMessage(const QString &title, const QString &message, int timeout)
+{
+    Q_D(ToucheSystemTray);
+    d->tray->showMessage(title, message, Touche::iconName(), timeout);
 }
 

@@ -59,6 +59,7 @@ void WiimoteDevice::wiimoteDisconnected(const QString &address)
     Q_UNUSED(address)
     emit disconnected(deviceInfo);
     delete deviceInfo;
+    deviceInfo = 0;
 }
 
 
