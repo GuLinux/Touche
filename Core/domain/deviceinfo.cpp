@@ -25,7 +25,9 @@ public:
     quint16 vendor, productID, version;
     quint16 bus, deviceNumber, interfaceNumber;
     QMap<QString, QVariant> keyboardDatabaseEntry;
+    QString configurationIdentifier;
 };
+
 
 DeviceInfo::DeviceInfo(QObject *parent)
     : QObject(parent), d_ptr(new DeviceInfoPrivate())
@@ -121,21 +123,13 @@ QString DeviceInfo::path()
     return d->path;
 }
 
-QString DeviceInfo::configID()
-{
-    return QString("0x%1:0x%2").arg(vendor(), 0, 16).arg(productID(), 0, 16);
-}
-
-quint32 DeviceInfo::vendor()
+QString DeviceInfo::configurationIdentifier()
 {
     Q_D(DeviceInfo);
-    return d->vendor;
-}
-
-quint32 DeviceInfo::productID()
-{
-    Q_D(DeviceInfo);
-    return d->productID;
+    if(d->configurationIdentifier == QString()) {
+        d->configurationIdentifier = QString("0x%1:0x%2").arg(d->vendor, 0, 16).arg(d->productID, 0, 16);
+    }
+    return d->configurationIdentifier;
 }
 
 quint32 DeviceInfo::version()
@@ -175,4 +169,9 @@ DeviceInfo *DeviceInfo::keyboardDatabaseEntry(const QMap<QString, QVariant> &key
     return this;
 }
 
-
+DeviceInfo *DeviceInfo::configurationIdentifier(const QString &configurationIdentifier)
+{
+    Q_D(DeviceInfo);
+    d->configurationIdentifier=configurationIdentifier;
+    return this;
+}

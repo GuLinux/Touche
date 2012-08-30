@@ -40,12 +40,11 @@ public:
     DeviceInfo * deviceNumber(quint16 deviceNumber);
     DeviceInfo * interfaceNumber(quint16 interfaceNumber);
     DeviceInfo * deviceReportedName(const QString &deviceReportedName);
+    DeviceInfo * configurationIdentifier(const QString &configurationIdentifier);
     DeviceInfo * keyboardDatabaseEntry(const QMap<QString, QVariant> &keyboardDatabaseEntry);
     QString name();
     QString path();
-    QString configID();
-    quint32 vendor();
-    quint32 productID();
+    QString configurationIdentifier();
     quint32 version();
     quint32 bus();
     quint32 deviceNumber();

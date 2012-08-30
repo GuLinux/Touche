@@ -68,9 +68,7 @@ void WiimoteDevice::wiimoteConnected(const QString &address)
     deviceInfo = new DeviceInfo(this);
     deviceInfo->name("Wiimote");
     deviceInfo->path(address);
-    // TODO: garbage! must find a more generic alternative
-    deviceInfo->vendor(0xFFA);
-    deviceInfo->productID(0xFFB);
+    deviceInfo->configurationIdentifier("WiimoteModule");
     deviceInfo->keyboardDatabaseEntry(keyboardDatabase->deviceConfiguration(deviceInfo));
     emit connected(deviceInfo);
 }

@@ -1,8 +1,6 @@
 {
-  "0xffa:0xffb": {
+  "WiimoteModule": {
       "name": "Wiimote",
-      "vendor": "0xffa",
-      "product": "0xffb",
       "keys": {
         "WiimoteButton_1": {
           "keypress": { "keyname": "WiimoteButton_1_keypress" },

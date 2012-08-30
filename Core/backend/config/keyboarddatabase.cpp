@@ -43,8 +43,8 @@ public:
             if(!databaseFile.exists())
                 continue;
             QVariant config = parser.parse(&databaseFile);
-            if(config.toMap().contains(deviceInfo->configID())) {
-                QMap<QString, QVariant> thisKeyboardDatabase = config.toMap().value(deviceInfo->configID()).toMap();
+            if(config.toMap().contains(deviceInfo->configurationIdentifier())) {
+                QMap<QString, QVariant> thisKeyboardDatabase = config.toMap().value(deviceInfo->configurationIdentifier()).toMap();
                 return thisKeyboardDatabase;
             }
         }
@@ -70,7 +70,7 @@ KeyboardDatabase::~KeyboardDatabase()
 DatabaseEntry *KeyboardDatabase::keyboard(DeviceInfo *deviceInfo)
 {
     Q_D(KeyboardDatabase);
-    return d->database.value(deviceInfo->configID(), &d->emptyDatabaseEntry);
+    return d->database.value(deviceInfo->configurationIdentifier(), &d->emptyDatabaseEntry);
 }
 
 void KeyboardDatabase::deviceAdded(DeviceInfo *device)
@@ -79,14 +79,14 @@ void KeyboardDatabase::deviceAdded(DeviceInfo *device)
     QMap<QString, QVariant> thisKeyboardDatabase = d->keyboardConfiguration(device);
     if(thisKeyboardDatabase.isEmpty())
         return;
-    d->database.insert(device->configID(), DatabaseEntry::fromConfig(thisKeyboardDatabase, this));
+    d->database.insert(device->configurationIdentifier(), DatabaseEntry::fromConfig(thisKeyboardDatabase, this));
 }
 
 void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
 {
     Q_D(KeyboardDatabase);
     if(!device) return;
-    delete d->database.take(device->configID());
+    delete d->database.take(device->configurationIdentifier());
 }
 
 const QMap<QString, QVariant> KeyboardDatabase::deviceConfiguration(DeviceInfo *deviceInfo)

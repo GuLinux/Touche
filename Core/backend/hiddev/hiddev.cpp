@@ -162,7 +162,7 @@ void HidDev::start()
     d->deviceInfo.vendor(dinfo.vendor)->productID(dinfo.product)->version(dinfo.version)
             ->bus(dinfo.busnum)->deviceNumber(dinfo.devnum)->interfaceNumber(dinfo.ifnum);
     err << QString("HID: vendor 0x%1 product 0x%2 version 0x%3\n")
-           .arg(d->deviceInfo.vendor(), 0, 16).arg(d->deviceInfo.productID(), 0, 16).arg(d->deviceInfo.version(), 0, 16);
+           .arg(dinfo.vendor, 0, 16).arg(dinfo.product, 0, 16).arg(d->deviceInfo.version(), 0, 16);
 
     err << QString("applications [%1]: %2").arg(dinfo.num_applications).arg(ioctl(d->fd, HIDIOCAPPLICATION, 0), 4, 16);
     for (uint i = 1; i < dinfo.num_applications; i++)
