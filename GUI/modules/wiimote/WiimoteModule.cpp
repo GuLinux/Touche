@@ -73,7 +73,7 @@ WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesL
     QObject(parent), d_ptr(new WiimoteModulePrivate(toucheCore, parentMenu))
 {
     Q_D(WiimoteModule);
-    d->titleAction = parentMenu->addTitle(QIcon::fromTheme("wiimote"), i18n("Wiimote"));
+    d->titleAction = parentMenu->addTitle(i18n("Wiimote"));
 
     d->connectAction = new KAction(KIcon("network-connect", KIconLoader::global()), i18n("Connect Wiimote"), this);
     d->connectAction->setObjectName("Wiimote_Connect");

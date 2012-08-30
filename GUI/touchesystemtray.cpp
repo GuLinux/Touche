@@ -89,7 +89,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu->addAction(d->switchToNextProfile);
     d->systemTrayMenu->addSeparator();
     d->afterProfiles = d->systemTrayMenu->addSeparator();
-    d->systemTrayMenu->addTitle(i18n("Devices"));
+    d->systemTrayMenu->addTitle(i18n("Configure Bindings"));
 
     d->afterDevices = d->systemTrayMenu->addSeparator();
 
