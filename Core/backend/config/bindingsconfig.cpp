@@ -52,10 +52,6 @@ public:
         return dynamic_cast<Binding*>(object);
     }
 
-    void setDefaultProfile(const QString &firstProfile) {
-
-    }
-
     void loadBindings() {
         if(settings->group() != QString() )
             settings->endGroup();
