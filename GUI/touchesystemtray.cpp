@@ -243,7 +243,6 @@ void ToucheSystemTray::switchToNextProfile()
 
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
-    Q_D(ToucheSystemTray);
     showMessage(i18n("%1 Profile").arg(i18n(Touche::displayName() )),
                          i18n("Profile changed to %1").arg(profile)
     );

@@ -28,17 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusInterface>
 #include <KDebug>
 
-#define HAVE_CWIID
 #ifndef HAVE_CWIID
 
-WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, QObject *parent) : QObject(parent) {
-    Q_UNUSED(parentMenu)
-    Q_UNUSED(toucheCore)
-    Q_UNUSED(devicesList)
-}
+WiimoteModule::WiimoteModule(ToucheCore *, KMenu *, DevicesList *, KActionCollection *, QObject *parent)
+    : QObject(parent), d_ptr(0) {}
+WiimoteModule::~WiimoteModule() {}
 void WiimoteModule::setEnabled(bool enabled) { Q_UNUSED(enabled) }
-void WiimoteModule::disconnected() {}
-void WiimoteModule::connected() {}
+void WiimoteModule::disconnected(const QString &) {}
+void WiimoteModule::connected(const QString &) {}
 void WiimoteModule::connectWiimote() {}
 void WiimoteModule::disconnectWiimote() {}
 #else
