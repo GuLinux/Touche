@@ -50,6 +50,7 @@ public:
     QAction *afterProfiles;
     QAction *afterDevices;
     WiimoteModule *wiimoteModule;
+    KAction *switchToNextProfile;
 };
 
 ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDialog *aboutDialog, DevicesList *devicesList) :
@@ -79,13 +80,13 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(updateProfilesList()));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
     d->systemTrayMenu->addTitle(i18n("Profiles"));
-    KAction *switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
-    switchToNextProfile->setObjectName("SwitchToNextProfile");
-    switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P"));
-    d->tray->actionCollection()->addAction(switchToNextProfile->objectName(), switchToNextProfile);
+    d->switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
+    d->switchToNextProfile->setObjectName("SwitchToNextProfile");
+    d->switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P"));
+    d->tray->actionCollection()->addAction(d->switchToNextProfile->objectName(), d->switchToNextProfile);
 
-    connect(switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
-    d->systemTrayMenu->addAction(switchToNextProfile);
+    connect(d->switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
+    d->systemTrayMenu->addAction(d->switchToNextProfile);
     d->systemTrayMenu->addSeparator();
     d->afterProfiles = d->systemTrayMenu->addSeparator();
     d->systemTrayMenu->addTitle(i18n("Devices"));
@@ -191,8 +192,10 @@ void ToucheSystemTray::updateProfilesList()
         if(action->objectName().startsWith("profile_"))
             d->systemTrayMenu->removeAction(action);
     }
+    QStringList availProfiles = d->toucheCore->availableProfiles();
+    d->switchToNextProfile->setEnabled(availProfiles.size()>0);
 
-    foreach(QString profile, d->toucheCore->availableProfiles()) {
+    foreach(QString profile, availProfiles) {
         QAction *profileAction = new KAction(profile, this);
         d->systemTrayMenu->insertAction(d->afterProfiles, profileAction);
         profileAction->setObjectName(QString("profile_%1").arg(profile));
@@ -226,6 +229,11 @@ void ToucheSystemTray::switchToNextProfile()
 {
     Q_D(ToucheSystemTray);
     QStringList profiles = d->toucheCore->availableProfiles();
+    if(profiles.isEmpty()) return;
+    if(!profiles.contains(d->toucheCore->currentProfile())) {
+        d->toucheCore->setProfile(profiles.first());
+        return;
+    }
     QList<QString>::const_iterator i;
     QString newProfile;
     for (i = profiles.constBegin(); i != profiles.constEnd(); ++i) {

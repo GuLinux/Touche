@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BINDING_DO_NOTHING "DoNothing"
 #define BINDING_RUN_COMMAND "RunCommand"
 #define BINDING_TO_KEY "TranslateToKey"
+#define BINDING_NOT_FOUND "****NotFound****"
 
 typedef std::function<Binding*(QObject*, const QString&)> BindingFactory;
 
@@ -101,7 +102,14 @@ BindingsConfig::~BindingsConfig()
 Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 {
     Q_D(BindingsConfig);
-    QString bindingSetting = d->settings->value(eventName, BINDING_DO_NOTHING).toString();
+    QString bindingSetting = d->settings->value(eventName, BINDING_NOT_FOUND).toString();
+    if(bindingSetting == BINDING_NOT_FOUND) {
+        d->settings->endGroup();
+        d->settings->beginGroup("Default");
+        bindingSetting = d->settings->value(eventName, BINDING_DO_NOTHING).toString();
+        d->settings->endGroup();
+        d->settings->beginGroup(d->profile);
+    }
     BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value(BINDING_DO_NOTHING));
     return bindingFactory(parent, eventName);
 }
@@ -111,6 +119,7 @@ Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 void BindingsConfig::setCurrentProfile(const QString &profileName)
 {
     Q_D(BindingsConfig);
+    if(profileName == QString() ) return;
     d->profile = QString("bindings_%1").arg(profileName);
     d->settings->beginGroup(d->profile);
     d->settings->setValue("name", profileName);
@@ -126,7 +135,6 @@ QStringList BindingsConfig::availableProfiles() const
     if(d->settings->group() != QString() )
         d->settings->endGroup();
     QStringList allProfiles = d->settings->childGroups();
-    d->settings->beginGroup(d->profile);
     foreach(QString group, allProfiles)
         if(!group.startsWith("bindings_")) allProfiles.removeAll(group);
     return allProfiles.replaceInStrings("bindings_", "");
