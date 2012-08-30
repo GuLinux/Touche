@@ -140,9 +140,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
-    kDebug() << "about to quit: " << d->aboutToQuit;
-    if(d->aboutToQuit)
-        return;
+    if(d->aboutToQuit || !deviceInfo) return;
     QString messageTitle = QString("<b>%1</b>: %2")
             .arg(i18n(Touche::displayName() ))
             .arg(i18nc("device disconnected tray popup", "Device Disconnected!"));

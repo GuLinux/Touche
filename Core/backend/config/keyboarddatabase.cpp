@@ -84,6 +84,7 @@ void KeyboardDatabase::deviceAdded(DeviceInfo *device)
 void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
 {
     Q_D(KeyboardDatabase);
+    if(!device) return;
     delete d->database.take(device->configID());
 }
 

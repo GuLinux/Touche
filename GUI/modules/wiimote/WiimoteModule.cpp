@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "modules/wiimote/WiimoteDevice.h"
 #include "touchecore.h"
 #include <KActionCollection>
+#include <QDBusInterface>
 
 #define HAVE_CWIID
 #ifndef HAVE_CWIID
@@ -95,6 +96,8 @@ WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesL
     connect(d->wiimoteManager, SIGNAL(disconnected(QString)), this, SLOT(disconnected()));
 
     devicesList->add(new WiimoteDevice(d->wiimoteManager, toucheCore->keyboardDatabase(), this));
+    QDBusInterface *upower = new QDBusInterface("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", QDBusConnection::systemBus());
+    connect(upower, SIGNAL(Sleeping()), d->wiimoteManager, SLOT(disconnectWiimote()));
 }
 
 
@@ -150,9 +153,3 @@ void WiimoteModule::disconnectWiimote()
 }
 
 #endif // HAVE_CWIID
-
-
-
-
-
-
