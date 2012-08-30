@@ -81,6 +81,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
     d->systemTrayMenu->addTitle(i18n("Profiles"));
     d->switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
+    d->switchToNextProfile->setIcon(KIcon("tab-duplicate", KIconLoader::global()));
     d->switchToNextProfile->setObjectName("SwitchToNextProfile");
     d->switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P"));
     d->tray->actionCollection()->addAction(d->switchToNextProfile->objectName(), d->switchToNextProfile);
