@@ -60,6 +60,7 @@ EditStringListWrapper::EditStringListWrapper(const QString &objectName, KEditLis
     setObjectName(objectName);
     connect(parent, SIGNAL(added(QString)), this, SLOT(stringListChanged()));
     connect(parent, SIGNAL(removed(QString)), this, SLOT(stringListChanged()));
+    connect(parent, SIGNAL(changed()), this, SLOT(stringListChanged()));
 }
 
 
