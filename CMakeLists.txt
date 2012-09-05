@@ -29,7 +29,7 @@ if(CWIID_FOUND)
     set(Touche_static_libraries ${Touche_static_libraries} ${CMAKE_BINARY_DIR}/lib/libWiimoteBridge.a )
 endif(CWIID_FOUND)
 
-set(Touche_libs ${Touche_libs} ${Touche_static_libraries} ${X11_LIBRARIES} ${QJSON_LIBRARIES} ${X11_XTest_LIB} ${KDE4_KDEUI_LIBS})
+set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${QJSON_LIBRARIES} ${X11_XTest_LIB} ${KDE4_KDEUI_LIBS})
 include_directories( ${KDE4_INCLUDES} )
 
 
