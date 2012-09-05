@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int argc, char *argv[])
 {
-    KAboutData about(Touche::appName() , 0, ki18n(Touche::displayName()), "0.2",
+    KAboutData about(Touche::appName() , 0, ki18n(Touche::displayName()), "0.3",
                      ki18n("Special key recognizer for Linux Desktops"),
                      KAboutData::License_GPL_V3,
                      KLocalizedString(),
