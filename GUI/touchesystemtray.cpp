@@ -60,6 +60,7 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     Q_D(ToucheSystemTray);
     d->tray = new KStatusNotifierItem(toucheCore);
     d->tray->setIconByName(Touche::iconName());
+    connect(d->tray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(trayActivateRequest(bool,QPoint)));
 
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
@@ -266,3 +267,10 @@ void ToucheSystemTray::configureShortcuts()
     KShortcutsDialog::configure(d->tray->actionCollection());
 }
 
+
+
+void ToucheSystemTray::trayActivateRequest(bool active, const QPoint &pos)
+{
+    Q_D(ToucheSystemTray);
+    d->systemTrayMenu->popup(pos);
+}
