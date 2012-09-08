@@ -70,6 +70,7 @@ void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg me
     WiimoteMessage wiimoteMessage(deltaTime);
 
     for(int message = 0; message<mesg_count; message++) {
+#ifdef CWIID_MESG_MOTIONPLUS 
         if(curMessage.type == CWIID_MESG_MOTIONPLUS) {
             WiimoteVector3 gyro(    curMesgGyroAngleRate[CWIID_X],
                               curMesgGyroAngleRate[CWIID_Y],
@@ -83,7 +84,9 @@ void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg me
 //            gyro *= multiplyForHighSpeed;
             wiimoteMessage.setGyro(gyro);
         }
-        else if(curMessage.type == CWIID_MESG_ACC) {
+        else
+#endif
+          if(curMessage.type == CWIID_MESG_ACC) {
             WiimoteVector3 accel(
               curMesgAccel[CWIID_X],
               curMesgAccel[CWIID_Y],
@@ -147,7 +150,9 @@ void CWiidConnectionWorker::wiimoteConnect()
 //        if(cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC)) qDebug() << "Error enabling messages";
 //        if(cwiid_enable(wiimote, CWIID_FLAG_CONTINUOUS)) qDebug() << "Error enabling continuous";
         cwiid_set_mesg_callback(wiimote, &cwiidCallback);
+#ifdef CWIID_FLAG_MOTIONPLUS
         if(cwiid_enable(wiimote, CWIID_FLAG_MOTIONPLUS)) qDebug() << "Error enabling motionplus";
+#endif
         cwiid_request_status(wiimote);
         workers.insert(wiimote, this);
 
