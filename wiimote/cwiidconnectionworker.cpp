@@ -153,15 +153,20 @@ void CWiidConnectionWorker::wiimoteConnect()
 #ifdef CWIID_FLAG_MOTIONPLUS
         if(cwiid_enable(wiimote, CWIID_FLAG_MOTIONPLUS)) qDebug() << "Error enabling motionplus";
 #endif
+        setLeds(CWIID_LED1_ON);
         cwiid_request_status(wiimote);
         workers.insert(wiimote, this);
 
-        if(cwiid_command(wiimote, CWIID_CMD_LED, CWIID_LED1_ON)) qDebug() << "Error setting led1 on";
         emit connected(bluetoothAddress);
     } else {
         emit deviceMessage("Error connecting", 5000);
         emit disconnected(QString());
     }
+}
+
+void CWiidConnectionWorker::setLeds(int ledsMask)
+{
+  if(cwiid_command(wiimote, CWIID_CMD_LED, ledsMask)) qDebug() << "Error setting led1 on";
 }
 
 

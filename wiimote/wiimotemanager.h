@@ -34,7 +34,7 @@ public slots:
     void calibrateWiimote();
     void resetAngles();
     void resetAngles(double yaw, double pitch, double roll);
-    
+    void setLeds(int ledsMask);
 private:
     CWiidConnectionWorker *worker;
     QThread *thread;

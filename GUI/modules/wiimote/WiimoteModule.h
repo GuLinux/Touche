@@ -37,6 +37,7 @@ public:
 signals:
 public slots:
     void setEnabled(bool enabled);
+    void profileChanged(int profileNumber);
 
 private slots:
     void connectWiimote();

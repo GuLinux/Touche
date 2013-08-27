@@ -139,6 +139,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
     d->systemTrayMenu->insertAction(d->afterDevices, deviceAction);
     d->actions.insert(deviceInfo, deviceAction);
     updateTooltip();
+    d->wiimoteModule->profileChanged(d->toucheCore->availableProfiles().indexOf(d->toucheCore->currentProfile()));
 }
 
 void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
@@ -254,6 +255,7 @@ void ToucheSystemTray::switchToNextProfile()
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
     Q_D(ToucheSystemTray);
+    d->wiimoteModule->profileChanged(d->toucheCore->availableProfiles().indexOf(profile));
     KNotification *notification = KNotification::event("profileChanged", i18n("%1 Profile").arg(i18n(Touche::displayName() )),
                          i18n("Profile changed to %1").arg(profile));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), notification, SLOT(close()));

@@ -71,6 +71,16 @@ WiimoteModule::~WiimoteModule()
     delete d_ptr;
 }
 
+void WiimoteModule::profileChanged(int profileNumber)
+{
+  Q_D(WiimoteModule);
+  qDebug() << "wiimote: profile changed: " << profileNumber;
+  if(!d->isConnected)
+    return;
+  d->wiimoteManager->setLeds(std::min(0xF, profileNumber+1));
+}
+
+
 WiimoteModule::WiimoteModule(ToucheCore *toucheCore, KMenu *parentMenu, DevicesList *devicesList, KActionCollection *actionCollection, QObject *parent) :
     QObject(parent), d_ptr(new WiimoteModulePrivate(toucheCore, parentMenu))
 {

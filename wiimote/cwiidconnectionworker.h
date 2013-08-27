@@ -20,6 +20,7 @@ signals:
     void deviceMessage(const QString &message, int timeout);
     void buttons(int buttonsMask);
 public slots:
+    void setLeds(int ledsMask);
     void wiimoteConnect();
     void wiimoteDisconnect();
 private slots:

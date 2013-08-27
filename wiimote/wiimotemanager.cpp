@@ -39,6 +39,11 @@ int WiimoteManager::calibrationTotalSteps() const
     return wiimote->calibrationTotalSteps();
 }
 
+void WiimoteManager::setLeds(int ledsMask)
+{
+  QMetaObject::invokeMethod(worker, "setLeds", Qt::QueuedConnection, Q_ARG(int, ledsMask));
+}
+
 
 void WiimoteManager::connectWiimote()
 {
