@@ -1,6 +1,7 @@
 releases_archive
 *.autosave
 *-build-*
+build
 *.swp
 *.build*
 *~
