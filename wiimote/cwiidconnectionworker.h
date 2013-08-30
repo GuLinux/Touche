@@ -3,6 +3,7 @@
 #include "cwiid.h"
 #include "wiimote_messages.h"
 #include <QObject>
+#include <QTimer>
 class QMutex;
 
 class CWiidConnectionWorker : public QObject
@@ -23,6 +24,7 @@ public slots:
     void setLeds(int ledsMask);
     void wiimoteConnect();
     void wiimoteDisconnect();
+    void checkStatus();
 private slots:
 private:
     cwiid_wiimote_t *wiimote;
@@ -31,6 +33,7 @@ private:
     WiimoteVector3 accelCalibOne;
     QMutex *mutex;
     QString bluetoothAddress;
+    QTimer heartbitTimer;
 };
 
 #endif // CWIIDCONNECTIONWORKER_H

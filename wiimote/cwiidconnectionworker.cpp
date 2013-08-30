@@ -23,6 +23,10 @@ CWiidConnectionWorker::CWiidConnectionWorker(QObject *parent) :
     QObject(parent)
 {
     mutex = new QMutex();
+    heartbitTimer.setInterval(1000);
+    connect(&heartbitTimer, SIGNAL(timeout()), this, SLOT(checkStatus()));
+    connect(this, SIGNAL(connected(QString)), &heartbitTimer, SLOT(start()));
+    connect(this, SIGNAL(disconnected(QString)), &heartbitTimer, SLOT(stop()));
 }
 
 CWiidConnectionWorker::~CWiidConnectionWorker()
@@ -170,6 +174,13 @@ void CWiidConnectionWorker::setLeds(int ledsMask)
 }
 
 
+void CWiidConnectionWorker::checkStatus()
+{
+  if(cwiid_command(wiimote, CWIID_CMD_STATUS, 0)) {
+     qDebug() << "Error getting status, disconnecting";
+     wiimoteDisconnect();
+  }
+}
 
 
 
