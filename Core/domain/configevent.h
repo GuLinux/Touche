@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include <QPair>
 #include <QVariantMap>
+#include <QDebug>
 
 class InputEvent;
 class ConfigEventPrivate;
@@ -37,6 +38,7 @@ public:
     void addInputEvent(const QString &tag, const QVariantMap &payload);
 
     Binding* matches(InputEvent *other, const QStringList &tags, BindingsConfig *bindingsConfig);
+    friend QDebug operator<<(QDebug dbg, ConfigEvent *c);
 signals:
     
 public slots:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>328</width>
-    <height>156</height>
+    <width>420</width>
+    <height>287</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,6 +48,13 @@
        <widget class="QRadioButton" name="cfg_eventtype_keyrelease">
         <property name="text">
          <string extracomment="ToKey conf dialog: label for checkbox">keyrelease</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="cfg_eventtype_keydoubleclick">
+        <property name="text">
+         <string extracomment="ToKey conf dialog: label for checkbox">double click</string>
         </property>
        </widget>
       </item>

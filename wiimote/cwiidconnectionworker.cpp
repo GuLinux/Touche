@@ -98,9 +98,7 @@ void cwiidCallback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg me
               );
             wiimoteMessage.setAccel(accel);
         } else if(curMessage.type == CWIID_MESG_STATUS) {
-            qDebug() << "Got status message: " <<
-                        curMessage.status_mesg.battery
-                     << ", " << curMessage.status_mesg.ext_type;
+            // qDebug() << "Got status message: " << curMessage.status_mesg.battery << ", " << curMessage.status_mesg.ext_type;
         } else if(curMessage.type == CWIID_MESG_BTN) {
             worker->emitButtons(curMessage.btn_mesg.buttons);
         }

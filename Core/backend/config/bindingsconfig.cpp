@@ -107,16 +107,17 @@ BindingsConfig::~BindingsConfig()
 Binding *BindingsConfig::bindingFor(const QString &eventName, QObject *parent)
 {
     Q_D(BindingsConfig);
+    kDebug() << __PRETTY_FUNCTION__ << ": " << eventName;
     d->settings->beginGroup(d->profile);
     QString bindingSetting = d->settings->value(eventName, BINDING_NOT_FOUND).toString();
     QString foundInGroup = d->settings->group();
-    kDebug() << "Profile: " << d->settings->group() << ", found binding (1st try): " << bindingSetting;
+    kDebug() << "Profile: " << d->settings->group() << ", event" << eventName << ", found binding (1st try): " << bindingSetting;
     d->settings->endGroup();
     if(bindingSetting == BINDING_NOT_FOUND) {
         d->settings->beginGroup("bindings_Default");
         bindingSetting = d->settings->value(eventName, BINDING_DO_NOTHING).toString();
         foundInGroup = d->settings->group();
-        kDebug() << "Profile: " << d->settings->group() << ", found binding (2st try): " << bindingSetting;
+        kDebug() << "Profile: " << d->settings->group() << ", event" << eventName << ", found binding (2st try): " << bindingSetting;
         d->settings->endGroup();
     }
     BindingFactory bindingFactory = d->bindings.value(bindingSetting, d->bindings.value(BINDING_DO_NOTHING));

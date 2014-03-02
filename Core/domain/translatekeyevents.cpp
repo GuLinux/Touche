@@ -81,7 +81,7 @@ void TranslateKeyEvents::inputEvent(InputEventP keyEvent, DeviceInfo *deviceInfo
         return;
     }
     foreach(ConfigEvent *configKeyEvent, databaseEntry->configuredEvents()) {
-        if(d->match(configKeyEvent, keyEvent, QStringList("keypress")))
+        if(d->match(configKeyEvent, keyEvent, QStringList{"keypress", "keydoubleclick"}))
             return;
     }
 }

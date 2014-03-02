@@ -4,47 +4,58 @@
       "keys": {
         "WiimoteButton_1": {
           "keypress": { "keyname": "WiimoteButton_1_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_1_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_1_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_1_keydoubleclick" }
         },
         "WiimoteButton_2": {
           "keypress": { "keyname": "WiimoteButton_2_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_2_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_2_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_2_keydoubleclick" }
         },
         "WiimoteButton_A": {
           "keypress": { "keyname": "WiimoteButton_A_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_A_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_A_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_A_keydoubleclick" }
         },
         "WiimoteButton_B": {
           "keypress": { "keyname": "WiimoteButton_B_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_B_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_B_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_B_keydoubleclick" }
         },
         "WiimoteButton_Down": {
           "keypress": { "keyname": "WiimoteButton_Down_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Down_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Down_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Down_keydoubleclick" }
         },
         "WiimoteButton_Home": {
           "keypress": { "keyname": "WiimoteButton_Home_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Home_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Home_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Home_keydoubleclick" }
         },
         "WiimoteButton_Left": {
           "keypress": { "keyname": "WiimoteButton_Left_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Left_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Left_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Left_keydoubleclick" }
         },
         "WiimoteButton_Minus": {
           "keypress": { "keyname": "WiimoteButton_Minus_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Minus_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Minus_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Minus_keydoubleclick" }
         },
         "WiimoteButton_Plus": {
           "keypress": { "keyname": "WiimoteButton_Plus_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Plus_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Plus_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Plus_keydoubleclick" }
         },
         "WiimoteButton_Up": {
           "keypress": { "keyname": "WiimoteButton_Up_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Up_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Up_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Up_keydoubleclick" }
         },
         "WiimoteButton_Right": {
           "keypress": { "keyname": "WiimoteButton_Right_keypress" },
-          "keyrelease": { "keyname": "WiimoteButton_Right_keyrelease" }
+          "keyrelease": { "keyname": "WiimoteButton_Right_keyrelease" }, 
+          "keydoubleclick": { "keyname": "WiimoteButton_Right_keydoubleclick" }
         }
       }
     }

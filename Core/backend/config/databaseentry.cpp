@@ -37,7 +37,6 @@ public:
         }
         configuredEvents << configEvent;
     }
-
 };
 
 DatabaseEntry::DatabaseEntry(QObject *parent) : QObject(parent), d_ptr(new DatabaseEntryPrivate())

@@ -22,6 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/Device.h"
 #include <QStringList>
 #include "domain/inputevent.h"
+#include <QMap>
+#include <QDateTime>
+#include <iostream>
+#include <QDebug>
 
 class WiimoteManager;
 class DeviceInfo;
@@ -34,10 +38,12 @@ public:
     virtual bool matches(const QVariantMap &payload);
     inline virtual QObject *nearestQObject() { return this; }
     inline virtual operator QString() { return key; }
+    friend QDebug operator<<(QDebug d, const WiimoteInputEvent &e);
 private:
     const QString key;
     const QString event;
 };
+
 
 class WiimoteDevice : public Device
 {
@@ -59,6 +65,7 @@ private:
     DeviceInfo *deviceInfo;
     QStringList m_buttons;
     KeyboardDatabase *keyboardDatabase;
+    QMap<QString,QDateTime> keyReleaseEvents;
 };
 
 #endif // WIIMOTEDEVICE_H

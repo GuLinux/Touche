@@ -46,6 +46,7 @@ ToKeyConfig::ToKeyConfig(QSettings *settings, const QString &bindingType, CfgKey
     ui->setupUi(this);
     connect(ui->cfg_eventtype_keypress, SIGNAL(toggled(bool)), this, SLOT(radioButtonChanged(bool)));
     connect(ui->cfg_eventtype_keyrelease, SIGNAL(toggled(bool)), this, SLOT(radioButtonChanged(bool)));
+    connect(ui->cfg_eventtype_keydoubleclick, SIGNAL(toggled(bool)), this, SLOT(radioButtonChanged(bool)));
     connect(ui->cfg_keysymbol, SIGNAL(textChanged(QString)), this, SLOT(stringChanged(QString)));
     ui->cfg_keysymbol->setCompleter(new X11KeySymbolsCompleter(this));
     foreach(const QString keySym, X11KeySymbolsCompleter::keySymbols()) {
@@ -58,6 +59,7 @@ ToKeyConfig::ToKeyConfig(QSettings *settings, const QString &bindingType, CfgKey
     ui->cfg_keysymbol->lineEdit()->setText(keySymbol);
     ui->cfg_eventtype_keypress->setChecked(eventtype=="keypress");
     ui->cfg_eventtype_keyrelease->setChecked(eventtype=="keyrelease");
+    ui->cfg_eventtype_keydoubleclick->setChecked(eventtype=="keydoubleclick");
 }
 
 

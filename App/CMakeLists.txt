@@ -3,6 +3,7 @@ set(Touche_kde_SRCS main.cpp )
 set(Touche_kde_includes ${Touche_common_includes}
   #${CMAKE_SOURCE_DIR}/Touche_kde ${CMAKE_BINARY_DIR}/Touche_kde
 )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fstack-protector-all")
 
 #qt4_wrap_cpp(Touche_kde_mocs trayIcon/touchesystemtray.h)
 include_directories(${Touche_kde_includes}) 

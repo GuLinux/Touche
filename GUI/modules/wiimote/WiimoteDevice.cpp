@@ -32,6 +32,11 @@ WiimoteDevice::WiimoteDevice(WiimoteManager *wiimoteManager, KeyboardDatabase *k
     connect(wiimoteManager, SIGNAL(buttonsDown(QStringList)), this, SLOT(buttonsDown(QStringList)));
 }
 
+QDebug operator<<(QDebug d, const WiimoteInputEvent &e) {
+  d.space() << "[" << e.key << ", " << e.event << "]";
+  return d.space();
+}
+
 
 WiimoteDevice::~WiimoteDevice()
 {
@@ -76,20 +81,26 @@ void WiimoteDevice::wiimoteConnected(const QString &address)
 
 void WiimoteDevice::buttonsDown(const QStringList &buttons)
 {
+    auto emitEvent = [=](WiimoteInputEvent *keyEvent) {
+      qDebug() << "Firing " << *keyEvent;
+      emit inputEvent(keyEvent, deviceInfo);
+      QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+    };
+    qDebug() << __PRETTY_FUNCTION__ << ": buttons=" << buttons << "; m_buttons=" << m_buttons;
     foreach(const QString button, m_buttons) {
         if(!buttons.contains(button)) {
-            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keyrelease", this);
-            emit inputEvent(keyEvent, deviceInfo);
-            QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+            emitEvent(new WiimoteInputEvent(button, "keyrelease", this));
             m_buttons.removeAll(button);
+            if(keyReleaseEvents.count(button) && keyReleaseEvents[button].msecsTo(QDateTime::currentDateTime()) < 500) {
+              emitEvent(new WiimoteInputEvent(button, "keydoubleclick", this));
+            } else
+              keyReleaseEvents[button] = QDateTime::currentDateTime();
         }
     }
 
     foreach(const QString button, buttons) {
         if(!m_buttons.contains(button)) {
-            WiimoteInputEvent *keyEvent = new WiimoteInputEvent(button, "keypress", this);
-            emit inputEvent(keyEvent, deviceInfo);
-            QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+            emitEvent(new WiimoteInputEvent(button, "keypress", this));
             m_buttons << button;
         }
     }
