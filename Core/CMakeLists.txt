@@ -1,3 +1,4 @@
+find_package(Qt5X11Extras REQUIRED)
 set(Touche_Core_SRCS
     backend/config/keyboarddatabase.cpp
     backend/config/databaseentry.cpp

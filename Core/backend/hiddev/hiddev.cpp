@@ -174,10 +174,12 @@ void HidDev::start()
     err << QString("HID device name: \"%1\"\n").arg(d->deviceInfo.name());
     FD_ZERO(&(d->fdset));
 
-    QMap<QString, QVariant> keyboardDatabaseEntry = d->keyboardDatabase->deviceConfiguration(&d->deviceInfo);
-    d->read_timeout_milliseconds = keyboardDatabaseEntry.value("read_timeout_milliseconds", 300).toULongLong();
-    d->deviceInfo.name(keyboardDatabaseEntry.value("name").toString());
-    d->deviceInfo.keyboardDatabaseEntry(keyboardDatabaseEntry);
+    if(d->keyboardDatabase) {
+      QMap<QString, QVariant> keyboardDatabaseEntry = d->keyboardDatabase->deviceConfiguration(&d->deviceInfo);
+      d->read_timeout_milliseconds = keyboardDatabaseEntry.value("read_timeout_milliseconds", 300).toULongLong();
+      d->deviceInfo.name(keyboardDatabaseEntry.value("name").toString());
+      d->deviceInfo.keyboardDatabaseEntry(keyboardDatabaseEntry);
+    }
 
     qDebug() << "Read timeout set to " << d->read_timeout_milliseconds << " milliseconds";
     emit connected(&d->deviceInfo);

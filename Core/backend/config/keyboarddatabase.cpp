@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "keyboarddatabase.h"
-#include <qjson/parser.h>
 #include <QFile>
 #include <QVariantMap>
 #include <QDebug>
 #include "domain/deviceinfo.h"
 #include "domain/inputevent.h"
 #include "databaseentry.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class KeyboardDatabasePrivate {
 public:
@@ -35,20 +36,20 @@ public:
     KeyboardDatabase * q_ptr;
     Q_DECLARE_PUBLIC(KeyboardDatabase)
 
-    QMap<QString, QVariant> keyboardConfiguration(DeviceInfo *deviceInfo) {
-        QJson::Parser parser;
-
+    QJsonObject keyboardConfiguration(DeviceInfo *deviceInfo) {
         foreach(QString database, databaseFiles) {
             QFile databaseFile(database);
             if(!databaseFile.exists())
                 continue;
-            QVariant config = parser.parse(&databaseFile);
-            if(config.toMap().contains(deviceInfo->configurationIdentifier())) {
-                QMap<QString, QVariant> thisKeyboardDatabase = config.toMap().value(deviceInfo->configurationIdentifier()).toMap();
+	    databaseFile.open(QIODevice::ReadOnly);
+	    auto document = QJsonDocument::fromJson(databaseFile.readAll());
+            
+            if(document.object().contains(deviceInfo->configurationIdentifier())) {
+                auto thisKeyboardDatabase = document.object()[deviceInfo->configurationIdentifier()].toObject();
                 return thisKeyboardDatabase;
             }
         }
-        return QMap<QString, QVariant>();
+        return QJsonObject();
     }
 };
 
@@ -76,10 +77,10 @@ DatabaseEntry *KeyboardDatabase::keyboard(DeviceInfo *deviceInfo)
 void KeyboardDatabase::deviceAdded(DeviceInfo *device)
 {
     Q_D(KeyboardDatabase);
-    QMap<QString, QVariant> thisKeyboardDatabase = d->keyboardConfiguration(device);
+    QJsonObject thisKeyboardDatabase = d->keyboardConfiguration(device);
     if(thisKeyboardDatabase.isEmpty())
         return;
-    d->database.insert(device->configurationIdentifier(), DatabaseEntry::fromConfig(thisKeyboardDatabase, this));
+    d->database.insert(device->configurationIdentifier(), DatabaseEntry::fromConfig(thisKeyboardDatabase.toVariantMap(), this));
 }
 
 void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
@@ -92,7 +93,7 @@ void KeyboardDatabase::deviceRemoved(DeviceInfo *device)
 const QMap<QString, QVariant> KeyboardDatabase::deviceConfiguration(DeviceInfo *deviceInfo)
 {
     Q_D(KeyboardDatabase);
-    return d->keyboardConfiguration(deviceInfo);
+    return d->keyboardConfiguration(deviceInfo).toVariantMap();
 }
 
 

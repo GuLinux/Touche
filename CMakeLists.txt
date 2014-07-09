@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8.11)
 
 #find_package(Qt5Core REQUIRED COMPONENTS X11Extras)
 find_package(Qt5Widgets REQUIRED)
-find_package(Qt5X11Extras REQUIRED)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 find_package(X11 REQUIRED)
@@ -34,13 +33,14 @@ if(CWIID_FOUND)
     set(Touche_static_libraries ${Touche_static_libraries} ${CMAKE_BINARY_DIR}/lib/libWiimoteBridge.a )
 endif(CWIID_FOUND)
 
-set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${X11_XTest_LIB} Qt5::Widgets Qt5::X11Extras )
+set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${X11_XTest_LIB} Qt5::Widgets )
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC") # TODO: why fPIC is mandatory?
 
 
 add_subdirectory(Core)
+include_directories(Core)
 #add_subdirectory(BindingsConfigurationDialog)
 #add_subdirectory(GUI)
 if(CWIID_FOUND)
@@ -56,4 +56,10 @@ else(NOT CWIID_FOUND)
     message("Found Optional dependencies:")
     message("  CWiid - for Wiimote support")
 endif(NOT CWIID_FOUND)
+
+set(BUILD_TESTS Off CACHE BOOL "Enable building and running tests")
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif(BUILD_TESTS)
 
