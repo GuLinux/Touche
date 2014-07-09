@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TOUCHECORE_H
 #define TOUCHECORE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QMap>
 #include <KLocale>
 #include <KStandardDirs>

@@ -25,10 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touchecore.h"
 #include "domain/deviceinfo.h"
 #include <kaction.h>
-#include <KDebug>
+#include <QDebug>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QDialog>
 #include <KAboutApplicationDialog>
 #include "touchesystemtray.h"

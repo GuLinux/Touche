@@ -10,3 +10,4 @@ static-libraries.bin
 *.user
 .*-swp
 .kdev*
+.kateproject.d

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/deviceinfo.h"
 #include "keysconfigurationdialog.h"
 #include "SettingsDialog.h"
-#include <KDebug>
+#include <QDebug>
 #include <QMenu>
 #include <QCoreApplication>
 #include <QMessageBox>

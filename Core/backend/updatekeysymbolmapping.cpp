@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "updatekeysymbolmapping.h"
-#include <KDebug>
+#include <QDebug>
 #include <X11/XKBlib.h>
 #include <QX11Info>
 #include <QFile>
-#include <QtCore/QTextStream>
+#include <QTextStream>
 #include <QProcessEnvironment>
 #include <QProcess>
 #include <QFileInfo>

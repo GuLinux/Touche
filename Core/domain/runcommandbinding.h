@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef RUNCOMMANDBINDING_H
 #define RUNCOMMANDBINDING_H
 #include "domain/binding.h"
-#include <QtCore/QObject>
+#include <QObject>
 #include <QStringList>
 
 class RunCommandBindingPrivate;

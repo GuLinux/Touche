@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef BINDINGSCONFIG_H
 #define BINDINGSCONFIG_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class Binding;
 class BindingsConfigPrivate;

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIGEVENT_H
 #define CONFIGEVENT_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QPair>
 #include <QVariantMap>
 #include <QDebug>

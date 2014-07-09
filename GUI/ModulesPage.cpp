@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ModulesPage.h"
 #include "ui_ModulesPage.h"
 #include <QStandardItemModel>
-#include <KDebug>
+#include <QDebug>
 #include <QStandardItem>
 #include <QSettings>
 
@@ -61,5 +61,5 @@ void ModulesPage::accept()
 
 void ModulesPage::modelDataChanged()
 {
-    kDebug() << "modules model data changed";
+    qDebug() << "modules model data changed";
 }

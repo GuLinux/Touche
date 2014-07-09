@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "tokeybinding.h"
-#include <KDebug>
+#include <QDebug>
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
-#include <QtCore/QTextStream>
+#include <QTextStream>
 #include <QProcessEnvironment>
 #include "backend/updatekeysymbolmapping.h"
 
@@ -68,6 +68,6 @@ void ToKeyBinding::execute()
         }
         return;
     }
-    kDebug() << QString("executing \"ToKeyBinding\": sending key%1  with keysym: \"%2\" [0x%3]; keycode:  %4").arg(d->isKeypress ? "press" : "release").arg(d->keySymName).arg(keysym, 0,16).arg(keycode);
+    qDebug() << QString("executing \"ToKeyBinding\": sending key%1  with keysym: \"%2\" [0x%3]; keycode:  %4").arg(d->isKeypress ? "press" : "release").arg(d->keySymName).arg(keysym, 0,16).arg(keycode);
     XTestFakeKeyEvent(QX11Info::display(), keycode, d->isKeypress, 0 );
 }

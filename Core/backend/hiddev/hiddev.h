@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HIDDEV_H
 #define HIDDEV_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "domain/inputevent.h"
 
 class DeviceInfo;

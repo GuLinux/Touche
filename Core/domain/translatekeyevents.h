@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TRANSLATEKEYEVENTS_H
 #define TRANSLATEKEYEVENTS_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "domain/deviceinfo.h"
 #include "domain/inputevent.h"
 class TranslateKeyEventsPrivate;

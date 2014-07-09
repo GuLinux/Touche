@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CFGDEVICE_H
 #define CFGDEVICE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QList>
-#include <KDebug>
+#include <QDebug>
 #include "cfgkey.h"
 #include "domain/deviceinfo.h"
 class DeviceInfo;

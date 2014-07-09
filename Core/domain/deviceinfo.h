@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DEVICEINFO_H
 #define DEVICEINFO_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QMap>
 #include <QVariant>
 

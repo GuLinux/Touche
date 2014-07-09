@@ -1,12 +1,13 @@
 project(Touche)
-cmake_minimum_required(VERSION 2.8)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
-find_package(QJSON REQUIRED)
+cmake_minimum_required(VERSION 2.8.11)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 find_package(X11 REQUIRED)
-find_package( KDE4 REQUIRED )
 find_package( CWiid )
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5Widgets)
 
-include(KDE4Defaults)
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
 
 
 set(Touche_static_libraries
@@ -29,22 +30,20 @@ if(CWIID_FOUND)
     set(Touche_static_libraries ${Touche_static_libraries} ${CMAKE_BINARY_DIR}/lib/libWiimoteBridge.a )
 endif(CWIID_FOUND)
 
-set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${QJSON_LIBRARIES} ${X11_XTest_LIB} ${KDE4_KDEUI_LIBS})
-include_directories( ${KDE4_INCLUDES} )
+set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${X11_XTest_LIB} Qt5::Widgets )
 
 
-set(KDE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC") # TODO: why fPIC is mandatory?
 
 
 add_subdirectory(Core)
-add_subdirectory(BindingsConfigurationDialog)
-add_subdirectory(GUI)
+#add_subdirectory(BindingsConfigurationDialog)
+#add_subdirectory(GUI)
 if(CWIID_FOUND)
     add_subdirectory(wiimote)
 endif(CWIID_FOUND)
 
-add_subdirectory(App)
+#add_subdirectory(App)
 
 if(NOT CWIID_FOUND)
     message("Missing Optional dependencies:")

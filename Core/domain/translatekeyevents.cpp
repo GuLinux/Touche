@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "translatekeyevents.h"
 #include "domain/inputevent.h"
-#include <KDebug>
+#include <QDebug>
 #include <QMap>
 #include "domain/binding.h"
 #include "domain/runcommandbinding.h"
