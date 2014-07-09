@@ -1,13 +1,17 @@
 project(Touche)
 cmake_minimum_required(VERSION 2.8.11)
+
+#find_package(Qt5Core REQUIRED COMPONENTS X11Extras)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5X11Extras REQUIRED)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules)
 find_package(X11 REQUIRED)
 find_package( CWiid )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
-find_package(Qt5Widgets)
 
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
+#include_directories(${Qt5Widgets_INCLUDE_DIRS})
 
 
 set(Touche_static_libraries
@@ -30,7 +34,7 @@ if(CWIID_FOUND)
     set(Touche_static_libraries ${Touche_static_libraries} ${CMAKE_BINARY_DIR}/lib/libWiimoteBridge.a )
 endif(CWIID_FOUND)
 
-set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${X11_XTest_LIB} Qt5::Widgets )
+set(Touche_libs ${Touche_static_libraries} ${Touche_libs} ${X11_LIBRARIES} ${X11_XTest_LIB} Qt5::Widgets Qt5::X11Extras )
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC") # TODO: why fPIC is mandatory?

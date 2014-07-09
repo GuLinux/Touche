@@ -141,7 +141,7 @@ void ToucheCore::setProfile(const QString &profileName)
 
 QSettings *Touche::settings(QObject *parent)
 {
-     return new QSettings(KStandardDirs::locateLocal("config", "ToucheBindings"), QSettings::NativeFormat, parent);
+     return new QSettings("GuLinux", "Touche", parent);
 }
 
 

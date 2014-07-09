@@ -23,4 +23,5 @@ set(Touche_Core_includes ${Touche_common_includes} )
 
 include_directories(${Touche_Core_includes}) 
 add_library(Touche_Core STATIC ${Touche_Core_SRCS} )
+target_link_libraries(Touche_Core Qt5::Widgets Qt5::X11Extras)
 
