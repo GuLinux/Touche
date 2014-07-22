@@ -62,60 +62,61 @@ public:
     QMutex mutex;
     Q_DECLARE_PUBLIC(HidDev)
 
-    void stop()
-    {
-        if(fd<0) return;
-        aboutToQuit=true;
-        if(fd>=0) {
-            close(fd);
-            fd=-1;
-        }
-    }
-
-    void read_events()
-    {
-        if(fd<0 || aboutToQuit) return;
-        QMutexLocker locker(&mutex);
-        Q_UNUSED(locker);
-        Q_Q(HidDev);
-
-        timeval tv;
-        tv.tv_sec=0;
-        tv.tv_usec=read_timeout_milliseconds*1000;
-        FD_SET(fd, &(fdset));
-        int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
-        if(selectRD==-1) {
-            qDebug() << "Error on select: " << strerror(errno);
-            stop();
-            return;
-        }
-
-        if(!selectRD>0) {
-            if(had_events) {
-                had_events=false;
-                emit q->noMoreEvents(&deviceInfo);
-            }
-            return;
-        }
-
-        struct hiddev_event ev[256];
-        int rd = read(fd, ev, sizeof(ev));
-        if(rd==-1) {
-            stop();
-            qDebug() << "Error on read: " << strerror(errno);
-            return;
-        }
-        HidInputEvent *keyEvent = new HidInputEvent(q);
-        for(int i=0; i<rd; i++) {
-            keyEvent->addRegister(ev[i].hid, ev[i].value, i);
-        }
-        q->emit inputEvent(keyEvent, &deviceInfo);
-        had_events=true;
-        QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
-    }
+    void stop();
+    void read_events();
 };
 
+void HidDevPrivate::stop()
+{
+    if(fd<0) return;
+    aboutToQuit=true;
+    if(fd>=0) {
+        close(fd);
+        fd=-1;
+    }
+}
 
+void HidDevPrivate::read_events()
+{
+  if(fd<0 || aboutToQuit) return;
+  QMutexLocker locker(&mutex);
+  Q_UNUSED(locker);
+  Q_Q(HidDev);
+
+  timeval tv;
+  tv.tv_sec=0;
+  tv.tv_usec=read_timeout_milliseconds*1000;
+  FD_SET(fd, &(fdset));
+  int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
+  if(selectRD==-1) {
+      qDebug() << "Error on select: " << strerror(errno);
+      stop();
+      return;
+  }
+
+  if(!selectRD>0) {
+      if(had_events) {
+          had_events=false;
+          emit q->noMoreEvents(&deviceInfo);
+      }
+      return;
+  }
+
+  struct hiddev_event ev[256];
+  int rd = read(fd, ev, sizeof(ev));
+  if(rd==-1) {
+      stop();
+      qDebug() << "Error on read: " << strerror(errno);
+      return;
+  }
+  HidInputEvent *keyEvent = new HidInputEvent(q);
+  for(int i=0; i<rd; i++) {
+      keyEvent->addRegister(ev[i].hid, ev[i].value, i);
+  }
+  q->emit inputEvent(keyEvent, &deviceInfo);
+  had_events=true;
+  QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+}
 
 
 
