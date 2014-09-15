@@ -42,6 +42,7 @@ add_subdirectory(BindingsConfigurationDialog)
 add_subdirectory(GUI)
 if(CWIID_FOUND)
     add_subdirectory(wiimote)
+    add_definitions(-DCWIID_FOUND=1)
 endif(CWIID_FOUND)
 
 add_subdirectory(App)

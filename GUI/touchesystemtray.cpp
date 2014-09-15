@@ -95,10 +95,10 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu->addTitle(i18n("Configure Bindings"));
 
     d->afterDevices = d->systemTrayMenu->addSeparator();
-
+#ifdef CWIID_FOUND
     d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu,
                                          devicesList, d->tray->actionCollection(), this);
-
+#endif
     updateTooltip();
     updateProfilesList();
     updateModulesList();
@@ -139,7 +139,9 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
     d->systemTrayMenu->insertAction(d->afterDevices, deviceAction);
     d->actions.insert(deviceInfo, deviceAction);
     updateTooltip();
+#ifdef CWIID_FOUND
     d->wiimoteModule->profileChanged(d->toucheCore->availableProfiles().indexOf(d->toucheCore->currentProfile()));
+#endif
 }
 
 void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
@@ -182,9 +184,10 @@ void ToucheSystemTray::updateModulesList()
     Q_D(ToucheSystemTray);
     QSettings *toucheSettings = Touche::settings(this);
     toucheSettings->sync();
+#ifdef CWIID_FOUND
     bool wiimoteEnabled = toucheSettings->value("wiimote_enabled", false).toBool();
     d->wiimoteModule->setEnabled(wiimoteEnabled);
-
+#endif
     delete toucheSettings;
 }
 
@@ -255,7 +258,9 @@ void ToucheSystemTray::switchToNextProfile()
 void ToucheSystemTray::profileChanged(const QString &profile)
 {
     Q_D(ToucheSystemTray);
+#ifdef CWIID_FOUND
     d->wiimoteModule->profileChanged(d->toucheCore->availableProfiles().indexOf(profile));
+#endif
     KNotification *notification = KNotification::event("profileChanged", i18n("%1 Profile").arg(i18n(Touche::displayName() )),
                          i18n("Profile changed to %1").arg(profile));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), notification, SLOT(close()));
