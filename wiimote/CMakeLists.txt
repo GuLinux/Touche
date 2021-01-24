@@ -10,7 +10,7 @@ set(WiimoteBridge_SRCS
 
 string(REPLACE "-ansi" "" CMAKE_CXX_FLAGS ${KDE_CXX_FLAGS})
 
-qt4_wrap_cpp(WiimoteBridge_mocs
+qt5_wrap_cpp(WiimoteBridge_mocs
   cwiidconnectionworker.h
   wiimote.h
   wiimotemanager.h

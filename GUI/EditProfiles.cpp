@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QLabel>
 #include <QDebug>
+#include <klocalizedstring.h>
 
 EditProfiles::EditProfiles(ToucheCore *core, QSettings *settings, QWidget *parent) :
     QWidget(parent), settings(settings)

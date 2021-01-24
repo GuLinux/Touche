@@ -1,0 +1,17 @@
+version: '3'
+services:
+  ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    working_dir: /src
+    volumes:
+      - .:/src
+
+  arch:
+    build:
+      context: .
+      dockerfile: Dockerfile.arch
+    working_dir: /src
+    volumes:
+      - .:/src

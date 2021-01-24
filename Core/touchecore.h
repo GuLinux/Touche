@@ -34,9 +34,9 @@ public:
     static const inline QString appName() { return QObject::tr("Touche", "Application internal name"); }
     static const inline QString displayName() { return QObject::tr("Touché", "Application display name"); }
     static const inline QString iconName() { return "input-keyboard" ; }
+    static const inline QByteArray appVersion() { return TOUCHE_APP_VERSION ; }
     static QSettings *settings(QObject *parent = 0);
-    static inline QStringList keyboardDatabases()
-        { return { "/usr/share/Touche/KeyboardDatabases" }; } // TODO: change using standard share dir
+    static inline QStringList keyboardDatabases() { return { TOUCHE_KEYBOARD_DATABASE_DIR }; }
 };
 
 class ToucheCore : public QObject

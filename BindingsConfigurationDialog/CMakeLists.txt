@@ -17,8 +17,8 @@ set(BindingsConfigurationDialog_FORMS keysconfigurationdialog.ui
     bindingsGui/ToKey_cfg.ui
 )
 
-QT4_WRAP_UI(BindingsConfigurationDialog_FORMS_HEADERS ${BindingsConfigurationDialog_FORMS})
-qt4_wrap_cpp(BindingsConfigurationDialog_mocs  bindingconfigurationwidget.h
+QT5_WRAP_UI(BindingsConfigurationDialog_FORMS_HEADERS ${BindingsConfigurationDialog_FORMS})
+qt5_wrap_cpp(BindingsConfigurationDialog_mocs  bindingconfigurationwidget.h
   keybindingconfiguration.h
   keysconfigurationdialog.h
   models/cfgkeyevent.h
@@ -32,6 +32,8 @@ qt4_wrap_cpp(BindingsConfigurationDialog_mocs  bindingconfigurationwidget.h
 set(BindingsConfigurationDialog_includes ${Touche_common_includes} )
 
 include_directories(${BindingsConfigurationDialog_includes}) 
+
 add_library(BindingsConfigurationDialog STATIC ${BindingsConfigurationDialog_SRCS} ${BindingsConfigurationDialog_FORMS_HEADERS} ${BindingsConfigurationDialog_mocs} )
 
-
+target_link_libraries(BindingsConfigurationDialog PRIVATE
+   KF5::KDELibs4Support)

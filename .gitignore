@@ -2,6 +2,7 @@ releases_archive
 *.autosave
 *-build-*
 build
+/artifacts/
 *.swp
 *.build*
 *~

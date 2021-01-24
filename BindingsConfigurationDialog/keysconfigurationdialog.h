@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KEYSCONFIGURATIONDIALOG_H
 #define KEYSCONFIGURATIONDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 #include <QModelIndex>
 #include <QHash>
 class CfgKeyListModel;

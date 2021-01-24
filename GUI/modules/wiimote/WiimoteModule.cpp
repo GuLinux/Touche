@@ -35,6 +35,7 @@ WiimoteModule::WiimoteModule(ToucheCore *, KMenu *, DevicesList *, KActionCollec
     : QObject(parent), d_ptr(0) {}
 WiimoteModule::~WiimoteModule() {}
 void WiimoteModule::setEnabled(bool enabled) { Q_UNUSED(enabled) }
+void WiimoteModule::profileChanged(int) {}
 void WiimoteModule::disconnected(const QString &) {}
 void WiimoteModule::connected(const QString &) {}
 void WiimoteModule::connectWiimote() {}

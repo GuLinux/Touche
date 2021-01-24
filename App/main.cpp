@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/deviceinfo.h"
 #include <kaction.h>
 #include <QDebug>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 #include <QTimer>
 #include <QDialog>
@@ -38,12 +38,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int argc, char *argv[])
 {
-    KAboutData about(Touche::appName() , 0, ki18n(Touche::displayName()), "0.3",
+    K4AboutData about(Touche::appName().toUtf8(), 0, ki18n(Touche::displayName().toUtf8().constData()),
+                     Touche::appVersion(),
                      ki18n("Special key recognizer for Linux Desktops"),
-                     KAboutData::License_GPL_V3,
+                     K4AboutData::License_GPL_V3,
                      KLocalizedString(),
                      KLocalizedString(),
-                     "http://rockman81.blogspot.it/p/touche.html",
+                     "https://github.com/GuLinux/Touche",
                      "marco.gulino@kde.org"
                      );
     about.addAuthor(ki18n("Marco Gulino"), ki18n("main developer"),
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
     KApplication a;
 #endif
 
-    KAboutApplicationDialog aboutTouche(&about);
+    KAboutApplicationDialog aboutTouche(about);
     a.setQuitOnLastWindowClosed(false);
     QStringList arguments = KCmdLineArgs::allArguments();
     KeyboardDatabase database(Touche::keyboardDatabases());

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "SettingsDialog.h"
 #include <QDebug>
 #include <QMenu>
+#include <QIcon>
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <KLocale>
@@ -35,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KShortcutsDialog>
 #include <KActionCollection>
 #include <QSettings>
+#include "kshortcut.h"
 #include "modules/wiimote/WiimoteModule.h"
 #include <KNotification>
 
@@ -65,13 +67,13 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     // not a great approach, but having it autodelete on exit seems to make the app crash.
     // it is however worth pointing out that memory is cleared on application exit, so it's not a real memory leak.
     d->systemTrayMenu = new KMenu(0);
-    d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName()));
+    d->systemTrayMenu->addTitle(QIcon::fromTheme(Touche::iconName()), i18n(Touche::displayName().toUtf8().constData()));
     d->systemTrayMenu->addAction(KStandardAction::preferences(this, SLOT(editProfiles()), this) );
     d->systemTrayMenu->addAction(KStandardAction::keyBindings(this, SLOT(configureShortcuts()), this));
     d->systemTrayMenu->addAction(KStandardAction::aboutApp(aboutDialog, SLOT(exec()), this));
     d->tray->setContextMenu(d->systemTrayMenu);
     d->tray->setCategory(KStatusNotifierItem::Hardware);
-    d->tray->setTitle(i18n(Touche::displayName() ));
+    d->tray->setTitle(i18n(Touche::displayName() .toUtf8().constData()));
 
 
     connect(d->toucheCore, SIGNAL(connected(DeviceInfo*)), SLOT(deviceConnected(DeviceInfo*)));
@@ -83,10 +85,10 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), this, SLOT(profileChanged(QString)));
     d->systemTrayMenu->addTitle(i18n("Profiles"));
     d->switchToNextProfile = new KAction(i18n("Next Profile"), d->systemTrayMenu);
-    d->switchToNextProfile->setIcon(KIcon("tab-duplicate", KIconLoader::global()));
+    d->switchToNextProfile->setIcon(QIcon::fromTheme("tab-duplicate"));
     d->switchToNextProfile->setObjectName("SwitchToNextProfile");
     d->switchToNextProfile->setGlobalShortcut(KShortcut("Meta+P"));
-    d->tray->actionCollection()->addAction(d->switchToNextProfile->objectName(), d->switchToNextProfile);
+    d->tray->addAction(d->switchToNextProfile->objectName(), d->switchToNextProfile);
 
     connect(d->switchToNextProfile, SIGNAL(triggered()), this, SLOT(switchToNextProfile()));
     d->systemTrayMenu->addAction(d->switchToNextProfile);
@@ -95,10 +97,15 @@ ToucheSystemTray::ToucheSystemTray(ToucheCore *toucheCore, KAboutApplicationDial
     d->systemTrayMenu->addTitle(i18n("Configure Bindings"));
 
     d->afterDevices = d->systemTrayMenu->addSeparator();
+
+    auto actionCollection = new KActionCollection(d->tray);
+    actionCollection->addActions(d->tray->actionCollection());
+
 #ifdef CWIID_FOUND
     d->wiimoteModule = new WiimoteModule(d->toucheCore, d->systemTrayMenu,
-                                         devicesList, d->tray->actionCollection(), this);
+                                         devicesList, actionCollection, this);
 #endif
+
     updateTooltip();
     updateProfilesList();
     updateModulesList();
@@ -131,7 +138,7 @@ void ToucheSystemTray::deviceConnected(DeviceInfo *deviceInfo)
 {
     Q_D(ToucheSystemTray);
     QString messageTitle = QString("<b>%1</b>: %2")
-            .arg(i18n(Touche::displayName() ))
+            .arg(i18n(Touche::displayName() .toUtf8().constData()))
             .arg(i18nc("device connected tray popup", "Device Connected!"));
     KNotification::event("deviceConnected", messageTitle, deviceInfo->name());
     KAction *deviceAction = new KAction(deviceInfo->name(), d->systemTrayMenu);
@@ -149,7 +156,7 @@ void ToucheSystemTray::deviceDisconnected(DeviceInfo *deviceInfo)
     Q_D(ToucheSystemTray);
     if(d->aboutToQuit || !deviceInfo) return;
     QString messageTitle = QString("<b>%1</b>: %2")
-            .arg(i18n(Touche::displayName() ))
+            .arg(i18n(Touche::displayName() .toUtf8().constData()))
             .arg(i18nc("device disconnected tray popup", "Device Disconnected!"));
     KNotification::event("deviceConnected", messageTitle, deviceInfo->name());
     QAction *action = d->actions.take(deviceInfo);
@@ -167,7 +174,7 @@ void ToucheSystemTray::updateTooltip()
         devices << deviceInfo->name();
     }
 
-    d->tray->setToolTip(QIcon::fromTheme(Touche::iconName() ), i18n(Touche::displayName() ), QString());
+    d->tray->setToolTip(QIcon::fromTheme(Touche::iconName() ), i18n(Touche::displayName().toUtf8().constData()), QString());
     d->tray->setToolTipSubTitle(devices.join("\n"));
 
 }
@@ -261,7 +268,7 @@ void ToucheSystemTray::profileChanged(const QString &profile)
 #ifdef CWIID_FOUND
     d->wiimoteModule->profileChanged(d->toucheCore->availableProfiles().indexOf(profile));
 #endif
-    KNotification *notification = KNotification::event("profileChanged", i18n("%1 Profile").arg(i18n(Touche::displayName() )),
+    KNotification *notification = KNotification::event("profileChanged", i18n("%1 Profile").arg(i18n(Touche::displayName() .toUtf8().constData())),
                          i18n("Profile changed to %1").arg(profile));
     connect(d->toucheCore, SIGNAL(profileChanged(QString)), notification, SLOT(close()));
 
@@ -271,7 +278,9 @@ void ToucheSystemTray::profileChanged(const QString &profile)
 void ToucheSystemTray::configureShortcuts()
 {
     Q_D(ToucheSystemTray);
-    KShortcutsDialog::configure(d->tray->actionCollection());
+    auto actionCollection = new KActionCollection(d->tray);
+    actionCollection->addActions(d->tray->actionCollection());
+    KShortcutsDialog::configure(actionCollection);
 }
 
 
