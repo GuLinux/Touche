@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CFGKEY_H
 #define CFGKEY_H
 
-#include <QtCore/QObject>
-#include <KDebug>
+#include <QObject>
+#include <QDebug>
 #include <QList>
 #include "cfgkeyevent.h"
 #include <QAbstractListModel>

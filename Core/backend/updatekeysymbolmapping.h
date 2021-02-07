@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef UPDATEKEYSYMBOLMAPPING_H
 #define UPDATEKEYSYMBOLMAPPING_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class UpdateKeySymbolMappingPrivate;
 class UpdateKeySymbolMapping : public QObject

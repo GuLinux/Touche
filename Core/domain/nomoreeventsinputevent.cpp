@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "nomoreeventsinputevent.h"
-#include <KDebug>
+#include <QDebug>
 
 NoMoreEventsInputEvent::NoMoreEventsInputEvent(QObject *parent) :
     QObject(parent)

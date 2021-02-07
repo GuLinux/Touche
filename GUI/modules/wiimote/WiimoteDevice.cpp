@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "WiimoteDevice.h"
 #include "wiimotemanager.h"
 #include "domain/deviceinfo.h"
-#include <KDebug>
+#include <QDebug>
 #include <QTimer>
 #include "backend/config/keyboarddatabase.h"
 
@@ -115,7 +115,7 @@ WiimoteInputEvent::WiimoteInputEvent(const QString &key, const QString &event, Q
 
 bool WiimoteInputEvent::matches(const QVariantMap &payload)
 {
-    kDebug() << "Payload: " << payload;
-    kDebug() << "myself: " << key << "_" << event;
+    qDebug() << "Payload: " << payload;
+    qDebug() << "myself: " << key << "_" << event;
     return QString("%1_%2").arg(key).arg(event) == payload.value("keyname").toString();
 }

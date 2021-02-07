@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KEYBOARDDATABASE_H
 #define KEYBOARDDATABASE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QStringList>
 
 class DeviceInfo;

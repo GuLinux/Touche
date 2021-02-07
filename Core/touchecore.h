@@ -20,11 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TOUCHECORE_H
 #define TOUCHECORE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QMap>
-#include <KLocale>
-#include <KStandardDirs>
-#include <KGlobal>
+#include <QStringList>
+
 class DeviceInfo;
 class ToucheCorePrivate;
 class QSettings;
@@ -32,12 +31,12 @@ class Device;
 class KeyboardDatabase;
 class Touche {
 public:
-    static const inline char* appName() { return I18N_NOOP2("Application internal name", "Touche"); }
-    static const inline char* displayName() { return I18N_NOOP2("Application display name", "Touché"); }
-    static const inline char* iconName() { return "input-keyboard" ; }
+    static const inline QString appName() { return QObject::tr("Touche", "Application internal name"); }
+    static const inline QString displayName() { return QObject::tr("Touché", "Application display name"); }
+    static const inline QString iconName() { return "input-keyboard" ; }
+    static const inline QByteArray appVersion() { return TOUCHE_APP_VERSION ; }
     static QSettings *settings(QObject *parent = 0);
-    static inline QStringList keyboardDatabases()
-        { return KGlobal::dirs()->findAllResources("data", "Touche/KeyboardDatabases/*.json"); }
+    static inline QStringList keyboardDatabases() { return { TOUCHE_KEYBOARD_DATABASE_DIR }; }
 };
 
 class ToucheCore : public QObject

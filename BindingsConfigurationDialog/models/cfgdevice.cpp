@@ -21,12 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "domain/deviceinfo.h"
 #include "models/cfgkey.h"
 #include <QStringList>
-#include <KDebug>
+#include <QDebug>
 
 CfgDevice::CfgDevice(DeviceInfo *deviceInfo, QObject *parent) :
     QObject(parent), m_deviceInfo(deviceInfo)
 {
-    kDebug() << "CfgDevice for " << deviceInfo->name() << ", " << deviceInfo->configurationIdentifier();
+    qDebug() << "CfgDevice for " << deviceInfo->name() << ", " << deviceInfo->configurationIdentifier();
     QMap<QString, QVariant> keysMap = deviceInfo->keyboardDatabaseEntry().value("keys").toMap();
     QStringList keys = keysMap.keys();
     foreach(const QString keyName, keys) {

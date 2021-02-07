@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CFGKEYEVENT_H
 #define CFGKEYEVENT_H
 
-#include <QtCore/QObject>
-#include <KDebug>
+#include <QObject>
+#include <QDebug>
 #include <QAbstractListModel>
 class CfgKeyEvent;
 class CfgKey;

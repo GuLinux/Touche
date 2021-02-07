@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/ioctl.h>
 #include <sys/select.h>
 
-#include <QtCore/QTextStream>
-#include <QtCore/QTimer>
+#include <QTextStream>
+#include <QTimer>
 #include "domain/inputevent.h"
 #include <QCoreApplication>
 #include <QThread>
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMutexLocker>
 #include <QElapsedTimer>
 
-#include <KDebug>
+#include <QDebug>
 #include "backend/config/databaseentry.h"
 #include "domain/deviceinfo.h"
 #include "backend/config/keyboarddatabase.h"
@@ -62,60 +62,61 @@ public:
     QMutex mutex;
     Q_DECLARE_PUBLIC(HidDev)
 
-    void stop()
-    {
-        if(fd<0) return;
-        aboutToQuit=true;
-        if(fd>=0) {
-            close(fd);
-            fd=-1;
-        }
-    }
-
-    void read_events()
-    {
-        if(fd<0 || aboutToQuit) return;
-        QMutexLocker locker(&mutex);
-        Q_UNUSED(locker);
-        Q_Q(HidDev);
-
-        timeval tv;
-        tv.tv_sec=0;
-        tv.tv_usec=read_timeout_milliseconds*1000;
-        FD_SET(fd, &(fdset));
-        int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
-        if(selectRD==-1) {
-            kDebug() << "Error on select: " << strerror(errno);
-            stop();
-            return;
-        }
-
-        if(!selectRD>0) {
-            if(had_events) {
-                had_events=false;
-                emit q->noMoreEvents(&deviceInfo);
-            }
-            return;
-        }
-
-        struct hiddev_event ev[256];
-        int rd = read(fd, ev, sizeof(ev));
-        if(rd==-1) {
-            stop();
-            kDebug() << "Error on read: " << strerror(errno);
-            return;
-        }
-        HidInputEvent *keyEvent = new HidInputEvent(q);
-        for(int i=0; i<rd; i++) {
-            keyEvent->addRegister(ev[i].hid, ev[i].value, i);
-        }
-        q->emit inputEvent(keyEvent, &deviceInfo);
-        had_events=true;
-        QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
-    }
+    void stop();
+    void read_events();
 };
 
+void HidDevPrivate::stop()
+{
+    if(fd<0) return;
+    aboutToQuit=true;
+    if(fd>=0) {
+        close(fd);
+        fd=-1;
+    }
+}
 
+void HidDevPrivate::read_events()
+{
+  if(fd<0 || aboutToQuit) return;
+  QMutexLocker locker(&mutex);
+  Q_UNUSED(locker);
+  Q_Q(HidDev);
+
+  timeval tv;
+  tv.tv_sec=0;
+  tv.tv_usec=read_timeout_milliseconds*1000;
+  FD_SET(fd, &(fdset));
+  int selectRD = select(fd+1, &(fdset), NULL, NULL, &tv);
+  if(selectRD==-1) {
+      qDebug() << "Error on select: " << strerror(errno);
+      stop();
+      return;
+  }
+
+  if(!selectRD>0) {
+      if(had_events) {
+          had_events=false;
+          emit q->noMoreEvents(&deviceInfo);
+      }
+      return;
+  }
+
+  struct hiddev_event ev[256];
+  int rd = read(fd, ev, sizeof(ev));
+  if(rd==-1) {
+      stop();
+      qDebug() << "Error on read: " << strerror(errno);
+      return;
+  }
+  HidInputEvent *keyEvent = new HidInputEvent(q);
+  for(int i=0; i<rd; i++) {
+      keyEvent->addRegister(ev[i].hid, ev[i].value, i);
+  }
+  q->emit inputEvent(keyEvent, &deviceInfo);
+  had_events=true;
+  QTimer::singleShot(30000, keyEvent, SLOT(deleteLater()));
+}
 
 
 
@@ -142,13 +143,13 @@ void HidDev::start()
     while(d->fd==-1) {
         d->fd = open(d->deviceInfo.path().toLatin1(), O_RDONLY);
         if(d->fd==-1 && d->errors_timer.elapsed() > OPEN_TIMEOUT) {
-            kDebug() << "Error on open: " << strerror(errno) << " for more than " << OPEN_TIMEOUT << " milliseconds; giving up.";
+            qDebug() << "Error on open: " << strerror(errno) << " for more than " << OPEN_TIMEOUT << " milliseconds; giving up.";
             // TODO: emit signal for gui notification
             return;
         }
         qApp->processEvents();
     }
-    kDebug() << "Hid dev opened: " << d->fd;
+    qDebug() << "Hid dev opened: " << d->fd;
 
 
     int version;
@@ -158,7 +159,7 @@ void HidDev::start()
     err << QString("hiddev driver version is %1.%2.%3\n").arg(version >> 16).arg((version >> 8) & 0xff).arg(version & 0xff);
 
     ioctl(d->fd, HIDIOCGDEVINFO, &dinfo);
-    kDebug() << "Product: " << QString("%1").arg((quint16) dinfo.product, 4, 16, QChar('0'));
+    qDebug() << "Product: " << QString("%1").arg((quint16) dinfo.product, 4, 16, QChar('0'));
     d->deviceInfo.vendor(dinfo.vendor)->productID(dinfo.product)->version(dinfo.version)
             ->bus(dinfo.busnum)->deviceNumber(dinfo.devnum)->interfaceNumber(dinfo.ifnum);
     err << QString("HID: vendor 0x%1 product 0x%2 version 0x%3\n")
@@ -174,25 +175,27 @@ void HidDev::start()
     err << QString("HID device name: \"%1\"\n").arg(d->deviceInfo.name());
     FD_ZERO(&(d->fdset));
 
-    QMap<QString, QVariant> keyboardDatabaseEntry = d->keyboardDatabase->deviceConfiguration(&d->deviceInfo);
-    d->read_timeout_milliseconds = keyboardDatabaseEntry.value("read_timeout_milliseconds", 300).toULongLong();
-    d->deviceInfo.name(keyboardDatabaseEntry.value("name").toString());
-    d->deviceInfo.keyboardDatabaseEntry(keyboardDatabaseEntry);
+    if(d->keyboardDatabase) {
+      QMap<QString, QVariant> keyboardDatabaseEntry = d->keyboardDatabase->deviceConfiguration(&d->deviceInfo);
+      d->read_timeout_milliseconds = keyboardDatabaseEntry.value("read_timeout_milliseconds", 300).toULongLong();
+      d->deviceInfo.name(keyboardDatabaseEntry.value("name").toString());
+      d->deviceInfo.keyboardDatabaseEntry(keyboardDatabaseEntry);
+    }
 
-    kDebug() << "Read timeout set to " << d->read_timeout_milliseconds << " milliseconds";
+    qDebug() << "Read timeout set to " << d->read_timeout_milliseconds << " milliseconds";
     emit connected(&d->deviceInfo);
     while(d->fd!=-1 && !d->aboutToQuit) {
         qApp->processEvents();
         d->read_events();
     }
-    kDebug() << "Device loop stopped";
+    qDebug() << "Device loop stopped";
     emit removed(&d->deviceInfo);
 }
 
 void HidDev::stop()
 {
     Q_D(HidDev);
-    kDebug() << "qapp said it's time to go...";
+    qDebug() << "qapp said it's time to go...";
     QMutexLocker locker(&d->mutex);
     Q_UNUSED(locker);
     d->stop();

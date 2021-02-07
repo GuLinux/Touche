@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef TOKEYBINDING_H
 #define TOKEYBINDING_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "domain/binding.h"
 class ToKeyBindingPrivate;
 class ToKeyBinding : public QObject, public Binding

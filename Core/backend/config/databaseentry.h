@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DATABASEENTRY_H
 #define DATABASEENTRY_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QVariant>
 #include <QList>
 

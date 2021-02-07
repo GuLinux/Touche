@@ -1,17 +1,18 @@
-# Maintainer: Marco Gulino <marco.gulino@gmail.com> 
-# Maintainer: Marco Gulino <marco.gulino@gmail.com> 
+# Maintainer: Marco Gulino <marco.gulino@gmail.com>
 
-pkgname=touche
-pkgver=20130828
-pkgrel=0
-pkgdesc="Touché is a KDE application that brings full support on GNU/Linux desktops to your input devices: keyboard, mices, even IR remote receivers"
+pkgname=touche-git
+pkgver=20210124
+pkgrel=1
+pkgdesc="Touché is a KDE application that brings full support on GNU/Linux desktops to your input devices: keyboard, mice, even IR remote receivers"
 arch=('i686' 'x86_64')
-url="http://rockman81.blogspot.it/p/touche.html"
+url="https://github.com/GuLinux/Touche"
 license=('GPL')
 groups=()
-depends=('qt4' 'kdelibs' 'qjson')
-makedepends=('git' 'cmake')
+depends=('qt5-base' 'kdelibs4support')
+makedepends=('git' 'cmake' 'kdesignerplugin' 'kdoctools' 'kinit' 'extra-cmake-modules')
 optdepends=('cwiid-git')
+source=("$pkgname"::"git+https://github.com/GuLinux/Touche.git")
+md5sums=('SKIP')
 provides=()
 conflicts=()
 replaces=()
@@ -19,26 +20,19 @@ backup=()
 options=()
 noextract=()
 
-_gitroot='https://github.com/GuLinux/Touche.git'
-_gitname='Touche'
-
-build() {
-  cd "${srcdir}/"
-  if [ -d "${srcdir}"/${_gitname} ] ; then
-   cd "${srcdir}/${_gitname}" && git pull origin
-   msg "The local files are updated."
-  else
-   git clone ${_gitroot}
-   cd ${_gitname}
-  fi
-
-  git submodule init
-  git submodule update
-  mkdir build -p
-  cd build
- cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release -DQT_QMAKE_EXECUTABLE=qmake-qt4 ..
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
+pkgver() {
+  cat "$srcdir/${pkgname%-git}/version.txt"
 }
 
+build() {
+  cmake -B "$srcdir/${pkgname%-git}-build" \
+      -S "$srcdir/${pkgname%-git}" \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=None \
+      -DQT_QMAKE_EXECUTABLE=qmake-qt5
+  make -C "$srcdir/${pkgname%-git}-build"
+}
 
+package() {
+  make -C "$srcdir/${pkgname%-git}-build" DESTDIR=${pkgdir} install
+}

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HID_INPUTEVENT_H
 #define HID_INPUTEVENT_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QPair>
 #include <QList>
 #include "domain/inputevent.h"

@@ -2,6 +2,7 @@ releases_archive
 *.autosave
 *-build-*
 build
+/artifacts/
 *.swp
 *.build*
 *~
@@ -10,3 +11,4 @@ static-libraries.bin
 *.user
 .*-swp
 .kdev*
+.kateproject.d

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 #include "dumpkeys.h"
-#include <QtCore/QTextStream>
+#include <QTextStream>
 #include "domain/inputevent.h"
 
 

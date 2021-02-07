@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KNotification>
 #include <QDBusInterface>
-#include <KDebug>
+#include <QDebug>
 
 #ifndef HAVE_CWIID
 
@@ -35,6 +35,7 @@ WiimoteModule::WiimoteModule(ToucheCore *, KMenu *, DevicesList *, KActionCollec
     : QObject(parent), d_ptr(0) {}
 WiimoteModule::~WiimoteModule() {}
 void WiimoteModule::setEnabled(bool enabled) { Q_UNUSED(enabled) }
+void WiimoteModule::profileChanged(int) {}
 void WiimoteModule::disconnected(const QString &) {}
 void WiimoteModule::connected(const QString &) {}
 void WiimoteModule::connectWiimote() {}
@@ -140,7 +141,7 @@ void WiimoteModule::disconnected(const QString &address)
         QString message = i18n("%1 could not find any Wiimote.\nPlease remember to press 1+2 to pair your Wiimote.").arg(i18n(Touche::displayName()));
         KNotification::event("deviceMessage", title, message);
     }
-    kDebug() << "Wiimote disconnected: " << address;
+    qDebug() << "Wiimote disconnected: " << address;
 }
 
 
@@ -150,7 +151,7 @@ void WiimoteModule::connected(const QString &address)
     d->enableActions(true);
     d->toggleActionsVisibility(true);
     d->isConnected = true;
-    kDebug() << "Wiimote connected: " << address;
+    qDebug() << "Wiimote connected: " << address;
 }
 
 

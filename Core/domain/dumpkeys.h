@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DUMPKEYS_H
 #define DUMPKEYS_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "domain/inputevent.h"
 
 class DumpKeys : public QObject

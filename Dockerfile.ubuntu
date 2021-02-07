@@ -1,0 +1,6 @@
+FROM ubuntu:20.04
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-suggests --no-install-recommends \
+    build-essential git pkg-config cmake gettext extra-cmake-modules \
+    qt5-qmake libkf5kdelibs4support-dev libxtst-dev libqt5x11extras5-dev

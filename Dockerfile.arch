@@ -1,0 +1,14 @@
+FROM archlinux:base-devel
+RUN pacman -Syu --noconfirm
+RUN curl 'https://archlinux.org/mirrorlist/?country=US&protocol=http&protocol=https&ip_version=4&ip_version=6&use_mirror_status=on' | \
+        grep -e '^#Server' | \
+        sed -e 's/^#//' > /etc/pacman.d/mirrorlist
+COPY ./scripts/aur/touche-git /build/aur
+RUN useradd --no-create-home --shell=/bin/false build && \
+    echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    mkdir -p /build && \
+    chown -R build: /build
+RUN source /build/aur/PKGBUILD && \
+        pacman -Syu --noconfirm --asdeps "${depends[@]}" "${makedepends[@]}" && \
+        rm -rf /build/aur

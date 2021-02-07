@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_keysconfigurationdialog.h"
 #include "backend/config/databaseentry.h"
 #include "domain/configevent.h"
-#include <KDebug>
+#include <QDebug>
 #include <QStringListModel>
 #include "models/cfgdevice.h"
 #include "keybindingconfiguration.h"
@@ -50,7 +50,7 @@ KeysConfigurationDialog::KeysConfigurationDialog(DeviceInfo *deviceInfo, const Q
     connect(ui->keys_listview, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(cfgKeySelected(QModelIndex)));
 
     settings = Touche::settings(this);
-    kDebug() << "avail groups: " << settings->childGroups();
+    qDebug() << "avail groups: " << settings->childGroups();
     settings->beginGroup(QString("bindings_%1").arg(profile));
 }
 
@@ -82,7 +82,7 @@ void KeysConfigurationDialog::accept()
 
 void KeysConfigurationDialog::keyEvent(const QString &keyName)
 {
-    kDebug() << "keyEvent: " << keyName;
+    qDebug() << "keyEvent: " << keyName;
     QModelIndex index = cfgKeyListModel->findKey(keyName);
     ui->keys_listview->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
     cfgKeySelected(index);

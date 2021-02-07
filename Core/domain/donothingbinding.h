@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DONOTHINGBINDING_H
 #define DONOTHINGBINDING_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "domain/binding.h"
 
 class DoNothingBinding : public QObject, public Binding

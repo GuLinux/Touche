@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HiddevDevices_H
 #define HiddevDevices_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "domain/Device.h"
 
 class HiddevDevicesPrivate;
